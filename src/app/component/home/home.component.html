@@ -1,1 +1,33 @@
-<p>home works!</p>
+
+<!-- <div class="modal my-auto p-0" style="background-color: rgba(0, 0, 0, 0.5)" id="usernameModal" tabindex="-1">
+  <div class="modal-dialog" style="top: 30%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="">Username</h5>
+      </div>
+      <div class="modal-body p-0">
+        <input type="text" class="border-0 w-100 m-0 p-2" id="username" placeholder="enter your username here"
+          required />
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="setUsername" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="container my-5 d-flex justify-content-between">
+  <div class="my-2 d-flex">
+    <div class="m-2">
+      <button class="btn btn-md bg-success" id="createLobby" (click)="createLobby()">Create Lobby</button>
+    </div>
+    <div class="m-2">
+      <input type="text" id="code" placeholder="enter code" (keyup)="setCode($event)">
+      <button class="btn btn-md bg-info" id="joinLobby" (click)="joinLobby()">Join Lobby</button>
+    </div>
+  </div>
+  <div class="username_box">
+    <input type="text" value="Username: atp" class="bg-white border-0 display-6 text-end" id="username_show" disabled />
+  </div>
+</div>
+
+

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { WebSocketService } from "./web-socket.service";
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'front-end';
 
+  constructor(private socket: WebSocketService){}
+
   ngOnInit(): void {
-    console.log('test')
+    this.socket.emit('start','atp')
   }
   
 }
