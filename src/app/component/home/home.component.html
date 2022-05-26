@@ -1,33 +1,53 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
 
-<!-- <div class="modal my-auto p-0" style="background-color: rgba(0, 0, 0, 0.5)" id="usernameModal" tabindex="-1">
-  <div class="modal-dialog" style="top: 30%">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="">Username</h5>
-      </div>
-      <div class="modal-body p-0">
-        <input type="text" class="border-0 w-100 m-0 p-2" id="username" placeholder="enter your username here"
-          required />
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="setUsername" class="btn btn-primary">Confirm</button>
+<body>
+  <section class="fancy-border">
+    <div class="middle-sec">
+      <img src="../assets/picture/crown.png" class="imaging" style="width: 350px;">
+      <div class="btn-game">
+        <div class="row-col">
+          <button class="btn-create" id="createLobby" (click)="createLobby()">Create Lobby</button>
+          <button class=".btn-semiblock red-color">?</button>
+        </div>
+        <div class="row-col">
+          <button class=".btn-semiblock">1</button>
+          <button class=".btn-semiblock">2</button>
+          <button class=".btn-semiblock">3</button>
+          <button class=".btn-semiblock">4</button>
+        </div>
+
       </div>
     </div>
-  </div>
-</div> -->
-<div class="container my-5 d-flex justify-content-between">
-  <div class="my-2 d-flex">
-    <div class="m-2">
-      <button class="btn btn-md bg-success" id="createLobby" (click)="createLobby()">Create Lobby</button>
+  </section>
+
+  <aside>
+    
+  
+
+    <div class="code">
+      <input maxlength='7'  type="text" id="code" placeholder="#######" (keyup)="setCode($event)" />
+      <div class="btn-game tests">
+        <button class=".btn-semiblock" id="joinLobby" (click)="joinLobby()">JOIN GAME</button>
     </div>
-    <div class="m-2">
-      <input type="text" id="code" placeholder="enter code" (keyup)="setCode($event)">
-      <button class="btn btn-md bg-info" id="joinLobby" (click)="joinLobby()">Join Lobby</button>
     </div>
-  </div>
-  <div class="username_box">
-    <input type="text" value="Username: atp" class="bg-white border-0 display-6 text-end" id="username_show" disabled />
-  </div>
-</div>
+    <div class="fancy-border mintop">
+      <div class="textalign">CUSTOM ROOM</div>
 
 
+    </div>
+
+  </aside>
+  <input type="checkbox" id="active">
+  <label for="active" class="menu-btn"><span></span></label>
+  <label for="active" class="close"></label>
+  <div class="wrapper">
+    <ul>
+      <li><a href="#">NAME</a></li>
+
+    </ul>
+  </div>
+</body>

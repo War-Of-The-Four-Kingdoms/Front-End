@@ -8,11 +8,23 @@ import { WebSocketService } from "./web-socket.service";
 })
 export class AppComponent {
   title = 'front-end';
-
+  isVisible = true;
+  username:any =''
   constructor(private socket: WebSocketService){}
 
   ngOnInit(): void {
-    this.socket.emit('start','atp')
+    
   }
+
   
+
+  handleOk(): void {
+    console.log('Button ok clicked!');
+    this.isVisible = false;
+    this.socket.emit('start',this.username)
+  }
+
+
 }
+  
+
