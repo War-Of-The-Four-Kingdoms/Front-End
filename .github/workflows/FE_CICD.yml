@@ -1,4 +1,4 @@
-name: Angular POC CI
+name: Angular CICD
 on:
   push:
     branches: [ docker ]
