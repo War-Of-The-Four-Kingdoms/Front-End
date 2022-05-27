@@ -4,19 +4,9 @@ import { HomeComponent } from './home/home.component';
 import { LobbyComponent } from './lobby/lobby.component';
 
 
-const routes: Routes = [ {
-  path: '',
-  redirectTo: 'home',
-  pathMatch: 'full'
-},
-{
-  path: 'lobby',
-  component: LobbyComponent,
-},
-{
-  path: 'home',
-  component: HomeComponent,
-},
+const routes: Routes = [ 
+
+
 ];
 
 @NgModule({

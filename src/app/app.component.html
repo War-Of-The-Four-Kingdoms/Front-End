@@ -1,9 +1,12 @@
-<router-outlet></router-outlet>
+<router-outlet>
 <!-- <button nz-button [nzType]="'primary'" ></button> -->
-<nz-modal [(nzVisible)]="isVisible" nzTitle="กรุณากรอกชื่อ"  (nzOnOk)="handleOk()">
+<nz-modal  nzCentered [(nzVisible)]="isVisible" nzTitle="กรุณากรอกชื่อ"  (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
-      <p>Content one</p>
-      <input type="text" id="code" placeholder="enter username" [(ngModel)]="username">
+      <div><input class="bold" type="text" id="code" placeholder="enter username" [(ngModel)]="username"></div>
+      
     </ng-container>
   </nz-modal>
 
+
+  
+</router-outlet>

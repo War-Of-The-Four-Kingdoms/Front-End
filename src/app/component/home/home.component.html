@@ -4,50 +4,75 @@
   <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 
-<body>
-  <section class="fancy-border">
-    <div class="middle-sec">
-      <img src="../assets/picture/crown.png" class="imaging" style="width: 350px;">
-      <div class="btn-game">
-        <div class="row-col">
-          <button class="btn-create" id="createLobby" (click)="createLobby()">Create Lobby</button>
-          <button class=".btn-semiblock red-color">?</button>
-        </div>
-        <div class="row-col">
-          <button class=".btn-semiblock">1</button>
-          <button class=".btn-semiblock">2</button>
-          <button class=".btn-semiblock">3</button>
-          <button class=".btn-semiblock">4</button>
-        </div>
 
+<section class="fancy-border">
+  <div class="middle-sec">
+    <img src="../assets/picture/crown.png" class="imaging" style="width: 350px;">
+    <div class="btn-game">
+      <div class="row-col">
+        <button class="btn-create" id="createLobby" (click)="showModalMiddle()">Create Lobby</button>
+        <button class=".btn-semiblock red-color"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+            viewBox="0 0 24 24">
+            <path
+              d="M5.495 2h16.505v-2h-17c-1.657 0-3 1.343-3 3v18c0 1.657 1.343 3 3 3h17v-20h-16.505c-1.375 0-1.375-2 0-2zm6.681 17c-.573 0-1.04-.467-1.04-1.042 0-.576.467-1.042 1.04-1.042.576 0 1.042.466 1.042 1.042 0 .575-.466 1.042-1.042 1.042zm.034-10c1.644 0 2.81 1.015 2.79 2.666-.015 1.134-.705 1.878-1.259 2.477-.832.896-.766 1.336-.766 1.941h-1.644c0-1.311-.045-1.84 1.174-2.999.469-.446.839-.799.788-1.493-.048-.66-.599-1.004-1.118-1.004-.883 0-1.26.785-1.26 1.746h-1.647c0-2.212 1.262-3.334 2.942-3.334z" />
+            </svg></button>
+      </div>
+      <div class="row-col">
+        <button class=".btn-semiblock"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+            viewBox="0 0 24 24">
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+            </svg></button>
+        <button class=".btn-semiblock"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"
+            viewBox="0 0 24 24">
+            <path
+              d="M16.921 3c-.368 4.506-1.953 7.23-3.372 9.669-.577.993-1.136 1.953-1.543 2.95-.408-.998-.969-1.959-1.548-2.953-1.422-2.437-3.011-5.161-3.379-9.666h9.842zm2.079-2h-14c0 9.803 5.105 13.053 5.604 17h2.805c.497-3.947 5.591-7.197 5.591-17zm-7 11.547c-1.125-2.563-1.849-5.599-1.857-8.547h-1.383c.374 3.118 1.857 7.023 3.24 8.547zm1.438 6.453h-2.866c-.202 1.187-.63 2.619-2.571 2.619v1.381h8v-1.381c-1.999 0-2.371-1.432-2.563-2.619zm7.08-1.596c-1.402-.634-2.609-.19-3.354.293.745-.484 1.603-1.464 1.595-3.003-2.591 1.038-2.295 2.496-2.765 3.345-.315.571-1.007.274-1.007.274l-.213.352c.365.193.989.319 1.716.319 1.307 0 2.949-.409 4.028-1.58zm2.444-4.022c-1.382.097-2.118 1.061-2.501 1.763.383-.702.614-1.942-.05-3.158-1.61 1.929-.752 2.958-.762 3.831-.004.427-.49.417-.49.417l.007.404c.314-.041 3.154-.717 3.796-3.257zm1.036-3.87c-1.171.426-1.56 1.473-1.718 2.175.158-.702.041-1.863-.835-2.75-.915 2.068.082 2.745.29 3.503.102.371-.325.606-.325.606l.29.179c.061-.029 2.385-1.332 2.298-3.713zm-.2-3.792c-.903.666-1.017 1.688-.974 2.335-.042-.646-.395-1.639-1.376-2.182-.264 2.018.769 2.349 1.142 2.95.182.294.023.658.023.658l.284-.019s.026-.127.169-.442c.291-.644 1.255-1.334.732-3.3zm-1.901-2.72s-.273.984-.045 1.732c.244.798.873 1.361.873 1.361s.34-.873.099-1.733c-.222-.792-.927-1.36-.927-1.36zm-12.67 15.665l-.213-.352s-.691.297-1.007-.274c-.47-.849-.174-2.307-2.765-3.345-.008 1.539.85 2.52 1.595 3.003-.745-.484-1.952-.927-3.354-.293 1.078 1.171 2.721 1.581 4.028 1.581.727-.001 1.35-.127 1.716-.32zm-4.393-2.027l.007-.404s-.486.01-.49-.417c-.009-.873.848-1.901-.762-3.831-.664 1.216-.433 2.457-.05 3.158-.383-.702-1.12-1.666-2.501-1.763.642 2.541 3.482 3.217 3.796 3.257zm-2.533-3.413l.29-.179s-.427-.236-.325-.606c.208-.758 1.205-1.435.29-3.503-.876.887-.994 2.048-.835 2.75-.158-.702-.546-1.749-1.718-2.175-.088 2.381 2.236 3.684 2.298 3.713zm-1.366-4.204c.143.315.169.442.169.442l.284.019s-.159-.364.023-.658c.373-.601 1.405-.933 1.142-2.95-.983.542-1.335 1.534-1.377 2.181.042-.647-.072-1.67-.974-2.335-.523 1.966.441 2.656.733 3.301zm.241-4.661c-.24.86.099 1.733.099 1.733s.629-.563.873-1.361c.228-.748-.045-1.732-.045-1.732s-.705.568-.927 1.36z" />
+            </svg></button>
+        <button class=".btn-semiblock">3</button>
+        <button class=".btn-semiblock">4</button>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <aside>
-    
-  
-
-    <div class="code">
-      <input maxlength='7'  type="text" id="code" placeholder="#######" (keyup)="setCode($event)" />
-      <div class="btn-game tests">
-        <button class=".btn-semiblock" id="joinLobby" (click)="joinLobby()">JOIN GAME</button>
+<aside>
+  <div class="code">
+    <input maxlength='6' type="text" id="code" placeholder="#######" (keyup)="setCode($event)" />
+    <div class="btn-game tests">
+      <button class=".btn-semiblock" id="joinLobby" (click)="joinLobby()">JOIN GAME</button>
     </div>
+  </div>
+  <div class="fancy-border mintop">
+    <div class="textalign">CUSTOM ROOM</div>
+    <div class="rooms-align" *ngFor="let data of this.roomsarray">
+      <div>ROOM's Name:{{data.code}}</div>
+      <div>PLAYER:{{data.players.length}}/{{data.max}}</div>
+      <div class="btn join-btn" (click)="joinLobbys(data.code)">JOIN LOBBY</div>
     </div>
-    <div class="fancy-border mintop">
-      <div class="textalign">CUSTOM ROOM</div>
+  </div>
 
-
-    </div>
-
-  </aside>
-  <input type="checkbox" id="active">
+</aside>
+<!-- <input type="checkbox" id="active">
   <label for="active" class="menu-btn"><span></span></label>
   <label for="active" class="close"></label>
   <div class="wrapper">
     <ul>
       <li><a href="#">NAME</a></li>
-
     </ul>
-  </div>
-</body>
+  </div> -->
+
+<nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+  <ng-container *nzModalContent>
+    <h1>ROOM OPTION</h1>
+    <hr>
+    <div>
+      <div class="num45">Number of Player : <select [(ngModel)]="this.num">
+          <option *ngFor="let numbers of numbers" [ngValue]="numbers">{{numbers}}</option>
+        </select></div>
+      <div class="num45">PRIVATE : <nz-switch [(ngModel)]="switchValue"></nz-switch> 
+      </div>
+    </div>
+
+
+  </ng-container>
+</nz-modal>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { WebSocketService } from "./web-socket.service";
 
 @Component({
@@ -10,16 +10,19 @@ export class AppComponent {
   title = 'front-end';
   isVisible = true;
   username:any =''
-  constructor(private socket: WebSocketService){}
+  isVisibleMiddle = false;
+  constructor(private socket: WebSocketService,private elementRef:ElementRef){}
 
   ngOnInit(): void {
-    
+    this.socket.listen('set room').subscribe((room: any) => {
+      console.log(room)
+      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
+  });
   }
 
   
 
   handleOk(): void {
-    console.log('Button ok clicked!');
     this.isVisible = false;
     this.socket.emit('start',this.username)
   }

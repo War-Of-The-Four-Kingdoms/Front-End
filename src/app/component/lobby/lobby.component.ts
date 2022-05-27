@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { WebSocketService } from "../../web-socket.service";
 
 @Component({
@@ -7,42 +8,41 @@ import { WebSocketService } from "../../web-socket.service";
   styleUrls: ['./lobby.component.scss']
 })
 export class LobbyComponent implements OnInit {
+  roomMAX: any;
 
-  constructor(private socket: WebSocketService, private elementRef:ElementRef) { }
+  constructor(private router: Router,private socket: WebSocketService, private elementRef: ElementRef) { }
 
-  lobbyCode :string = '';
+  lobbyCode: string = '';
 
   ngOnInit(): void {
-    
-    
     this.socket.emit('get room info', {});
     this.socket.listen('sctc').subscribe((data: any) => {
-      this.appendChat('<p class="text-right text-primary">'+data.username+': '+data.message+'</p>');
+      this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
-        this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
-        this.lobbyCode = room.code;
+      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
+      this.lobbyCode = room.code;
+      this.roomMAX = room.max;
     });
   }
-  
-  typingChat(e: any): boolean{
-            let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
-            if(e.which === 13 && !e.shiftKey){
-                this.socket.emit('scts', {message: message,code: this.lobbyCode});
-                this.appendChat('<p class="text-end text-success">'+message+'</p>');
-                this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
-                return false;
-            }
-            return true;
+  typingChat(e: any): boolean {
+    let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
+    if (e.which === 13 && !e.shiftKey) {
+      this.socket.emit('scts', { message: message, code: this.lobbyCode });
+      this.appendChat('<p class="text-end text-success message" style="font-size:24px">' + message + '</p>');
+      this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
+      return false;
+    }
+    return true;
   }
-
-  appendChat(message: string) : void{
+  appendChat(message: string): void {
     var cl = this.elementRef.nativeElement.querySelector('.chatline');
     cl.insertAdjacentHTML('beforeend', message);
   }
-
-  
-
+  leave(){
+    this.socket.emit('leave lobby', { code: this.lobbyCode, max_player: this.roomMAX});
+    this.router.navigate(['home']);
+  }
   // var room = [];
   // $(function() {
   //     let ip_address = '127.0.0.1';
