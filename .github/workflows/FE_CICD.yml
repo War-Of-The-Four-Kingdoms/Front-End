@@ -1,7 +1,7 @@
 name: Angular POC CI
 on:
   push:
-    branches: [ main ]
+    branches: [ docker ]
     
 jobs:
   build:
