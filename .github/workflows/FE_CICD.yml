@@ -87,3 +87,4 @@ jobs:
         echo "----- CURL THE SITE -----"
         curl $VM_IP:80
         echo ""
+
