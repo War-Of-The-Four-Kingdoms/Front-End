@@ -20,7 +20,6 @@ export class AppComponent {
   });
   }
 
-  
 
   handleOk(): void {
     this.isVisible = false;

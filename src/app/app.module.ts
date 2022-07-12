@@ -16,6 +16,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { LoginPageComponent } from './component/login-page/login-page.component';
 
 
 registerLocaleData(en);
@@ -24,7 +25,9 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
     HomeComponent,
-    LobbyComponent
+    LobbyComponent,
+    LoginPageComponent
+    
   
   ],
   imports: [
