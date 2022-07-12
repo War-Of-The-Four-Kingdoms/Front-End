@@ -47,8 +47,6 @@ export class HomeComponent implements OnInit {
   }
 
   handleOkMiddle(): void {
-    console.log(this.num)
-    console.log(this.switchValue)
     let code = Math.random().toString(36).slice(2, 8).toUpperCase();
     this.socket.emit('create lobby', { code: code, max_player: this.num, private: this.switchValue });
     this.router.navigate(['lobby']);

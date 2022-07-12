@@ -1,30 +1,40 @@
-<head>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-  </head>
-  
-  
-  <section class="fancy-border">
-<div class="login-box">
-    <h2>Login</h2>
-    <form>
-      <div class="user-box">
-        <input type="text" name="" required="">
-        <label>Username</label>
+<div class="container">
+  <div class="row">
+      <div class="col d-flex flex-row justify-content-center align-content-center pt-5 pb-5">
+          <div class="card">
+              <div class="card-body">
+                  <div [formGroup]="form">
+                      <h5 class="card-title">Authentication form</h5>
+                      <p class="card-text">Fill the following form and click on the <strong>Login</strong> button to
+                          access the home page</p>
+                      <div class="row" *ngIf="errors">
+                          <div class="col">
+                              <div class="alert alert-danger">
+                                  <strong>Oops!</strong> You have entered invalid credentials
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col">
+                              <div class="form-group">
+                                  <label for="email">Email address</label>
+                                  <input type="email" id="email" formControlName="email" class="form-control" />
+                              </div>
+                              <div class="form-group">
+                                  <label for="password">Password</label>
+                                  <input type="password" id="password" formControlName="password" class="form-control" />
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col d-flex flex-row justify-content-center align-content-center mt-10" style="margin-top: 10px">
+                              <button type="submit" (click)="login()" [disabled]="loading">Login</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-      <div class="user-box">
-        <input type="password" name="" required="">
-        <label>Password</label>
-      </div>
-      <a href="#">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        Submit
-      </a>
-    </form>
   </div>
-  </section>
+</div>
   
