@@ -71,7 +71,7 @@ jobs:
           echo ""
           echo "----- DOCKER RUN -----"
           docker rm frontend --force
-          docker run --name frontend -p 8080:80 -d sharkthovenzart/seniorproject:frontend
+          docker run --name frontend -p 80:80 -d sharkthovenzart/seniorproject:frontend
           echo ""
           echo "----- DOCKER LOGOUT -----"
           docker logout
