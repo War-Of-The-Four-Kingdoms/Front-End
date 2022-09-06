@@ -14,7 +14,7 @@ import {
 export class LoginPageComponent implements OnInit {
 
   // Variables
-  form!:FormGroup
+  form!: FormGroup
   loading: boolean = false;
   errors: boolean = false;
 
@@ -44,7 +44,7 @@ export class LoginPageComponent implements OnInit {
    */
   login(): void {
     console.log('hi');
-    
+
     this.loading = true;
     this.errors = false;
     this.authService.login(this.controls['email'].value, this.controls['password'].value)

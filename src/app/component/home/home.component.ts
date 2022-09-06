@@ -1,3 +1,4 @@
+import { Validators } from '@angular/forms';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { WebSocketService } from "../../web-socket.service";
 import {
@@ -29,7 +30,7 @@ export class HomeComponent implements OnInit {
   createLobby(): void {
     let code = Math.random().toString(36).slice(2, 8).toUpperCase();
     this.socket.emit('create lobby', { code: code, max_player: 10, private: false });
-    this.router.navigate(['lobby']);
+    this.router.navigate(['start']);
   }
 
   setCode(event: any): void {
@@ -38,18 +39,18 @@ export class HomeComponent implements OnInit {
 
   joinLobby(): void {
     this.socket.emit('join lobby', { code: this.inputCode, max_player: 10 });
-    this.router.navigate(['lobby']);
+    this.router.navigate(['start']);
   }
 
   joinLobbys(data:any): void {
     this.socket.emit('join lobby', { code: data });
-    this.router.navigate(['lobby']);
+    this.router.navigate(['start']);
   }
 
   handleOkMiddle(): void {
     let code = Math.random().toString(36).slice(2, 8).toUpperCase();
     this.socket.emit('create lobby', { code: code, max_player: this.num, private: this.switchValue });
-    this.router.navigate(['lobby']);
+    this.router.navigate(['start']);
     this.isVisibleMiddle = false;
   }
 

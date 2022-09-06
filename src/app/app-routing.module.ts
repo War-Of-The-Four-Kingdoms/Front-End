@@ -5,6 +5,7 @@ import { LobbyComponent } from './component/lobby/lobby.component';
 import { LoginPageComponent } from './component/login-page/login-page.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { GuestGuardService } from './services/guest-guard.service';
+import { GameStartComponent } from './component/game-start/game-start.component';
 
 const routes: Routes = [
 
@@ -15,6 +16,10 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+  },
+  {
+    path: 'start',
+    component: GameStartComponent,
   },
   {
     path: 'login',

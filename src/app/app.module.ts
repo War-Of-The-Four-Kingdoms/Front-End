@@ -17,6 +17,8 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { LoginPageComponent } from './component/login-page/login-page.component';
+import { GameStartComponent } from './component/game-start/game-start.component';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 registerLocaleData(en);
 
@@ -25,7 +27,8 @@ registerLocaleData(en);
     AppComponent,
     HomeComponent,
     LobbyComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    GameStartComponent
   ],
   imports: [
     NzButtonModule,
@@ -38,6 +41,7 @@ registerLocaleData(en);
     NzModalModule,
     NzRadioModule,
     NzSwitchModule,
+    NzDrawerModule,
     ReactiveFormsModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],

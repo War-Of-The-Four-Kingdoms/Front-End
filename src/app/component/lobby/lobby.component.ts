@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebSocketService } from "../../web-socket.service";
@@ -9,8 +10,16 @@ import { WebSocketService } from "../../web-socket.service";
 })
 export class LobbyComponent implements OnInit {
   roomMAX: any;
-
-  constructor(private router: Router,private socket: WebSocketService, private elementRef: ElementRef) { }
+  arr: any[] = []
+  constructor(private router: Router, private socket: WebSocketService, private elementRef: ElementRef) {
+    this.arr.push({
+      headers: new HttpHeaders({
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      })
+    })
+    console.log(this.arr)
+  }
 
   lobbyCode: string = '';
 
@@ -25,6 +34,7 @@ export class LobbyComponent implements OnInit {
       this.roomMAX = room.max;
     });
   }
+
   typingChat(e: any): boolean {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
@@ -35,12 +45,13 @@ export class LobbyComponent implements OnInit {
     }
     return true;
   }
+  
   appendChat(message: string): void {
     var cl = this.elementRef.nativeElement.querySelector('.chatline');
     cl.insertAdjacentHTML('beforeend', message);
   }
-  leave(){
-    this.socket.emit('leave lobby', { code: this.lobbyCode, max_player: this.roomMAX});
+  leave() {
+    this.socket.emit('leave lobby', { code: this.lobbyCode, max_player: this.roomMAX });
     this.router.navigate(['home']);
   }
   // var room = [];

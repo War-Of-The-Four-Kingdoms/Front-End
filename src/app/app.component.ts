@@ -9,7 +9,7 @@ import { WebSocketService } from "./web-socket.service";
 export class AppComponent {
   title = 'front-end';
   isVisible = true;
-  username:any =''
+  username:any = "pong"
   isVisibleMiddle = false;
   constructor(private socket: WebSocketService,private elementRef:ElementRef){}
 
@@ -18,6 +18,7 @@ export class AppComponent {
       console.log(room)
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
   });
+  this.socket.emit('start',this.username)
   }
 
 
