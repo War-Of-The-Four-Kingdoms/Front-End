@@ -72,6 +72,8 @@ jobs:
           echo "----- DOCKER COMPOSE RUN -----"
           docker-compose down
           docker-compose up -d
+          docker exec -i backend pm2 start server.js
+          docker exec -i backend pm2 start "php artisan serve --host=0.0.0.0" 
           echo ""
           echo "----- DOCKER LOGOUT -----"
           docker logout
