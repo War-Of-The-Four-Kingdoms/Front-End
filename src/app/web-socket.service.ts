@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 export class WebSocketService {
 
   socket: any;
-  readonly uri: string = 'www.war4k.games:8000';
+  readonly uri: string = 'www.war4k.games:3000';
 
   constructor() { 
     this.socket = io(this.uri);
