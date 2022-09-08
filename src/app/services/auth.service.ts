@@ -29,8 +29,6 @@ export class AuthService {
   }
 
   detail() {
-    console.log(localStorage.getItem('access_token'));
-    
     return this.http.post(this.apiUrl + '/details', "", { headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), })
   }
 

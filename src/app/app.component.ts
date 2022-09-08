@@ -18,10 +18,9 @@ export class AppComponent {
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // this.socket.listen('set room').subscribe((room: any) => {
-    //   this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
-    // });
-    // this.socket.emit('start', this.username)
+    this.socket.listen('already connect').subscribe((rooms: any) => {
+      this.alreadyOpen = true;
+    });
   }
 
 

@@ -29,6 +29,7 @@ export class GameStartComponent implements OnInit {
   chair3user: boolean = false;
   chair4user: boolean = false;
   chair5user: boolean = false;
+  myId: any;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router) {
@@ -53,21 +54,33 @@ export class GameStartComponent implements OnInit {
     });
     this.listen_position();
     this.socket.emit('get room info', {});
-    this.socket.listen('leave lobby').subscribe((data: any) => {
-      console.log(data);
-      
-    });
     this.socket.listen('sctc').subscribe((data: any) => {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
+      console.log(room);
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
+      this.myId = room.uid;
       if (room.is_host == true) {
         this.host = true
       }
 
+    });
+    this.socket.listen('change host').subscribe((uid) => {
+      console.log(uid);
+      console.log(this.myId);
+
+      if (this.myId == uid) {
+        console.log('yes');
+
+        this.host = true
+      }else{
+        console.log('no');
+
+        this.host = false
+      }
     });
   }
 

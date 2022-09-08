@@ -10,11 +10,11 @@ export class WebSocketService {
   socket: any;
   readonly uri: string = 'localhost:3000';
 
-  constructor() { 
+  constructor() {
     this.socket = io(this.uri);
   }
 
-  
+
 
   listen(eventName: string){
     return new Observable((subscriber) => {
