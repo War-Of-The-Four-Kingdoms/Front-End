@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   isVisibleMiddle = false;
   array = [1, 2, 3, 4];
   numbers = [5, 6, 7, 8, 9, 10];
+  user = { name: null, email: null, uuid: null }
   num: any = 5
   switchValue = false;
   constructor(private router: Router, private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
@@ -40,12 +41,14 @@ export class HomeComponent implements OnInit {
         this.authService.detail().subscribe((res: any) => {
           console.log(res);
         });
-        })
-    }else{
+      })
+    } else {
       this.authService.detail()
-      .subscribe((res: any) => {
-        console.log(res);
-      });
+        .subscribe((res: any) => {
+          this.user.name = res.name
+          this.user.email = res.email
+          this.user.uuid = res.uuid
+        });
     }
 
   }
