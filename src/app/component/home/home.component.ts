@@ -15,7 +15,9 @@ export class HomeComponent implements OnInit {
   isVisibleMiddle = false;
   array = [1, 2, 3, 4];
   numbers = [5, 6, 7, 8, 9, 10];
-  user = { name: null, email: null, uuid: null }
+  name: any
+  email: any
+  uuid: any
   num: any = 5
   switchValue = false;
   constructor(private router: Router, private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
@@ -39,18 +41,20 @@ export class HomeComponent implements OnInit {
         localStorage.setItem('refresh_token', res.refresh_token);
         localStorage.setItem('expires_in', timestamp)
         this.authService.detail().subscribe((res: any) => {
-          console.log(res);
+          this.name = res.success.name
+          this.email = res.success.email
+          this.uuid = res.success.uuid
         });
       })
     } else {
       this.authService.detail()
         .subscribe((res: any) => {
-          this.user.name = res.name
-          this.user.email = res.email
-          this.user.uuid = res.uuid
+          console.log(res);
+          this.name = res.success.name
+          this.email = res.success.email
+          this.uuid = res.success.uuid
         });
     }
-
   }
 
   createLobby(): void {
