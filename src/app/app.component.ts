@@ -14,20 +14,16 @@ export class AppComponent {
   isVisible = true;
   username: any = "pong"
   isVisibleMiddle = false;
+  alreadyOpen = false;
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.socket.listen('set room').subscribe((room: any) => {
-      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
-    });
-    this.socket.emit('start', this.username)
+    // this.socket.listen('set room').subscribe((room: any) => {
+    //   this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
+    // });
+    // this.socket.emit('start', this.username)
   }
 
-
-  handleOk(): void {
-    this.isVisible = false;
-    this.socket.emit('start', this.username)
-  }
 
 
 }
