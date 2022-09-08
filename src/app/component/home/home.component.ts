@@ -26,10 +26,28 @@ export class HomeComponent implements OnInit {
     this.socket.listen('set room list').subscribe((rooms: any) => {
       this.roomsarray = rooms
     });
-    this.authService.detail()
+    let expireDate = new Date()
+    let timestamp = Math.floor(expireDate.getTime() / 1000);
+    let expired = localStorage.getItem('expires_in')
+    if (parseInt(String(expired)) <= parseInt(String(timestamp))) {
+      this.authService.refresh().subscribe((res: any) => {
+        console.log(res);
+        let expireDate = new Date()
+        let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
+        localStorage.setItem('access_token', res.access_token);
+        localStorage.setItem('refresh_token', res.refresh_token);
+        localStorage.setItem('expires_in', timestamp)
+        this.authService.detail().subscribe((res: any) => {
+          console.log(res);
+        });
+        })
+    }else{
+      this.authService.detail()
       .subscribe((res: any) => {
         console.log(res);
       });
+    }
+
   }
 
   createLobby(): void {
