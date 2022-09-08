@@ -12,11 +12,11 @@ export class GameStartComponent implements OnInit {
   visible = false;
   lobbyCode: string = '';
   chair1: any = 1;
+  chair6: any = 6;
   chair2: any = 2;
+  chair5: any = 5;
   chair3: any = 3;
   chair4: any = 4;
-  chair5: any = 5;
-  chair6: any = 6;
   roomMAX: any;
   isVisibleMiddle = false;
   host: boolean = false;
@@ -121,63 +121,63 @@ export class GameStartComponent implements OnInit {
   select_position(pos: any): void {
     switch (pos) {
       case 1:
-        this.chair1 = 6
+        this.chair1 = 4
         this.chair2 = 5
-        this.chair3 = 4
-        this.chair4 = 3
+        this.chair3 = 6
+        this.chair4 = 1
         this.chair5 = 2
-        this.chair6 = 1
-        this.chair6user = true
+        this.chair6 = 3
+        this.chair4user = true
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 2:
         this.chair1 = 5
-        this.chair2 = 3
-        this.chair3 = 6
-        this.chair4 = 1
-        this.chair5 = 4
-        this.chair6 = 2
-        this.chair6user = true
+        this.chair2 = 6
+        this.chair3 = 1
+        this.chair4 = 2
+        this.chair5 = 3
+        this.chair6 = 4
+        this.chair4user = true
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 3:
-        this.chair1 = 4
-        this.chair2 = 6
+        this.chair1 = 6
+        this.chair2 = 1
         this.chair3 = 2
-        this.chair4 = 5
-        this.chair5 = 1
-        this.chair6 = 3
-        this.chair6user = true
+        this.chair4 = 3
+        this.chair5 = 4
+        this.chair6 = 5
+        this.chair4user = true
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 4:
-        this.chair1 = 3
-        this.chair2 = 1
-        this.chair3 = 5
-        this.chair4 = 2
-        this.chair5 = 6
-        this.chair6 = 4
-        this.chair6user = true
-        this.socket.emit('select position', { position: pos, code: this.lobbyCode });
-        break;
-      case 5:
-        this.chair1 = 2
-        this.chair2 = 4
-        this.chair3 = 1
-        this.chair4 = 6
-        this.chair5 = 3
-        this.chair6 = 5
-        this.chair6user = true
-        this.socket.emit('select position', { position: pos, code: this.lobbyCode });
-        break;
-      case 6:
         this.chair1 = 1
         this.chair2 = 2
         this.chair3 = 3
         this.chair4 = 4
         this.chair5 = 5
         this.chair6 = 6
-        this.chair6user = true
+        this.chair4user = true
+        this.socket.emit('select position', { position: pos, code: this.lobbyCode });
+        break;
+      case 5:
+        this.chair1 = 2
+        this.chair2 = 3
+        this.chair3 = 4
+        this.chair4 = 5
+        this.chair5 = 6
+        this.chair6 = 1
+        this.chair4user = true
+        this.socket.emit('select position', { position: pos, code: this.lobbyCode });
+        break;
+      case 6:
+        this.chair1 = 3
+        this.chair2 = 4
+        this.chair3 = 5
+        this.chair4 = 6
+        this.chair5 = 1
+        this.chair6 = 2
+        this.chair4user = true
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       default:

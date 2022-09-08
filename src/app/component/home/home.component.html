@@ -50,7 +50,18 @@
         <div class="btn join-btn" (click)="joinLobbys(data.code)">JOIN LOBBY</div>
       </div>
     </div>
-<div class="profile"></div>
+    <div class="profile row">
+      <div class="avatar">
+        <img src="../assets/picture/kid1.png" class="" style="width: 350px ;">
+      </div>
+      <div class="stats-player row">
+        <img src="../assets/picture/Ranking.png" class="ranking" style="width: 100px ;">
+        <div>PLAYER CARD</div>
+        <div class="name-player">NAME <div >{{this.name}}</div></div>
+        <div class="name-player">EMAIL <div >{{this.email}}</div></div>
+        <div class="name-player">UID <div >{{this.uuid}}</div></div>
+      </div>
+    </div>
   </aside>
   <!-- <input type="checkbox" id="active">
   <label for="active" class="menu-btn"><span></span></label>
