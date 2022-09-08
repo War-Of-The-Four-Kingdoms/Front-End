@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  authUrl = 'http://localhost:8000/oauth/token';
+  authUrl = 'http://localhost:8000/api';
   apiUrl = 'http://localhost:8000/api';
   options: any;
 
@@ -20,19 +20,25 @@ export class AuthService {
       })
     };
   }
+
   login(e: string, p: string) {
-    return this.http.post(this.authUrl, {
-      grant_type: 'password',
-      client_id: '2',
-      client_secret: 'srKHlpLcnyLaBhZmQsAIuztgY7C0N8gjZPFKjYgu',
-      username: e,
+    return this.http.post(this.authUrl + '/login', {
+      email: e,
       password: p,
-      scope: ''
     }, this.options);
   }
 
+  detail() {
+    console.log(localStorage.getItem('access_token'));
+    
+    return this.http.post(this.apiUrl + '/details', "", { headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), })
+  }
+
+  refresh() {
+    return this.http.post(this.apiUrl + '/refresh', { refresh_token: localStorage.getItem('refresh_token') }, this.options)
+  }
+
   logout() {
-    this.options.headers.Authorization = 'Bearer ' + localStorage.getItem('access_token');
-    return this.http.get(this.apiUrl + '/token/revoke', this.options);
+    return this.http.get(this.apiUrl + '/revoke', { headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), })
   }
 }

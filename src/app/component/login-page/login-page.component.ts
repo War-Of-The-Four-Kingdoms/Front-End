@@ -43,17 +43,19 @@ export class LoginPageComponent implements OnInit {
    * Login the user based on the form values
    */
   login(): void {
-    console.log('hi');
-
     this.loading = true;
     this.errors = false;
     this.authService.login(this.controls['email'].value, this.controls['password'].value)
       .subscribe((res: any) => {
-        // Store the access token in the localstorage
+        console.log(res);
+        let expireDate = new Date()
+        let timestamp = expireDate.getTime() + res.expires_in;
         localStorage.setItem('access_token', res.access_token);
+        localStorage.setItem('refresh_token', res.refresh_token);
+        localStorage.setItem('expires_in', timestamp)
         this.loading = false;
         // Navigate to home page
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       }, (err: any) => {
         // This error can be internal or invalid credentials
         // You need to customize this based on the error.status code

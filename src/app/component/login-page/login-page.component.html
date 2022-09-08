@@ -1,4 +1,48 @@
-<div class="container">
+<!-- 
+	<div class="section full-height">
+        <div class="container">
+            <div class="row">
+                <div class="col d-flex flex-row justify-content-center align-content-center pt-5 pb-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div [formGroup]="form">
+                                <h5 class="card-title">Authentication form</h5>
+                                <p class="card-text">Fill the following form and click on the <strong>Login</strong> button to
+                                    access the home page</p>
+                                <div class="row" *ngIf="errors">
+                                    <div class="col">
+                                        <div class="alert alert-danger">
+                                            <strong>Oops!</strong> You have entered invalid credentials
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="email">Email address</label>
+                                            <input type="email" id="email" formControlName="email" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Password</label>
+                                            <input type="password" id="password" formControlName="password" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col d-flex flex-row justify-content-center align-content-center mt-10" style="margin-top: 10px">
+                                        <button type="submit" (click)="login()" [disabled]="loading">Login</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+	
+  </div> -->
+
+<!-- <div class="container">
   <div class="row">
       <div class="col d-flex flex-row justify-content-center align-content-center pt-5 pb-5">
           <div class="card">
@@ -36,9 +80,11 @@
           </div>
       </div>
   </div>
-</div>
+</div> -->
+
+
   
-<!-- <body>
+<body>
    <a href="https://front.codes/" class="logo" target="_blank">
 </a>
 <div class="fancy-border">
@@ -54,17 +100,24 @@
                         <div class="card-3d-wrapper">
                             <div class="card-front">
                                 <div class="center-wrap">
-                                    <div class="section text-center">
+                                    <div class="section text-center" [formGroup]="form">
                                         <h4 class="mb-4 pb-3">Log In</h4>
-                                        <div class="form-group">
-                                            <input type="email" name="logemail" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off">
+                                        <div class="form-group" >
+                                            <input type="email" id="email" formControlName="email" class="form-control" name="logemail" class="form-style" placeholder="Your Email"  autocomplete="off">
                                             <i class="input-icon uil uil-at"></i>
                                         </div>	
                                         <div class="form-group mt-2">
-                                            <input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+                                            <input type="password" id="password" formControlName="password" class="form-control" name="logpass" class="form-style" placeholder="Your Password"  autocomplete="off">
+                                            <div class="row" *ngIf="errors">
+                                                <div class="col">
+                                                    <div class="alert alert-danger">
+                                                        <strong>Oops!</strong> You have entered invalid credentials
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <i class="input-icon uil uil-lock-alt"></i>
                                         </div>
-                                        <a href="#" class="btn mt-4" (click)="login()">Login</a>
+                                        <a  class="btn mt-4" (click)="login()">Login</a>
                                         <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
                                       </div>
                                   </div>
@@ -97,4 +150,4 @@
     </div>
 </div>
 </div>
-</body> -->
+</body>

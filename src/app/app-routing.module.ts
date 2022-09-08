@@ -12,14 +12,18 @@ const routes: Routes = [
   {
     path: 'lobby',
     component: LobbyComponent,
+    canActivate: [ AuthGuardService ],
+    
   },
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [ AuthGuardService ],
   },
   {
-    path: 'start',
+    path: 'start/:code',
     component: GameStartComponent,
+    canActivate: [ AuthGuardService ],
   },
   {
     path: 'login',

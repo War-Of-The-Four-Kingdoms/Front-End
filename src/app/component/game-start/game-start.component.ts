@@ -54,6 +54,7 @@ export class GameStartComponent implements OnInit {
     this.listen_position();
     this.socket.emit('get room info', {});
     this.socket.listen('leave lobby').subscribe((data: any) => {
+      console.log(data);
       
     });
     this.socket.listen('sctc').subscribe((data: any) => {
@@ -212,7 +213,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<p class="box">' + message + '</p>');
+      this.appendChat('<p class="text-end text-success message" style="font-size:24px;width:90%;">' + message + '</p>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
@@ -224,6 +225,7 @@ export class GameStartComponent implements OnInit {
     cl.insertAdjacentHTML('beforeend', message);
   }
   leave() {
+    this.socket.emit('select position', { position: 0, code: this.lobbyCode });
     this.socket.emit('leave lobby', { code: this.lobbyCode, max_player: this.roomMAX });
     this.router.navigate(['home']);
   }

@@ -1,5 +1,8 @@
 import { Component, ElementRef } from '@angular/core';
 import { WebSocketService } from "./web-socket.service";
+import { DatePipe } from '@angular/common';
+import { AuthService } from './services/auth.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,25 +12,35 @@ import { WebSocketService } from "./web-socket.service";
 export class AppComponent {
   title = 'front-end';
   isVisible = true;
-  username:any = "pong"
+  username: any = "pong"
   isVisibleMiddle = false;
-  constructor(private socket: WebSocketService,private elementRef:ElementRef){}
+  constructor(private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.socket.listen('set room').subscribe((room: any) => {
-      console.log(room)
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
-  });
-  this.socket.emit('start',this.username)
+    });
+    this.socket.emit('start', this.username)
+
+    let expireDate = new Date()
+    let timestamp = expireDate.getTime();
+    let expired = localStorage.getItem('expires_in')
+    if (parseInt(String(expired)) <= parseInt(String(timestamp))) {
+      this.authService.refresh().subscribe((res: any) => {
+
+      })
+    }
+
+
   }
 
 
   handleOk(): void {
     this.isVisible = false;
-    this.socket.emit('start',this.username)
+    this.socket.emit('start', this.username)
   }
 
 
 }
-  
+
 
