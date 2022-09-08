@@ -49,7 +49,7 @@ export class LoginPageComponent implements OnInit {
       .subscribe((res: any) => {
         console.log(res);
         let expireDate = new Date()
-        let timestamp = expireDate.getTime() + res.expires_in;
+        let timestamp = Math.floor(expireDate.getTime()/1000) + res.expires_in;
         localStorage.setItem('access_token', res.access_token);
         localStorage.setItem('refresh_token', res.refresh_token);
         localStorage.setItem('expires_in', timestamp)

@@ -23,10 +23,16 @@ export class AppComponent {
     this.socket.emit('start', this.username)
 
     let expireDate = new Date()
-    let timestamp = expireDate.getTime();
+    let timestamp = Math.floor(expireDate.getTime()/1000);
     let expired = localStorage.getItem('expires_in')
     if (parseInt(String(expired)) <= parseInt(String(timestamp))) {
       this.authService.refresh().subscribe((res: any) => {
+        console.log(res);
+        let expireDate = new Date()
+        let timestamp = Math.floor(expireDate.getTime()/1000) + res.expires_in;
+        localStorage.setItem('access_token', res.access_token);
+        localStorage.setItem('refresh_token', res.refresh_token);
+        localStorage.setItem('expires_in', timestamp)
 
       })
     }
