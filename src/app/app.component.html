@@ -3,10 +3,11 @@
 <!-- <nz-modal  nzCentered [(nzVisible)]="isVisible" nzTitle="กรุณากรอกชื่อ"  (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
       <div><input class="bold" type="text" id="code" placeholder="enter username" [(ngModel)]="username"></div>
-      
+
     </ng-container>
   </nz-modal> -->
+<div id="exist" *ngIf="alreadyOpen">
+  <div id="exist-text">Already Open in Other Tap</div>
+</div>
 
-
-  
 </router-outlet>
