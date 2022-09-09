@@ -29,7 +29,15 @@ export class GameStartComponent implements OnInit {
   chair3user: boolean = false;
   chair4user: boolean = false;
   chair5user: boolean = false;
+  hosting1: boolean = false;
+  hosting2: boolean = false;
+  hosting3: boolean = false;
+  hosting4: boolean = false;
+  hosting5: boolean = false;
+  hosting6: boolean = false;
   myId: any;
+  hosting: boolean = false;
+  roomHost: any;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router) {
@@ -58,28 +66,110 @@ export class GameStartComponent implements OnInit {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
+      this.hosting1 = false
+      this.hosting2 = false
+      this.hosting3 = false
+      this.hosting4 = false
+      this.hosting5 = false
+      this.hosting6 = false
       console.log(room);
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       this.myId = room.uid;
+      this.roomHost = room.host
+      console.log(this.roomHost);
       if (room.is_host == true) {
         this.host = true
+      } else {
+        room.positions.forEach((d: any) => {
+          if (this.chair1 == d.position) {
+            this.chair1user = true
+            if (d.uid == this.roomHost) {
+              this.hosting1 = true
+            }
+          } else if (this.chair2 == d.position) {
+            this.chair2user = true
+            if (d.uid == this.roomHost) {
+              this.hosting2 = true
+            }
+          } else if (this.chair3 == d.position) {
+            this.chair3user = true
+            if (d.uid == this.roomHost) {
+              this.hosting3 = true
+            }
+          } else if (this.chair4 == d.position) {
+            this.chair4user = true
+            if (d.uid == this.roomHost) {
+              this.hosting4 = true
+            }
+          } else if (this.chair5 == d.position) {
+            this.chair5user = true
+            if (d.uid == this.roomHost) {
+              this.hosting5 = true
+            }
+          }
+          else if (this.chair6 == d.position) {
+            this.chair6user = true
+            if (d.uid == this.roomHost) {
+              this.hosting6 = true
+            }
+          }
+        });
       }
 
     });
-    this.socket.listen('change host').subscribe((uid) => {
+    this.socket.listen('change host').subscribe((uid:any) => {
+      this.roomHost = uid.host
+      this.hosting1 = false
+      this.hosting2 = false
+      this.hosting3 = false
+      this.hosting4 = false
+      this.hosting5 = false
+      this.hosting6 = false
       console.log(uid);
       console.log(this.myId);
-
-      if (this.myId == uid) {
+      if (this.myId == uid.host) {
         console.log('yes');
-
         this.host = true
-      }else{
+        this.hosting4 = true
+      } else {
         console.log('no');
-
         this.host = false
+        uid.positions.forEach((d: any) => {
+          if (this.chair1 == d.position) {
+            this.chair1user = true
+            if (d.uid == uid.host) {
+              this.hosting1 = true
+            }
+          } else if (this.chair2 == d.position) {
+            this.chair2user = true
+            if (d.uid == uid.host) {
+              this.hosting2 = true
+            }
+          } else if (this.chair3 == d.position) {
+            this.chair3user = true
+            if (d.uid == uid.host) {
+              this.hosting3 = true
+            }
+          } else if (this.chair4 == d.position) {
+            this.chair4user = true
+            if (d.uid == uid.host) {
+              this.hosting4 = true
+            }
+          } else if (this.chair5 == d.position) {
+            this.chair5user = true
+            if (d.uid == uid.host) {
+              this.hosting5 = true
+            }
+          }
+          else if (this.chair6 == d.position) {
+            this.chair6user = true
+            if (d.uid == uid.host) {
+              this.hosting6 = true
+            }
+          }
+        });
       }
     });
   }
@@ -92,42 +182,49 @@ export class GameStartComponent implements OnInit {
       this.chair4user = false
       this.chair5user = false
       this.chair6user = false
-      console.log(data);
+      this.hosting1 = false
+      this.hosting2 = false
+      this.hosting3 = false
+      this.hosting4 = false
+      this.hosting5 = false
+      this.hosting6 = false
       data.forEach((d: any) => {
-        console.log(d.position);
-
         if (this.chair1 == d.position) {
           this.chair1user = true
-          console.log(d.position);
-          console.log(this.chair1);
-
+          if (d.uid == this.roomHost) {
+            this.hosting1 = true
+          }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
+          if (d.uid == this.roomHost) {
+            this.hosting2 = true
+          }
         } else if (this.chair3 == d.position) {
           this.chair3user = true
+          if (d.uid == this.roomHost) {
+            this.hosting3 = true
+          }
         } else if (this.chair4 == d.position) {
           this.chair4user = true
+          if (d.uid == this.roomHost) {
+            this.hosting4 = true
+          }
         } else if (this.chair5 == d.position) {
+          console.log(this.chair5);
+          console.log(d.position);
+
           this.chair5user = true
+          if (d.uid == this.roomHost) {
+            this.hosting5 = true
+          }
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
+          if (d.uid == this.roomHost) {
+            this.hosting6 = true
+          }
         }
-        // switch (d.position) {
-        //   case 1:
-        //     this.chair1user = true
-        //     break;
-        //   case 2:
-        //     this.chair2user = true
-        //     break;
-        // }
-
       });
-
-      // for (let j = 0; j <= data.length; j++){
-
-      // }
-
     });
   }
 
@@ -141,6 +238,9 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 2
         this.chair6 = 3
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 2:
@@ -151,6 +251,9 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 3
         this.chair6 = 4
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 3:
@@ -161,6 +264,9 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 4
         this.chair6 = 5
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 4:
@@ -171,6 +277,9 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 5
         this.chair6 = 6
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 5:
@@ -181,6 +290,9 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 6
         this.chair6 = 1
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 6:
@@ -191,10 +303,12 @@ export class GameStartComponent implements OnInit {
         this.chair5 = 1
         this.chair6 = 2
         this.chair4user = true
+        if (this.host == true) {
+          this.hosting4 = true
+        }
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       default:
-
         break;
     }
   }
