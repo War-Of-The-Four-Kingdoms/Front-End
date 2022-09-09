@@ -17,6 +17,9 @@ export class LoginPageComponent implements OnInit {
   form!: FormGroup
   loading: boolean = false;
   errors: boolean = false;
+  register!: FormGroup
+  regErrors: boolean = false;
+  regOk: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,10 +41,39 @@ export class LoginPageComponent implements OnInit {
         Validators.required
       ]
     });
+    this.register = this.fb.group({
+      name: [
+        '',
+        [Validators.required,]
+      ],
+      email: [
+        '',
+        [Validators.required, Validators.email]
+      ],
+      password: [
+        '',
+        Validators.required
+      ],
+      c_password: [
+        '',
+        Validators.required
+      ]
+    })
   }
   /**
    * Login the user based on the form values
    */
+  registers(): void {
+    this.authService.register(this.register.controls['name'].value, this.register.controls['email'].value,
+      this.register.controls['password'].value, this.register.controls['c_password'].value).subscribe
+      ((res: any) => {
+        console.log(res);
+        this.regOk = true
+      }, (err: any) => {
+        this.loading = false;
+        this.regErrors = true
+      });
+  }
   login(): void {
     this.loading = true;
     this.errors = false;
@@ -49,7 +81,7 @@ export class LoginPageComponent implements OnInit {
       .subscribe((res: any) => {
         console.log(res);
         let expireDate = new Date()
-        let timestamp = Math.floor(expireDate.getTime()/1000) + res.expires_in;
+        let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
         localStorage.setItem('access_token', res.access_token);
         localStorage.setItem('refresh_token', res.refresh_token);
         localStorage.setItem('expires_in', timestamp)
