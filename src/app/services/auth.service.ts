@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   register(n: string, e: string,p:string,cp:string){
-    return this.http.post(this.authUrl + '/register', {
+    return this.http.post(this.apiUrl + '/register', {
       name: n,
       email: e,
       password:p,
