@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   title: 'Local Environment Heading',
-  apiURL: 'localhost:8000/api',
-  socketURL: 'localhost:3000'
+  apiURL: 'http://localhost:8000/api',
+  socketURL: 'http://localhost:3000'
 };
 
 /*

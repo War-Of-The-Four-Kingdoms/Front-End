@@ -54,6 +54,9 @@ export class GameStartComponent implements OnInit {
     } )
   }
   ngOnInit(): void {
+    this.socket.listen('assign roles').subscribe((data: any) => {
+      console.log(data);
+    });
     if(this.is_started){
       window.addEventListener("beforeunload", function (e) {
         var confirmationMessage = "You will lost the process.";
