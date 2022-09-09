@@ -1,15 +1,16 @@
 <body class="">
-<!-- pass button -->
+  <!-- pass button -->
   <div class="wrapper">
     <div class="link_wrapper">
       <a href="#">PASS</a>
       <div class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
-          <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z"/>
+          <path
+            d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
         </svg>
       </div>
     </div>
-    
+
   </div>
   <!-- pass button -->
   <!-- <div class="chat-content">
@@ -22,23 +23,23 @@
   <div class="btn accept-btn" (click)="start()" *ngIf="this.host">Start</div>
   <div class="fancy-border">
     <div class="row">
-        <div class="chat-content">
-            <div class="chatline w-full">
-              <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
-            </div>
+      <div class="chat-content">
+        <div class="chatline w-full">
+          <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
         </div>
-        <div class="chat-section">
-            <div class="chat-box">
-                <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="" >
-                </div>
-            </div>
-            
+      </div>
+      <div class="chat-section">
+        <div class="chat-box">
+          <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+          </div>
         </div>
+
+      </div>
     </div>
-</div>
+  </div>
   <div class="timer">
-  <img src="../assets/picture/times.png" class="timer" style="width: 95px;">
-</div>
+    <img src="../assets/picture/times.png" class="timer" style="width: 95px;">
+  </div>
   <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
   <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"
     nzWidth="335px" [nzFooter]=null>
@@ -84,12 +85,16 @@
 
   </div>
   <div class="user">
-    <div class="circles" *ngIf="!this.chair1user" >
+    <div class="circles" *ngIf="!this.chair1user">
       <p class="circle-content" (click)="select_position(this.chair1)">
         {{this.chair1}}
       </p>
     </div>
-    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair1user"></div>
+    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1"> <img class="circle"
+        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair1user"></div>
+
+  </div>
+
 
   <div class="user2">
     <div class="circles" *ngIf="!this.chair6user">
@@ -97,36 +102,52 @@
         {{this.chair6}}
       </p>
     </div>
-    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"></div>
+    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting6"><img class="circle"
+        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"></div>
+
+  </div>
   <div class="user3">
-    <div class="circles" *ngIf="!this.chair2user"  >
+    <div class="circles" *ngIf="!this.chair2user">
       <p class="circle-content" (click)="select_position(this.chair2)">
         {{this.chair2}}
       </p>
     </div>
-    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"></div>
+    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2"> <img class="circle"
+        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"></div>
+
+  </div>
 
   <div class="user4">
-    <div class="circles"  *ngIf="!this.chair5user" >
+    <div class="circles" *ngIf="!this.chair5user">
       <p class="circle-content" (click)="select_position(this.chair5)">
         {{this.chair5}}
       </p>
     </div>
-    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair3user"></div>
-    <div class="user5">
-      <div class="circles"  *ngIf="!this.chair3user" >
-        <p class="circle-content" (click)="select_position(this.chair3)">
-          {{this.chair3}}
-        </p>
-      </div>
-      <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair5user"></div>
+    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5"></div>
+    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler"
+      *ngIf="this.chair5user">
+  </div>
+  <div class="user5">
+    <div class="circles" *ngIf="!this.chair3user">
+      <p class="circle-content" (click)="select_position(this.chair3)">
+        {{this.chair3}}
+      </p>
+    </div>
+    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3"></div>
+    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler"
+      *ngIf="this.chair3user">
+  </div>
   <div class="user6">
     <div class="circles" *ngIf="!this.chair4user">
       <p class="circle-content" (click)="select_position(this.chair4)">
         {{this.chair4}}
       </p>
     </div>
-    <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair4user"></div>
+    <div> <img class="circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler"
+        *ngIf="this.chair4user"> <img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4">
+    </div>
+
+  </div>
   <div class="hexagon">
     <div class="title">
       WAR4KING

@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   isVisibleMiddle = false;
   array = [1, 2, 3, 4];
   numbers = [5, 6, 7, 8, 9, 10];
@@ -48,16 +49,19 @@ export class HomeComponent implements OnInit {
 
     // }
     this.socket.listen('user checked').subscribe((data: any) => {
-      if(data.is_created){
+      if (data.is_created) {
         this.router.navigate(['start' + '/' + data.code]);
-      }else{
-        window.location.reload();
+      } else {
+        alert("Your Name already Taken");
+        setTimeout(function () {
+          window.location.reload();
+        }, 3000)
       }
     });
 
   }
 
-  getDetails(): string{
+  getDetails(): string {
     this.authService.detail()
         .subscribe((res: any) => {
           this.name = res.success.name
