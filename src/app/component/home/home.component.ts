@@ -31,14 +31,7 @@ export class HomeComponent implements OnInit {
       this.roomsarray = rooms
     });
     this.getDetails();
-    if(sessionStorage.getItem('username') == null){
-      this.socket.emit('start', {
-        username: this.name,
-        uuid: this.uuid,
-      });
-      sessionStorage.setItem('username',this.name);
-      sessionStorage.setItem('uuid',this.uuid);
-    }
+
     // let expireDate = new Date()
     // let timestamp = Math.floor(expireDate.getTime() / 1000);
     // let expired = localStorage.getItem('expires_in')
@@ -74,6 +67,14 @@ export class HomeComponent implements OnInit {
           this.name = res.success.name
           this.email = res.success.email
           this.uuid = res.success.uuid
+          if(sessionStorage.getItem('username') == null){
+            this.socket.emit('start', {
+              username: this.name,
+              uuid: this.uuid,
+            });
+            sessionStorage.setItem('username',this.name);
+            sessionStorage.setItem('uuid',this.uuid);
+          }
           // this.socket.emit('start', { username: this.name, uuid: this.uuid })
     });
     return 'success';

@@ -56,7 +56,7 @@ export class GameStartComponent implements OnInit {
   ngOnInit(): void {
     if(this.is_started){
       window.addEventListener("beforeunload", function (e) {
-        var confirmationMessage = "Refresh?";
+        var confirmationMessage = "You will lost the process.";
         e.returnValue = confirmationMessage;
         return confirmationMessage;
       });
