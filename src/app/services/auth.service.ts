@@ -28,6 +28,15 @@ export class AuthService {
     }, this.options);
   }
 
+  register(n: string, e: string,p:string,cp:string){
+    return this.http.post(this.authUrl + '/register', {
+      name: n,
+      email: e,
+      password:p,
+      c_password:cp
+    }, this.options);
+  }
+
   detail() {
     return this.http.post(this.apiUrl + '/details', "", { headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), })
   }
