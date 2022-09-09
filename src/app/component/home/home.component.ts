@@ -29,36 +29,31 @@ export class HomeComponent implements OnInit {
     this.socket.listen('set room list').subscribe((rooms: any) => {
       this.roomsarray = rooms
     });
-    let expireDate = new Date()
-    let timestamp = Math.floor(expireDate.getTime() / 1000);
-    let expired = localStorage.getItem('expires_in')
-    if (parseInt(String(expired)) <= parseInt(String(timestamp))) {
-      this.authService.refresh().subscribe((res: any) => {
-        let expireDate = new Date()
-        let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
-        localStorage.setItem('access_token', res.access_token);
-        localStorage.setItem('refresh_token', res.refresh_token);
-        localStorage.setItem('expires_in', timestamp)
-        let a = this.getDetails();
-
-        // this.authService.detail().subscribe((res: any) => {
-        //   this.name = res.success.name
-        //   this.email = res.success.email
-        //   this.uuid = res.success.uuid
-        //   this.socket.emit('start', { username: this.name, uuid: this.uuid })
-        // });
-      })
-    } else {
-      let a = this.getDetails();
-
-      // this.authService.detail()
-      //   .subscribe((res: any) => {
-      //     this.name = res.success.name
-      //     this.email = res.success.email
-      //     this.uuid = res.success.uuid
-      //     this.socket.emit('start', { username: this.name, uuid: this.uuid })
-      //   });
+    this.getDetails();
+    if(sessionStorage.getItem('username') == null){
+      this.socket.emit('start', {
+        username: this.name,
+        uuid: this.uuid,
+      });
+      sessionStorage.setItem('username',this.name);
+      sessionStorage.setItem('uuid',this.uuid);
     }
+    // let expireDate = new Date()
+    // let timestamp = Math.floor(expireDate.getTime() / 1000);
+    // let expired = localStorage.getItem('expires_in')
+    // if (parseInt(String(expired)) <= parseInt(String(timestamp))) {
+    //   this.authService.refresh().subscribe((res: any) => {
+    //     let expireDate = new Date()
+    //     let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
+    //     localStorage.setItem('access_token', res.access_token);
+    //     localStorage.setItem('refresh_token', res.refresh_token);
+    //     localStorage.setItem('expires_in', timestamp)
+    //     let a = this.getDetails();
+    //   })
+    // } else {
+    //   let a = this.getDetails();
+
+    // }
     this.socket.listen('user checked').subscribe((data: any) => {
       if(data.is_created){
         this.router.navigate(['start' + '/' + data.code]);
@@ -75,7 +70,7 @@ export class HomeComponent implements OnInit {
           this.name = res.success.name
           this.email = res.success.email
           this.uuid = res.success.uuid
-          this.socket.emit('start', { username: this.name, uuid: this.uuid })
+          // this.socket.emit('start', { username: this.name, uuid: this.uuid })
     });
     return 'success';
   }

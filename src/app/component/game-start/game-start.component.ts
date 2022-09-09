@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { WebSocketService } from "../../web-socket.service";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -30,17 +30,30 @@ export class GameStartComponent implements OnInit {
   chair4user: boolean = false;
   chair5user: boolean = false;
   myId: any;
+  roomcode: any;
+  is_started: boolean = false;
 
-
-  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router) {
+  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
       headers: new HttpHeaders({
         Accept: 'application/json',
         'Content-Type': 'application/json'
       })
     })
+    this._ActivatedRoute.paramMap.subscribe((param) => {
+      this.roomcode = param.get('code');
+      this.roomMAX = sessionStorage.getItem('Max');
+    } )
   }
   ngOnInit(): void {
+    if(this.is_started){
+      window.addEventListener("beforeunload", function (e) {
+        var confirmationMessage = "Refresh?";
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+      });
+    }
+
     this.socket.listen('your turn').subscribe((data: any) => {
       console.log('your turn');
       var counter = 0;
@@ -53,7 +66,11 @@ export class GameStartComponent implements OnInit {
       }, 1000);
     });
     this.listen_position();
-    this.socket.emit('get room info', {});
+
+      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username')});
+
+
+
     this.socket.listen('sctc').subscribe((data: any) => {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
@@ -62,6 +79,7 @@ export class GameStartComponent implements OnInit {
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
+      sessionStorage.setItem('Max',room.max);
       this.myId = room.uid;
       if (room.is_host == true) {
         this.host = true
@@ -94,7 +112,7 @@ export class GameStartComponent implements OnInit {
       this.chair6user = false
       console.log(data);
       data.forEach((d: any) => {
-        console.log(d.position);
+        // console.log(d.position);
 
         if (this.chair1 == d.position) {
           this.chair1user = true
