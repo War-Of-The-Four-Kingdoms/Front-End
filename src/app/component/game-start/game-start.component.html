@@ -18,8 +18,8 @@
       <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
     </div>
   </div> -->
-  <div class="btn join-btn" (click)="leave()">LEAVE LOBBY</div>
-  <div class="btn accept-btn" (click)="start()" *ngIf="this.host">Start</div>
+  <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
+  <div class="btn accept-btn" (click)="start()" *ngIf="this.host && this.started != true">Start</div>
   <div class="fancy-border">
     <div class="row">
       <div class="chat-content">
@@ -36,8 +36,8 @@
       </div>
     </div>
   </div>
-  <div class="timer">
-    <img src="../assets/picture/times.png" class="timer" style="width: 95px;">
+  <div [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
+    <img src="../assets/picture/stopwatch.png"  style="width: 95px;" *ngIf="this.clock">
   </div>
   <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
   <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"
@@ -82,7 +82,8 @@
       </p>
     </div>
     <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler"
-        *ngIf="this.hosting6"><img [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave: this.chair6 == this.quitRage && this.chair6 != this.queue}"
+        *ngIf="this.hosting6"><img
+        [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave: this.chair6 == this.quitRage && this.chair6 != this.queue}"
         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"><img
         class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
 
@@ -94,7 +95,8 @@
       </p>
     </div>
     <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
-      <img [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave: this.chair2 == this.quitRage && this.chair2 != this.queue}"
+      <img
+        [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave: this.chair2 == this.quitRage && this.chair2 != this.queue}"
         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"><img
         class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2"></div>
 
@@ -108,7 +110,8 @@
     </div>
     <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5">
     </div>
-    <img [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave: this.chair5 == this.quitRage && this.chair5 != this.queue}"
+    <img
+      [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave: this.chair5 == this.quitRage && this.chair5 != this.queue}"
       src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair5user">
     <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
   </div>
@@ -120,7 +123,8 @@
     </div>
     <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
     </div>
-    <img [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave: this.chair3 == this.quitRage && this.chair3 != this.queue}"
+    <img
+      [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave: this.chair3 == this.quitRage && this.chair3 != this.queue}"
       src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair3user"><img
       class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
   </div>
@@ -130,7 +134,8 @@
         {{this.chair4}}
       </p>
     </div>
-    <div> <img [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave: this.chair4 == this.quitRage && this.chair4 != this.queue}"
+    <div> <img
+        [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave: this.chair4 == this.quitRage && this.chair4 != this.queue}"
         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair4user"> <img
         class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4"><img
         class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown4">

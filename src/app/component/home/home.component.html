@@ -47,7 +47,7 @@
       <div class="textalign">CUSTOM ROOM</div>
       <div class="rooms-align" *ngFor="let data of this.roomsarray">
         <div>ROOM's Name:{{data.code}}</div>
-        <div>PLAYER:{{data.players.length}}/{{data.max}}</div>
+        <div>PLAYER:{{data.positions.length}}/{{data.max}}</div>
         <div class="btn join-btn" (click)="joinLobbys(data.code)">JOIN LOBBY</div>
       </div>
     </div>

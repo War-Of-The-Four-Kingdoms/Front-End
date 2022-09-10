@@ -2,10 +2,48 @@
 
 .timer {
   position: absolute;
-  top: 0%;
-  left: 88%;
+  top: 87%;
+  left: 55%;
+  animation: color-change 3s infinite;
+  color: white;
+  font-size: 50px;
+}
+
+.timer1 {
+  position: absolute;
+  top: 10%;
+  left: 55%;
   animation: color-change 3s infinite;
 }
+
+.timer2 {
+  position: absolute;
+  top: 30%;
+  left: 78%;
+  animation: color-change 3s infinite;
+}
+
+.timer3 {
+  position: absolute;
+  top: 65%;
+  left: 77%;
+  animation: color-change 3s infinite;
+}
+
+.timer5 {
+  position: absolute;
+  top: 65%;
+  left: 19%;
+  animation: color-change 3s infinite;
+}
+
+.timer6 {
+  position: absolute;
+  top:32%;
+  left: 18%;
+  animation: color-change 3s infinite;
+}
+
 
 @keyframes color-change {
   0% {

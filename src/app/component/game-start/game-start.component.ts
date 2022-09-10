@@ -55,6 +55,9 @@ export class GameStartComponent implements OnInit {
   activeClass: boolean = false;
   queue: any;
   quitRage: any;
+  started: boolean = false;
+  counterTime: any = 0;
+  clock: boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -65,15 +68,10 @@ export class GameStartComponent implements OnInit {
     })
     this._ActivatedRoute.paramMap.subscribe((param) => {
       this.roomcode = param.get('code');
-<<<<<<< HEAD
-      this.roomMAX = sessionStorage.getItem('Max');
-    })
-=======
 
-    } )
+    })
     this.roomMAX = sessionStorage.getItem('Max');
-    this.is_private = (sessionStorage.getItem('private')==='true');
->>>>>>> 8933f7f65de6009213258dcdcb83a094edddcabd
+    this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
     this.socket.listen('assign roles').subscribe((data: any) => {
@@ -128,18 +126,20 @@ export class GameStartComponent implements OnInit {
     }
 
     this.socket.listen('next turn').subscribe((pos: any) => {
+      this.clock = true
       this.queue = pos
       if (this.myPos == pos) {
-        this.activeClass = !this.activeClass
+        this.counterTime = 0
         console.log('your turn');
       } else {
+        this.counterTime = 0
         console.log('other turn');
       }
-      var counter = 0;
+      this.counterTime = 0;
       var interval = this.interval = setInterval(() => {
-        counter++;
-        console.log(counter);
-        if (counter == 5) {
+        this.counterTime++;
+        console.log(this.counterTime);
+        if (this.counterTime == 5) {
           clearInterval(interval);
         }
       }, 1000);
@@ -147,11 +147,7 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
 
-<<<<<<< HEAD
-    this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username') });
-=======
-      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
->>>>>>> 8933f7f65de6009213258dcdcb83a094edddcabd
+    this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
 
 
 
@@ -173,7 +169,7 @@ export class GameStartComponent implements OnInit {
       this.myPosId = room.uid;
       this.roomHost = room.host
       this.is_private = room.private;
-      sessionStorage.setItem('private',room.private);
+      sessionStorage.setItem('private', room.private);
       console.log(this.roomHost);
       if (room.is_host == true) {
         this.host = true
@@ -421,6 +417,7 @@ export class GameStartComponent implements OnInit {
 
   start(): void {
     this.socket.emit('start game', { code: this.lobbyCode });
+    this.started = true
   }
 
   pass(): void {
