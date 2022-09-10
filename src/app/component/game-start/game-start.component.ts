@@ -65,8 +65,12 @@ export class GameStartComponent implements OnInit {
       });
     }
 
-    this.socket.listen('your turn').subscribe((data: any) => {
-      console.log('your turn');
+    this.socket.listen('next turn').subscribe((pos: any) => {
+      if(this.chair4==pos){
+        console.log('your turn');
+      }else{
+        console.log('other turn');
+      }
       var counter = 0;
       var interval = this.interval = setInterval(() => {
         counter++;
