@@ -207,6 +207,9 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('player leave').subscribe((data: any) => {
       console.log(data);
     });
+    this.socket.listen('skip').subscribe(() => {
+      clearInterval(this.interval);
+    });
   }
 
   listen_position() {
