@@ -52,20 +52,20 @@ export class HomeComponent implements OnInit {
 
   getDetails(): string {
     this.authService.detail()
-      .subscribe((res: any) => {
-        this.name = res.success.name
-        this.email = res.success.email
-        this.uuid = res.success.uuid
-        if (sessionStorage.getItem('username') == null) {
+        .subscribe((res: any) => {
+          this.name = res.success.name
+          this.email = res.success.email
+          this.uuid = res.success.uuid
           this.socket.emit('start', {
             username: this.name,
             uuid: this.uuid,
           });
-          sessionStorage.setItem('username', this.name);
-          sessionStorage.setItem('uuid', this.uuid);
-        }
-        // this.socket.emit('start', { username: this.name, uuid: this.uuid })
-      });
+          if(sessionStorage.getItem('username') == null){
+            sessionStorage.setItem('username',this.name);
+            sessionStorage.setItem('uuid',this.uuid);
+          }
+          // this.socket.emit('start', { username: this.name, uuid: this.uuid })
+    });
     return 'success';
   }
   createLobby(): void {

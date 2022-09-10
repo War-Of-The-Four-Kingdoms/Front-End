@@ -40,6 +40,16 @@ export class GameStartComponent implements OnInit {
   roomHost: any;
   roomcode: any;
   is_started: boolean = false;
+  role: any;
+  extra_hp: any;
+  crown1: boolean = false;
+  crown2: boolean = false;
+  crown3: boolean = false;
+  crown4: boolean = false;
+  crown5: boolean = false;
+  crown6: boolean = false;
+  king_pos: any;
+  king_uid: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -51,10 +61,93 @@ export class GameStartComponent implements OnInit {
     this._ActivatedRoute.paramMap.subscribe((param) => {
       this.roomcode = param.get('code');
       this.roomMAX = sessionStorage.getItem('Max');
-    } )
+    })
   }
   ngOnInit(): void {
-    if(this.is_started){
+    this.socket.listen('assign roles').subscribe((data: any) => {
+      console.log(data);
+      
+      this.crown1 =false
+      this.crown2 =false
+      this.crown3 =false
+      this.crown4 =false
+      this.crown5 =false
+      this.crown6 =false
+      data.forEach((data: any) => {
+        if (data.role == 'king') {
+          this.king_pos = data.position
+          this.king_uid = data.uid
+          console.log(this.king_uid);
+          
+        }
+      });
+      if (this.myId == this.king_uid) {
+        this.role = 'king'
+        this.extra_hp = 1
+        this.crown4 = true
+      } else {
+        this.crown4 = false
+        data.forEach((data: any) => {
+          if (this.chair1 == this.king_pos) {
+            this.crown1 = true
+          } else if (this.chair2 == this.king_pos) {
+            this.crown2 = true
+          }
+          else if (this.chair3 == this.king_pos) {
+            this.crown3 = true
+          }
+          else if (this.chair4 == this.king_pos) {
+            this.crown4 = true
+          }
+          else if (this.chair5 == this.king_pos) {
+            this.crown5 = true
+          }
+          else if (this.chair6 == this.king_pos) {
+            this.crown6 = true
+          }
+        });
+      }
+
+      // if (this.myId == data.uid) {
+      //   this.role = data.role
+      //   this.extra_hp = data.extra_hp
+      //   if (this.role == 'king') {
+      //     this.crown4 = true
+      //   }
+      // } else {
+      //   data.forEach((data: any) => {
+      //     if (this.chair1 == data.position) {
+      //       if (data.role == 'king') {
+      //         this.crown1 = true
+      //       }
+      //     } else if (this.chair2 == data.positon) {
+      //       if (data.role == 'king') {
+      //         this.crown2 = true
+      //       }
+      //     } else if (this.chair3 == data.positon) {
+      //       if (data.role == 'king') {
+      //         this.crown3 = true
+      //       }
+      //     }
+      //     else if (this.chair4 == data.positon) {
+      //       if (data.role == 'king') {
+      //         this.crown4 = true
+      //       }
+      //     } else if (this.chair5 == data.positon) {
+      //       if (data.role == 'king') {
+      //         this.crown5 = true
+      //       }
+      //     }
+      //     else if (this.chair6 == data.positon) {
+      //       if (data.role == 'king') {
+      //         this.crown6 = true
+      //       }
+      //     }
+
+      //   });
+      // }
+    });
+    if (this.is_started) {
       window.addEventListener("beforeunload", function (e) {
         var confirmationMessage = "You will lost the process.";
         e.returnValue = confirmationMessage;
@@ -73,9 +166,14 @@ export class GameStartComponent implements OnInit {
         }
       }, 1000);
     });
+
+    this.socket.listen('other turn').subscribe((data: any) => {
+    });
+
+
     this.listen_position();
 
-      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username')});
+    this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username') });
 
 
 
@@ -93,7 +191,7 @@ export class GameStartComponent implements OnInit {
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
-      sessionStorage.setItem('Max',room.max);
+      sessionStorage.setItem('Max', room.max);
       this.myId = room.uid;
       this.roomHost = room.host
       console.log(this.roomHost);
@@ -137,7 +235,7 @@ export class GameStartComponent implements OnInit {
       }
 
     });
-    this.socket.listen('change host').subscribe((uid:any) => {
+    this.socket.listen('change host').subscribe((uid: any) => {
       this.roomHost = uid.host
       this.hosting1 = false
       this.hosting2 = false

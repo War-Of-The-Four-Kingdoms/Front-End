@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  authUrl = 'http://localhost:8000/api';
-  apiUrl = 'http://localhost:8000/api';
+  apiUrl = environment.apiURL;
   options: any;
 
   constructor(
@@ -22,14 +22,14 @@ export class AuthService {
   }
 
   login(e: string, p: string) {
-    return this.http.post(this.authUrl + '/login', {
+    return this.http.post(this.apiUrl + '/login', {
       email: e,
       password: p,
     }, this.options);
   }
 
   register(n: string, e: string,p:string,cp:string){
-    return this.http.post(this.authUrl + '/register', {
+    return this.http.post(this.apiUrl + '/register', {
       name: n,
       email: e,
       password:p,
