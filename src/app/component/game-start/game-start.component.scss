@@ -262,6 +262,26 @@ body {
   height: 8em;
   object-fit: cover;
   width: 8em;
+  box-shadow: 0 0 15px 15px rgba(#6e2525, 1);
+}
+
+.circle2 {
+  background: rgba(15, 28, 63, 0.125);
+  border-radius: 50%;
+  height: 8em;
+  object-fit: cover;
+  width: 8em;
+  animation: anim-glow 2s ease infinite;
+}
+
+@keyframes anim-glow {
+	0% {
+		box-shadow: 0 0 rgba(#61EF61, 1);
+	}
+	100% {
+		box-shadow: 0 0 50px 50px transparent;
+		border-width: 10px;
+	}
 }
 
 .hosting{

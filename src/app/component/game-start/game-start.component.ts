@@ -35,7 +35,7 @@ export class GameStartComponent implements OnInit {
   hosting4: boolean = false;
   hosting5: boolean = false;
   hosting6: boolean = false;
-  myId: any;
+  myPosId: any;
   hosting: boolean = false;
   roomHost: any;
   roomcode: any;
@@ -50,6 +50,9 @@ export class GameStartComponent implements OnInit {
   crown6: boolean = false;
   king_pos: any;
   king_uid: any;
+  myPos: any;
+  activeClass: boolean = false;    
+  queue: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -66,22 +69,21 @@ export class GameStartComponent implements OnInit {
   ngOnInit(): void {
     this.socket.listen('assign roles').subscribe((data: any) => {
       console.log(data);
-      
-      this.crown1 =false
-      this.crown2 =false
-      this.crown3 =false
-      this.crown4 =false
-      this.crown5 =false
-      this.crown6 =false
+      this.crown1 = false
+      this.crown2 = false
+      this.crown3 = false
+      this.crown4 = false
+      this.crown5 = false
+      this.crown6 = false
       data.forEach((data: any) => {
         if (data.role == 'king') {
           this.king_pos = data.position
           this.king_uid = data.uid
           console.log(this.king_uid);
-          
+
         }
       });
-      if (this.myId == this.king_uid) {
+      if (this.myPosId == this.king_uid) {
         this.role = 'king'
         this.extra_hp = 1
         this.crown4 = true
@@ -108,7 +110,7 @@ export class GameStartComponent implements OnInit {
         });
       }
 
-      // if (this.myId == data.uid) {
+      // if (this.myPosId == data.uid) {
       //   this.role = data.role
       //   this.extra_hp = data.extra_hp
       //   if (this.role == 'king') {
@@ -156,9 +158,11 @@ export class GameStartComponent implements OnInit {
     }
 
     this.socket.listen('next turn').subscribe((pos: any) => {
-      if(this.chair4==pos){
+      this.queue = pos
+      if (this.myPos == pos) {
+        this.activeClass = !this.activeClass
         console.log('your turn');
-      }else{
+      } else {
         console.log('other turn');
       }
       var counter = 0;
@@ -170,10 +174,6 @@ export class GameStartComponent implements OnInit {
         }
       }, 1000);
     });
-
-    this.socket.listen('other turn').subscribe((data: any) => {
-    });
-
 
     this.listen_position();
 
@@ -196,7 +196,7 @@ export class GameStartComponent implements OnInit {
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
-      this.myId = room.uid;
+      this.myPosId = room.uid;
       this.roomHost = room.host
       console.log(this.roomHost);
       if (room.is_host == true) {
@@ -248,8 +248,8 @@ export class GameStartComponent implements OnInit {
       this.hosting5 = false
       this.hosting6 = false
       console.log(uid);
-      console.log(this.myId);
-      if (this.myId == uid.host) {
+      console.log(this.myPosId);
+      if (this.myPosId == uid.host) {
         console.log('yes');
         this.host = true
         this.hosting4 = true
@@ -361,6 +361,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 2:
@@ -374,6 +375,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 3:
@@ -387,6 +389,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 4:
@@ -400,6 +403,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 5:
@@ -413,6 +417,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       case 6:
@@ -426,6 +431,7 @@ export class GameStartComponent implements OnInit {
         if (this.host == true) {
           this.hosting4 = true
         }
+        this.myPos = pos
         this.socket.emit('select position', { position: pos, code: this.lobbyCode });
         break;
       default:
