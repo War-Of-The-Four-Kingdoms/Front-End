@@ -53,7 +53,7 @@ export class GameStartComponent implements OnInit {
   king_uid: any;
   myPos: any;
   activeClass: boolean = false;
-  queue: any;
+  queue: any = 99;
   quitRage: any;
   started: boolean = false;
   counterTime: any = 0;
@@ -136,8 +136,8 @@ export class GameStartComponent implements OnInit {
       } else {
         this.counterTime = 0
         console.log('other turn');
+        
       }
-      this.counterTime = 0;
       this.now_playing = pos;
       var counter = 0;
       var interval = this.interval = setInterval(() => {

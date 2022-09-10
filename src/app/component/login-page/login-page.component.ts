@@ -69,9 +69,22 @@ export class LoginPageComponent implements OnInit {
       ((res: any) => {
         console.log(res);
         this.regOk = true
+        this.regErrors = false
+        this.authService.login(this.register.controls['email'].value, this.register.controls['password'].value)
+        .subscribe((res: any) => {
+          let expireDate = new Date()
+          let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
+          localStorage.setItem('access_token', res.access_token);
+          localStorage.setItem('refresh_token', res.refresh_token);
+          localStorage.setItem('expires_in', timestamp)
+          this.loading = false;
+          // Navigate to home page
+          this.router.navigate(['/home']);
+        })
       }, (err: any) => {
         this.loading = false;
         this.regErrors = true
+        this.regOk = false
       });
   }
   login(): void {

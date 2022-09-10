@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit {
     this.socket.listen('user checked').subscribe((data: any) => {
       if(data.is_created) {
         console.log('do');
-
         this.router.navigate(['start' + '/' + data.code]);
       }else {
         console.log('not');

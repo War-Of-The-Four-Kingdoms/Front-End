@@ -553,8 +553,8 @@ a:hover+.icon {
 .chat-section {
   position: absolute;
   bottom: 8px;
-  width: 100%;
-  right: 0;
+  width: 90%;
+  left: 0;
 }
 
 .chat-input{
@@ -566,5 +566,19 @@ a:hover+.icon {
   position: absolute;
   width: 90%;
   left: -22%;
-  overflow-y: 40px;
+  overflow-y: scroll;
+  height: 200px;
+}
+
+.counter{
+  background: lightblue;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  position: absolute;
+  font-size: 32px;
+  font-family: "Oswald", sans-serif;
+  top: 30%;
+  left: 25%;
 }

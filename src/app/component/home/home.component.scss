@@ -58,9 +58,15 @@ h1 {
 section {
   float: left;
   width: 60%;
-  background-color: #181620;
+  animation: scroll 70s linear infinite;
+  background:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://www.photoshopfreebrushes.com/wp-content/uploads/2015/07/golden-crowns-patterns-5.jpg");
   height: 100%;
+}
 
+@keyframes scroll {
+  100%{
+   background-position:0px -3000px;
+ }
 }
 
 aside {
@@ -84,7 +90,23 @@ aside {
 }
 
 
+.blocks{
+  display: inline-block;
+  border: solid 1px red;
+  width: 100px;
+  height: 350px;
+  margin-left: 5px;
+  background-color: white;
+}
 
+.player-1 {
+  position: absolute;
+  top: 25%;
+  left: 55%;
+  width: 700px;
+  gap: 10px;
+
+}
 
 
 
@@ -281,6 +303,39 @@ input[type="checkbox"] {
   transform-style: preserve-3d;
   animation: rotateAngle 6s linear infinite;
 }
+
+.imagings {
+  position: absolute;
+  left: 0;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  animation: rotateAngle 6s linear infinite;
+}
+
+.imagings2 {
+  position: absolute;
+  left: 52%;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  animation: rotateAngle 6s linear infinite;
+}
+.imagings3 {
+  position: absolute;
+  left: 52%;
+  bottom: 0%;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  animation: rotateAngle 6s linear infinite;
+}
+.imagings4 {
+  position: absolute;
+  left: 0;
+  bottom: 0%;
+  perspective: 500px;
+  transform-style: preserve-3d;
+  animation: rotateAngle 6s linear infinite;
+}
+
 
 .btn-create {
   width: 480px;
