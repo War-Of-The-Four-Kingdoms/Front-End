@@ -51,8 +51,9 @@ export class GameStartComponent implements OnInit {
   king_pos: any;
   king_uid: any;
   myPos: any;
-  activeClass: boolean = false;    
+  activeClass: boolean = false;
   queue: any;
+  quitRage: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -109,45 +110,6 @@ export class GameStartComponent implements OnInit {
           }
         });
       }
-
-      // if (this.myPosId == data.uid) {
-      //   this.role = data.role
-      //   this.extra_hp = data.extra_hp
-      //   if (this.role == 'king') {
-      //     this.crown4 = true
-      //   }
-      // } else {
-      //   data.forEach((data: any) => {
-      //     if (this.chair1 == data.position) {
-      //       if (data.role == 'king') {
-      //         this.crown1 = true
-      //       }
-      //     } else if (this.chair2 == data.positon) {
-      //       if (data.role == 'king') {
-      //         this.crown2 = true
-      //       }
-      //     } else if (this.chair3 == data.positon) {
-      //       if (data.role == 'king') {
-      //         this.crown3 = true
-      //       }
-      //     }
-      //     else if (this.chair4 == data.positon) {
-      //       if (data.role == 'king') {
-      //         this.crown4 = true
-      //       }
-      //     } else if (this.chair5 == data.positon) {
-      //       if (data.role == 'king') {
-      //         this.crown5 = true
-      //       }
-      //     }
-      //     else if (this.chair6 == data.positon) {
-      //       if (data.role == 'king') {
-      //         this.crown6 = true
-      //       }
-      //     }
-
-      //   });
-      // }
     });
     if (this.is_started) {
       window.addEventListener("beforeunload", function (e) {
@@ -294,6 +256,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('player leave').subscribe((data: any) => {
       console.log(data);
+      this.quitRage = data.position
     });
   }
 
