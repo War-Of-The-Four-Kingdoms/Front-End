@@ -39,6 +39,7 @@ export class GameStartComponent implements OnInit {
   hosting: boolean = false;
   roomHost: any;
   roomcode: any;
+  is_private: boolean = false;
   is_started: boolean = false;
   role: any;
   extra_hp: any;
@@ -64,8 +65,15 @@ export class GameStartComponent implements OnInit {
     })
     this._ActivatedRoute.paramMap.subscribe((param) => {
       this.roomcode = param.get('code');
+<<<<<<< HEAD
       this.roomMAX = sessionStorage.getItem('Max');
     })
+=======
+
+    } )
+    this.roomMAX = sessionStorage.getItem('Max');
+    this.is_private = (sessionStorage.getItem('private')==='true');
+>>>>>>> 8933f7f65de6009213258dcdcb83a094edddcabd
   }
   ngOnInit(): void {
     this.socket.listen('assign roles').subscribe((data: any) => {
@@ -139,7 +147,11 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
 
+<<<<<<< HEAD
     this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username') });
+=======
+      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
+>>>>>>> 8933f7f65de6009213258dcdcb83a094edddcabd
 
 
 
@@ -160,6 +172,8 @@ export class GameStartComponent implements OnInit {
       sessionStorage.setItem('Max', room.max);
       this.myPosId = room.uid;
       this.roomHost = room.host
+      this.is_private = room.private;
+      sessionStorage.setItem('private',room.private);
       console.log(this.roomHost);
       if (room.is_host == true) {
         this.host = true
