@@ -27,6 +27,9 @@ export class HomeComponent implements OnInit {
   isVisible = true;
   ngOnInit(): void {
     this.socket.emit('list room', {});
+    this.socket.listen('room full').subscribe(() => {
+      alert("The room is full.");
+    });
     this.socket.listen('set room list').subscribe((rooms: any) => {
 
       this.roomsarray = rooms

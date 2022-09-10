@@ -2,7 +2,7 @@
   <!-- pass button -->
   <div class="wrapper">
     <div class="link_wrapper">
-      <a href="#">PASS</a>
+      <a (click)="pass()">PASS</a>
       <div class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
           <path
@@ -19,7 +19,7 @@
     </div>
   </div> -->
   <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
-  <div class="btn accept-btn" (click)="start()" *ngIf="this.host && this.started != true">Start</div>
+  <div class="btn accept-btn" (click)="start()" >Start</div>
   <div class="fancy-border">
     <div class="row">
       <div class="chat-content">
@@ -36,8 +36,9 @@
       </div>
     </div>
   </div>
-  <div [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
-    <img src="../assets/picture/stopwatch.png"  style="width: 95px;" *ngIf="this.clock">
+  <div
+    [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
+    <img src="../assets/picture/stopwatch.png" style="width: 95px;" *ngIf="this.clock">
   </div>
   <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
   <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"

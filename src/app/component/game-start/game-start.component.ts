@@ -58,6 +58,7 @@ export class GameStartComponent implements OnInit {
   started: boolean = false;
   counterTime: any = 0;
   clock: boolean = false;
+  now_playing: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -75,6 +76,7 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     this.socket.listen('assign roles').subscribe((data: any) => {
+      this.started = true
       console.log(data);
       this.crown1 = false
       this.crown2 = false
@@ -136,6 +138,8 @@ export class GameStartComponent implements OnInit {
         console.log('other turn');
       }
       this.counterTime = 0;
+      this.now_playing = pos;
+      var counter = 0;
       var interval = this.interval = setInterval(() => {
         this.counterTime++;
         console.log(this.counterTime);
@@ -147,10 +151,11 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
 
-    this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
-
-
-
+    this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
+    // this.socket.listen('need more player').subscribe(() => {
+    //   this.started = false
+    //   alert('This game require atleast 4 players.')
+    // });
     this.socket.listen('sctc').subscribe((data: any) => {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
@@ -417,7 +422,6 @@ export class GameStartComponent implements OnInit {
 
   start(): void {
     this.socket.emit('start game', { code: this.lobbyCode });
-    this.started = true
   }
 
   pass(): void {
