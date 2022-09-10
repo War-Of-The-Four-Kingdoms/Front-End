@@ -197,6 +197,9 @@ export class GameStartComponent implements OnInit {
         });
       }
     });
+    this.socket.listen('player leave').subscribe((data: any) => {
+      console.log(data);
+    });
   }
 
   listen_position() {
