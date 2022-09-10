@@ -15,11 +15,11 @@ export class HomeComponent implements OnInit {
 
   isVisibleMiddle = false;
   array = [1, 2, 3, 4];
-  numbers = [5, 6, 7, 8, 9, 10];
+  numbers = [4, 5, 6];
   name: any
   email: any
   uuid: any
-  num: any = 5
+  num: any = 4
   switchValue = false;
   constructor(private router: Router, private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
   roomsarray: any
@@ -27,6 +27,9 @@ export class HomeComponent implements OnInit {
   isVisible = true;
   ngOnInit(): void {
     this.socket.emit('list room', {});
+    this.socket.listen('room full').subscribe(() => {
+      alert("The room is full.");
+    });
     this.socket.listen('set room list').subscribe((rooms: any) => {
 
       this.roomsarray = rooms

@@ -41,6 +41,7 @@ export class GameStartComponent implements OnInit {
   roomcode: any;
   is_private: boolean = false;
   is_started: boolean = false;
+  now_playing: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
     this.arr.push({
@@ -74,6 +75,7 @@ export class GameStartComponent implements OnInit {
       }else{
         console.log('other turn');
       }
+      this.now_playing = pos;
       var counter = 0;
       var interval = this.interval = setInterval(() => {
         counter++;
@@ -85,10 +87,10 @@ export class GameStartComponent implements OnInit {
     });
     this.listen_position();
 
-      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
-
-
-
+    this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
+    this.socket.listen('need more player').subscribe(() => {
+      alert('This game require atleast 4 players.')
+    });
     this.socket.listen('sctc').subscribe((data: any) => {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
