@@ -39,6 +39,7 @@ export class GameStartComponent implements OnInit {
   hosting: boolean = false;
   roomHost: any;
   roomcode: any;
+  is_private: boolean = false;
   is_started: boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
@@ -50,8 +51,10 @@ export class GameStartComponent implements OnInit {
     })
     this._ActivatedRoute.paramMap.subscribe((param) => {
       this.roomcode = param.get('code');
-      this.roomMAX = sessionStorage.getItem('Max');
+
     } )
+    this.roomMAX = sessionStorage.getItem('Max');
+    this.is_private = (sessionStorage.getItem('private')==='true');
   }
   ngOnInit(): void {
     this.socket.listen('assign roles').subscribe((data: any) => {
@@ -82,7 +85,7 @@ export class GameStartComponent implements OnInit {
     });
     this.listen_position();
 
-      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username')});
+      this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
 
 
 
@@ -103,6 +106,8 @@ export class GameStartComponent implements OnInit {
       sessionStorage.setItem('Max',room.max);
       this.myId = room.uid;
       this.roomHost = room.host
+      this.is_private = room.private;
+      sessionStorage.setItem('private',room.private);
       console.log(this.roomHost);
       if (room.is_host == true) {
         this.host = true

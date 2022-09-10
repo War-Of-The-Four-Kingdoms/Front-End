@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.socket.emit('list room', {});
     this.socket.listen('set room list').subscribe((rooms: any) => {
+
       this.roomsarray = rooms
     });
     this.getDetails();
@@ -49,9 +50,12 @@ export class HomeComponent implements OnInit {
 
     // }
     this.socket.listen('user checked').subscribe((data: any) => {
-      if (data.is_created) {
+      if(data.is_created) {
+        console.log('do');
+
         this.router.navigate(['start' + '/' + data.code]);
-      } else {
+      }else {
+        console.log('not');
         alert("Your Name already Taken");
         setTimeout(function () {
           window.location.reload();
@@ -90,12 +94,10 @@ export class HomeComponent implements OnInit {
 
   joinLobby(): void {
     this.socket.emit('join lobby', { code: this.inputCode, max_player: 10 });
-    this.router.navigate(['start' + '/' + this.inputCode]);
   }
 
   joinLobbys(data: any): void {
     this.socket.emit('join lobby', { code: data });
-    this.router.navigate(['start' + '/' + data]);
   }
 
   handleOkMiddle(): void {
