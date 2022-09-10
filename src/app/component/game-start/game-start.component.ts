@@ -273,6 +273,9 @@ export class GameStartComponent implements OnInit {
       console.log(data);
       this.quitRage = data.position
     });
+    this.socket.listen('skip').subscribe(() => {
+      clearInterval(this.interval);
+    });
   }
 
   listen_position() {
