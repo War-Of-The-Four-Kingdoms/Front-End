@@ -43,10 +43,10 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['start' + '/' + data.code]);
       } else {
         console.log('not');
-        alert("Your Name already Taken");
+        alert("User Not Found!!");
         setTimeout(function () {
           window.location.reload();
-        }, 3000)
+        }, 2000)
       }
     });
 
