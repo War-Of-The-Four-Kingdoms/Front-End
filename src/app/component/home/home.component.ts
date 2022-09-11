@@ -20,7 +20,9 @@ export class HomeComponent implements OnInit {
   email: any
   uuid: any
   num: any = 4
+  enabled: boolean = false;
   switchValue = false;
+  contenteditable: boolean = false;
   constructor(private router: Router, private socket: WebSocketService, private elementRef: ElementRef, private authService: AuthService) { }
   roomsarray: any
   inputCode: string = '';
@@ -36,10 +38,10 @@ export class HomeComponent implements OnInit {
     });
     this.getDetails();
     this.socket.listen('user checked').subscribe((data: any) => {
-      if(data.is_created) {
+      if (data.is_created) {
         console.log('do');
         this.router.navigate(['start' + '/' + data.code]);
-      }else {
+      } else {
         console.log('not');
         alert("Your Name already Taken");
         setTimeout(function () {
@@ -49,29 +51,45 @@ export class HomeComponent implements OnInit {
     });
 
   }
-
+  onNameChange(val: any) {
+    console.log("Changed", val)
+  }
   logout(): void {
     localStorage.clear()
     window.location.reload();
   }
 
+  enable() {
+    this.contenteditable = true
+  }
+
+
+
+  editName(e: any): boolean {
+    if (e.which === 13 && !e.shiftKey) {
+      console.log(e.target.textContent);
+      this.contenteditable = false
+      return false;
+    }
+    return true;
+  }
 
   getDetails(): string {
     this.authService.detail()
-        .subscribe((res: any) => {
-          this.name = res.success.name
-          this.email = res.success.email
-          this.uuid = res.success.uuid
-          this.socket.emit('start', {
-            username: this.name,
-            uuid: this.uuid,
-          });
-          if(sessionStorage.getItem('username') == null){
-            sessionStorage.setItem('username',this.name);
-            sessionStorage.setItem('uuid',this.uuid);
-          }
-          // this.socket.emit('start', { username: this.name, uuid: this.uuid })
-    });
+      .subscribe((res: any) => {
+        this.name = res.success.name
+        this.email = res.success.email
+        this.uuid = res.success.uuid
+        this.socket.emit('start', {
+          username: this.name,
+          uuid: this.uuid,
+        });
+        if (sessionStorage.getItem('username') == null) {
+          sessionStorage.setItem('username', this.name);
+          sessionStorage.setItem('uuid', this.uuid);
+        }
+        // this.socket.emit('start', { username: this.name, uuid: this.uuid })
+      });
     return 'success';
   }
   createLobby(): void {
