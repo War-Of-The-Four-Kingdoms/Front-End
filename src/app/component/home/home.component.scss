@@ -59,14 +59,14 @@ section {
   float: left;
   width: 60%;
   animation: scroll 70s linear infinite;
-  background:linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://www.photoshopfreebrushes.com/wp-content/uploads/2015/07/golden-crowns-patterns-5.jpg");
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://www.photoshopfreebrushes.com/wp-content/uploads/2015/07/golden-crowns-patterns-5.jpg");
   height: 100%;
 }
 
 @keyframes scroll {
-  100%{
-   background-position:0px -3000px;
- }
+  100% {
+    background-position: 0px -3000px;
+  }
 }
 
 aside {
@@ -90,7 +90,7 @@ aside {
 }
 
 
-.blocks{
+.blocks {
   display: inline-block;
   border: solid 1px red;
   width: 100px;
@@ -319,6 +319,7 @@ input[type="checkbox"] {
   transform-style: preserve-3d;
   animation: rotateAngle 6s linear infinite;
 }
+
 .imagings3 {
   position: absolute;
   left: 52%;
@@ -327,6 +328,7 @@ input[type="checkbox"] {
   transform-style: preserve-3d;
   animation: rotateAngle 6s linear infinite;
 }
+
 .imagings4 {
   position: absolute;
   left: 0;
@@ -571,20 +573,16 @@ $brown: #786450;
   right: 1%;
 }
 
-.pencil{
-  position: absolute;
-  right: 1%;
-  bottom: 24%;
+.pencil {
+  padding-left: 10px;
 }
 
-.exit-door{
+.exit-door {
   position: absolute;
   right: 1%;
 }
 
-.exit-door:hover{
-  
-}
+.exit-door:hover {}
 
 .name-player {
   border-bottom: whitesmoke solid 2px;
@@ -620,12 +618,10 @@ $brown: #786450;
   float: right;
   color: whitesmoke;
   font-size: 24px;
-  
-}
-.name{
 
-  
 }
+
+.name {}
 
 .card-user {
   padding: 10px;

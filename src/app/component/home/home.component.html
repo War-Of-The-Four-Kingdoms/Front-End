@@ -82,9 +82,8 @@
       </div>
       <div class="stats-player row">
         <img src="../assets/picture/Ranking.png" class="ranking" style="width: 100px ;">
-        <div><img src="../assets/picture/pencil.png" class="pencil" style="width: 30px;" (click)="enable()"></div>
         <div>PLAYER CARD</div>
-        <div class="name-player">NAME <div [attr.contenteditable]="contenteditable" (keypress)="editName($event)" >{{this.name}}</div>
+        <div class="name-player">NAME <div [attr.contenteditable]="contenteditable" (keypress)="editName($event)" >{{this.name}} <img src="../assets/picture/pencil.png" class="pencil" style="width: 30px;" (click)="enable()"></div>
         </div>
         <div class="name-player">EMAIL <div>{{this.email}}</div>
         </div>
