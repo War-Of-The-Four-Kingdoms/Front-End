@@ -37,6 +37,10 @@ export class AuthService {
     }, this.options);
   }
 
+  edit_name(new_name: string){
+    return this.http.put(this.apiUrl + '/name/edit'," ",{ headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), params: {name: new_name}})
+  }
+
   detail() {
     return this.http.get(this.apiUrl + '/details', { headers: new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token')), })
   }

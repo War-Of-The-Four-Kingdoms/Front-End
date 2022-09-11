@@ -63,11 +63,13 @@ export class HomeComponent implements OnInit {
     this.contenteditable = true
   }
 
-
-
   editName(e: any): boolean {
     if (e.which === 13 && !e.shiftKey) {
       console.log(e.target.textContent);
+      this.authService.edit_name(e.target.textContent).subscribe((res: any) => {
+        this.name = res.success.name
+        sessionStorage.setItem('username', this.name);
+      });
       this.contenteditable = false
       return false;
     }
