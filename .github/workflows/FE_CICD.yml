@@ -1,7 +1,7 @@
 name: Angular CICD
 on:
   push:
-    branches: [ docker-2 ]
+    branches: [ main ]
     
 jobs:
   build:
