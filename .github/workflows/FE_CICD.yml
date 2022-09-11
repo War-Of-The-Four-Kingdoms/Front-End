@@ -1,0 +1,96 @@
+name: Angular CICD
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    
+    - name: Docker login 
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo "----- DOCKER LOGIN -----"
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
+    - name: Docker Building
+      run: |
+        echo "----- DOCKER BUILD -----"
+        docker build -t cicd/frontend:latest .
+    
+    - name: Docker tagging
+      run: |
+        echo "----- DOCKER TAG -----"
+        docker tag cicd/frontend:latest sharkthovenzart/seniorproject:frontend
+        
+    - name: Docker push
+      run: |
+        echo "----- DOCKER PUSH -----"
+        docker push sharkthovenzart/seniorproject:frontend
+        
+    - name: Docker logout
+      run: |
+        echo "----- DOCKER LOGOUT -----"
+        docker logout
+        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: SSH into Azure Virtual machine using SSH key
+      uses: appleboy/ssh-action@master
+      env: 
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      with:
+        host: ${{ secrets.VM_IP }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.VM_PORT }}
+        envs: DOCKER_USER, DOCKER_PASSWORD
+        script: |
+          echo "Im in AZURE VM"
+          echo "----- DOCKER LOGIN -----"
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          echo ""
+          echo "----- DOCKER PULL -----"
+          docker image prune -f
+          docker pull docker.io/sharkthovenzart/seniorproject:frontend
+          echo ""
+          echo "----- DOCKER COMPOSE RUN -----"
+          docker-compose down
+          docker-compose up -d
+          sleep 35
+          docker exec -i backend pm2 start server.js
+          docker exec -i backend pm2 start "php artisan serve --host=0.0.0.0" 
+          echo ""
+          echo "----- DOCKER EXEC RUN PHP -----"
+          docker exec -i backend php artisan migrate:fresh --seed
+          docker exec -i backend php artisan passport:install --uuids --force -n
+          echo ""
+          echo "----- DOCKER LOGOUT -----"
+          docker logout
+          echo ""
+      
+    - name: Checking contaniner and status
+      env:
+        VM_IP: ${{ secrets.VM_IP }}
+      run: |
+        echo "----- DOCKER LIST CONTAINER -----"
+        docker ps -a
+        echo ""
+        echo "----- CURL THE SITE -----"
+        curl $VM_IP:80
+        echo ""
