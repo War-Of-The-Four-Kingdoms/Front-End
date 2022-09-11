@@ -136,14 +136,13 @@ export class GameStartComponent implements OnInit {
       } else {
         this.counterTime = 0
         console.log('other turn');
-        
+
       }
       this.now_playing = pos;
-      var counter = 0;
       var interval = this.interval = setInterval(() => {
         this.counterTime++;
         console.log(this.counterTime);
-        if (this.counterTime == 5) {
+        if (this.counterTime >= 5) {
           clearInterval(interval);
         }
       }, 1000);
@@ -152,10 +151,10 @@ export class GameStartComponent implements OnInit {
     this.listen_position();
 
     this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
-    // this.socket.listen('need more player').subscribe(() => {
-    //   this.started = false
-    //   alert('This game require atleast 4 players.')
-    // });
+    this.socket.listen('need more player').subscribe(() => {
+      this.started = false
+      alert('This game require atleast 4 players.')
+    });
     this.socket.listen('sctc').subscribe((data: any) => {
       this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
     });
