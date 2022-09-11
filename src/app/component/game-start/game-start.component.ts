@@ -54,7 +54,7 @@ export class GameStartComponent implements OnInit {
   myPos: any;
   activeClass: boolean = false;
   queue: any = 99;
-  quitRage: any;
+  quitRage: any = [];
   started: boolean = false;
   counterTime: any = 0;
   clock: boolean = false;
@@ -157,7 +157,7 @@ export class GameStartComponent implements OnInit {
       alert('This game require atleast 4 players.')
     });
     this.socket.listen('sctc').subscribe((data: any) => {
-      this.appendChat('<p class="text-right text-primary">' + data.username + ': ' + data.message + '</p>');
+      this.appendChat('<p class="text-right" style="font-size:18px;width:90%;color:white;">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
       this.hosting1 = false
@@ -167,6 +167,7 @@ export class GameStartComponent implements OnInit {
       this.hosting5 = false
       this.hosting6 = false
       console.log(room);
+
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
@@ -271,7 +272,13 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('player leave').subscribe((data: any) => {
       console.log(data);
-      this.quitRage = data.position
+      this.quitRage.push(data.position)
+       console.log(this.quitRage.includes(this.chair1));
+       console.log(this.quitRage.includes(this.chair2));
+       console.log(this.quitRage.includes(this.chair3));
+       console.log(this.quitRage.includes(this.chair4));
+       console.log(this.quitRage.includes(this.chair5));
+       console.log(this.quitRage.includes(this.chair6));
     });
     this.socket.listen('skip').subscribe(() => {
       clearInterval(this.interval);
@@ -450,7 +457,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<p class="text-end text-success message" style="font-size:24px;width:90%;">' + message + '</p>');
+      this.appendChat('<p class="text-end  message" style="font-size:18px;width:90%;color:green;">' +message +':Me' +'</p>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
