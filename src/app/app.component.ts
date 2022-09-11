@@ -50,6 +50,10 @@ export class AppComponent {
     });
   }
 
+  logout(): void {
+    localStorage.clear()
+    window.location.reload();
+  }
   getDetails(): string {
     this.authService.detail().subscribe((res: any) => {
       this.socket.emit('start', {

@@ -7,7 +7,9 @@
     </ng-container>
   </nz-modal> -->
 <div id="exist" *ngIf="alreadyOpen">
-  <div id="exist-text">Already Open in Other Tap</div>
+  <img src="assets/picture/exit-door.png" class="exit-door" style="width: 100px;" (click)="logout()">
+  <div id="exist-text">USER ALREADY LOGGED IN.</div>
+
 </div>
 
 </router-outlet>
