@@ -1,5 +1,5 @@
 import { Component, ElementRef } from '@angular/core';
-import { WebSocketService } from './web-socket.service';
+import { WebSocketService } from './services/web-socket.service';
 import { DatePipe } from '@angular/common';
 import { AuthService } from './services/auth.service';
 
