@@ -85,28 +85,20 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
       this.started = true
-      console.log(data);
       this.crown1 = false
       this.crown2 = false
       this.crown3 = false
       this.crown4 = false
       this.crown5 = false
       this.crown6 = false
-      data.forEach((data: any) => {
-        if (data.role == 'king') {
-          this.king_pos = data.position
-          this.king_uid = data.uid
-          console.log(this.king_uid);
-
-        }
-      });
+      this.king_pos = data.king.position;
+      this.king_uid = data.king.uid;
+      this.role = data.me.role;
+      console.log(this.role);
       if (this.myPosId == this.king_uid) {
-        this.role = 'king'
         this.extra_hp = 1
         this.crown4 = true
       } else {
-        this.crown4 = false
-        data.forEach((data: any) => {
           if (this.chair1 == this.king_pos) {
             this.crown1 = true
           } else if (this.chair2 == this.king_pos) {
@@ -124,7 +116,6 @@ export class GameStartComponent implements OnInit {
           else if (this.chair6 == this.king_pos) {
             this.crown6 = true
           }
-        });
       }
     });
     if (this.is_started) {
