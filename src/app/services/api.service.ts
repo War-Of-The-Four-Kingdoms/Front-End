@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
@@ -20,12 +20,13 @@ export class ApiService {
     };
   }
 
-  getRole() {
-    return this.http.get(this.apiUrl + '/getRole', this.options);
+  getRole(num: any) {
+    let params = new HttpParams().set('player_num', num);
+    return this.http.get(this.apiUrl + '/getRole', { params: params });
   }
 
   getCharacter() {
-    return this.http.get(this.apiUrl + '/getCharacter', this.options);
+    return this.http.get(this.apiUrl + '/getCharacter');
   }
 
 }

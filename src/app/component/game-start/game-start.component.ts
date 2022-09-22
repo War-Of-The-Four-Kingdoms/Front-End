@@ -82,9 +82,6 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('random characters').subscribe((data: any) => {
       console.log(data);
     });
-    this.api.getRole().subscribe((res: any) => {
-      this.roles = res.roles;
-    });
     this.api.getCharacter().subscribe((res: any) => {
       this.chars = {leader: res.leader , normal: res.normal};
     });
@@ -171,6 +168,9 @@ export class GameStartComponent implements OnInit {
       this.appendChat('<p class="text-right" style="font-size:18px;width:90%;color:white;">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
+      this.api.getRole(room.positions.length).subscribe((res: any) => {
+        this.roles = res.roles;
+      });
       this.hosting1 = false
       this.hosting2 = false
       this.hosting3 = false
