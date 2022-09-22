@@ -10,7 +10,7 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./game-start.component.scss']
 })
 export class GameStartComponent implements OnInit {
-  characterCard:boolean = false;
+  characterCard: boolean = false;
   visible = false;
   lobbyCode: string = '';
   chair1: any = 1;
@@ -44,7 +44,7 @@ export class GameStartComponent implements OnInit {
   is_private: boolean = false;
   is_started: boolean = false;
   role: any = "king";
-  describe:any = "Kill Traitor and Betrayer to win This Game";
+  describe: any = {king:"Kill Traitor and Betrayer to win This Game",knight:"Protect Your king and Kill Everyone Who betray!!",villager:"Kill this Corruption King to Win the game!!",noble:"Spy and Kill Everyone"};
   extra_hp: any;
   crown1: boolean = false;
   crown2: boolean = false;
@@ -63,8 +63,11 @@ export class GameStartComponent implements OnInit {
   clock: boolean = false;
   roles: any[] = [];
   chars: any;
+  knight_uid: any[] = [];
+  villager_uid: any[] = [];
+  noble_uid: any[] = [];
 
-  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute,private api: ApiService) {
+  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
       headers: new HttpHeaders({
         Accept: 'application/json',
@@ -80,10 +83,17 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     this.socket.listen('random characters').subscribe((data: any) => {
-      console.log(data);
+      this.characterCard = true;
+      // if(this.role == "knight"){
+      //   this.describe = this.describe.knight
+      // }else if(this.role == "villager"){
+      //   this.describe = "Kill this Corruption King to Win the game!!"
+      // }else if(this.role == "noble"){
+      //   this.
+      // }
     });
     this.api.getCharacter().subscribe((res: any) => {
-      this.chars = {leader: res.leader , normal: res.normal};
+      this.chars = { leader: res.leader, normal: res.normal };
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
       this.started = true
@@ -101,6 +111,28 @@ export class GameStartComponent implements OnInit {
           console.log(this.king_uid);
 
         }
+        if (data.role == 'knight') {
+          this.knight_uid.push(data.uid)
+          if (this.myPosId.includes(this.knight_uid)) {
+            this.role = 'knight'
+            this.extra_hp = 0
+          }
+        }
+        if (data.role == 'villager') {
+          this.villager_uid.push(data.uid)
+          if (this.myPosId.includes(this.villager_uid)) {
+            this.role = 'villager'
+            this.extra_hp = 0
+          }
+        }
+        if (data.role == 'noble') {
+          this.noble_uid.push(data.uid)
+          if (this.myPosId.includes(this.noble_uid)) {
+            this.role = 'noble'
+            this.extra_hp = 0
+          }
+        }
+
       });
       if (this.myPosId == this.king_uid) {
         this.role = 'king'
@@ -159,7 +191,7 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
 
-    this.socket.emit('get room info', {code: this.roomcode, max_player: this.roomMAX , username: sessionStorage.getItem('username'), private: this.is_private});
+    this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     this.socket.listen('need more player').subscribe(() => {
       this.started = false
       alert('This game require atleast 4 players.')
@@ -284,12 +316,12 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('player leave').subscribe((data: any) => {
       console.log(data);
       this.quitRage.push(data.position)
-       console.log(this.quitRage.includes(this.chair1));
-       console.log(this.quitRage.includes(this.chair2));
-       console.log(this.quitRage.includes(this.chair3));
-       console.log(this.quitRage.includes(this.chair4));
-       console.log(this.quitRage.includes(this.chair5));
-       console.log(this.quitRage.includes(this.chair6));
+      console.log(this.quitRage.includes(this.chair1));
+      console.log(this.quitRage.includes(this.chair2));
+      console.log(this.quitRage.includes(this.chair3));
+      console.log(this.quitRage.includes(this.chair4));
+      console.log(this.quitRage.includes(this.chair5));
+      console.log(this.quitRage.includes(this.chair6));
     });
     this.socket.listen('skip').subscribe(() => {
       clearInterval(this.interval);
@@ -443,7 +475,7 @@ export class GameStartComponent implements OnInit {
 
   start(): void {
 
-    this.socket.emit('start game', { code: this.lobbyCode, roles: this.roles, characters: this.chars});
+    this.socket.emit('start game', { code: this.lobbyCode, roles: this.roles, characters: this.chars });
   }
 
   pass(): void {
@@ -469,7 +501,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<p class="text-end  message" style="font-size:18px;width:90%;color:green;">' +message +':Me' +'</p>');
+      this.appendChat('<p class="text-end  message" style="font-size:18px;width:90%;color:green;">' + message + ':Me' + '</p>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
