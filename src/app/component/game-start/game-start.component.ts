@@ -10,6 +10,7 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./game-start.component.scss']
 })
 export class GameStartComponent implements OnInit {
+  characterCard:boolean = false;
   visible = false;
   lobbyCode: string = '';
   chair1: any = 1;
