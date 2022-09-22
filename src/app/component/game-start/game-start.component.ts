@@ -41,7 +41,8 @@ export class GameStartComponent implements OnInit {
   roomcode: any;
   is_private: boolean = false;
   is_started: boolean = false;
-  role: any;
+  role: any = "king";
+  describe:any = "Kill Traitor and Betrayer to win This Game";
   extra_hp: any;
   crown1: boolean = false;
   crown2: boolean = false;
