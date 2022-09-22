@@ -1,6 +1,6 @@
 import { Validators } from '@angular/forms';
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { WebSocketService } from "../../web-socket.service";
+import { WebSocketService } from "../../services/web-socket.service";
 import {
   Router
 } from "@angular/router";

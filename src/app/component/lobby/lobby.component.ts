@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { WebSocketService } from "../../web-socket.service";
+import { WebSocketService } from "../../services/web-socket.service";
 
 @Component({
   selector: 'app-lobby',
@@ -45,7 +45,7 @@ export class LobbyComponent implements OnInit {
     }
     return true;
   }
-  
+
   appendChat(message: string): void {
     var cl = this.elementRef.nativeElement.querySelector('.chatline');
     cl.insertAdjacentHTML('beforeend', message);

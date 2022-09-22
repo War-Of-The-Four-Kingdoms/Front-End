@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { WebSocketService } from "../../web-socket.service";
+import { WebSocketService } from "../../services/web-socket.service";
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-game-start',
@@ -59,9 +60,10 @@ export class GameStartComponent implements OnInit {
   started: boolean = false;
   counterTime: any = 0;
   clock: boolean = false;
-  now_playing: any;
+  roles: any[] = [];
+  chars: any;
 
-  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute) {
+  constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute,private api: ApiService) {
     this.arr.push({
       headers: new HttpHeaders({
         Accept: 'application/json',
@@ -76,6 +78,15 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
+    this.socket.listen('random characters').subscribe((data: any) => {
+      console.log(data);
+    });
+    this.api.getRole().subscribe((res: any) => {
+      this.roles = res.roles;
+    });
+    this.api.getCharacter().subscribe((res: any) => {
+      this.chars = {leader: res.leader , normal: res.normal};
+    });
     this.socket.listen('assign roles').subscribe((data: any) => {
       this.started = true
       console.log(data);
@@ -130,7 +141,6 @@ export class GameStartComponent implements OnInit {
 
     this.socket.listen('next turn').subscribe((pos: any) => {
       this.clock = true
-      this.queue = pos
       if (this.myPos == pos) {
         this.counterTime = 0
         console.log('your turn');
@@ -139,7 +149,6 @@ export class GameStartComponent implements OnInit {
         console.log('other turn');
 
       }
-      this.now_playing = pos;
       var interval = this.interval = setInterval(() => {
         this.counterTime++;
         console.log(this.counterTime);
@@ -147,6 +156,7 @@ export class GameStartComponent implements OnInit {
           clearInterval(interval);
         }
       }, 1000);
+      this.queue = pos
     });
 
     this.listen_position();
@@ -431,7 +441,8 @@ export class GameStartComponent implements OnInit {
   }
 
   start(): void {
-    this.socket.emit('start game', { code: this.lobbyCode });
+
+    this.socket.emit('start game', { code: this.lobbyCode, roles: this.roles, characters: this.chars});
   }
 
   pass(): void {

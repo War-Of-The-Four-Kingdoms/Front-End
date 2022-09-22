@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { WebSocketService } from "../../web-socket.service";
+import { WebSocketService } from "../../services/web-socket.service";
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthService } from '../../services/auth.service';
 import {
