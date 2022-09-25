@@ -67,6 +67,14 @@ export class GameStartComponent implements OnInit {
   villager_uid: any[] = [];
   noble_uid: any[] = [];
   characterPool: any[] = [];
+  myCharacter: any;
+  test: any;
+  img1: any;
+  img2: any;
+  img3: any;
+  img4: any;
+  img5: any;
+  img6: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -84,10 +92,11 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     this.socket.listen('random characters').subscribe((data: any) => {
+      console.log(data);
       this.characterCard = true;
       this.characterPool = data
       this.characterPool.forEach((c: any) => {
-        c.image_name = "../assets/picture/card/"+c.image_name
+        c.image_name = "../assets/picture/card/" + c.image_name
       });
     });
     this.api.getCharacter().subscribe((res: any) => {
@@ -293,6 +302,48 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('skip').subscribe(() => {
       clearInterval(this.interval);
     });
+
+    this.socket.listen('waiting other select character').subscribe((data: any) => {
+      console.log("waiting");
+      this.characterCard = false;
+    });
+    this.socket.listen('ready to start').subscribe((data: any) => {
+      console.log("ready to start");
+      this.characterCard = false;
+      console.log(this.myCharacter);
+    });
+    this.socket.listen('set player character').subscribe((data: any) => {
+      console.log(this.myPos);
+      if (this.myPos == data.position) {
+        this.test = "../assets/picture/card/" + data.character
+      } else {
+        if (this.chair1 == data.position) {
+          this.img1 = "../assets/picture/card/" + data.character
+        } else if (this.chair2 == data.position) {
+          this.img2 = "../assets/picture/card/" + data.character
+        } else if (this.chair3 == data.position) {
+          this.img3 = "../assets/picture/card/" + data.character
+        } else if (this.chair4 == data.position) {
+          this.img4 = "../assets/picture/card/" + data.character
+        }
+        else if (this.chair5 == data.position) {
+          this.img5 = "../assets/picture/card/" + data.character
+        }
+        else if (this.chair6 == data.position) {
+          this.img6 = "../assets/picture/card/" + data.character
+        }
+
+      }
+      console.log(data);
+
+    });
+  }
+
+  selectCharacter(char: any) {
+    console.log(char.id);
+    console.log(this.roomcode);
+    this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
+    this.myCharacter = char
   }
 
   listen_position() {

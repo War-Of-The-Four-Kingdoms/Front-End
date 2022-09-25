@@ -1,15 +1,14 @@
 <div id="exist" *ngIf="this.characterCard">
   <!-- If this role == king -->
-  <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p></div>
-    <!-- If this role == king -->
+  <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
+  </div>
+  <!-- If this role == king -->
   <div class="testing">
-   <div class="bend" *ngFor="let char of this.characterPool"><img class="card-pic" src={{char.image_name}}></div>
-    <!-- <img class="bend" src="../assets/picture/card/catdice.png">
-    <img class="bend" src="../assets/picture/card/bearfighter.png">
-    <img class="bend" src="../assets/picture/card/catdice.png">
-    <img class="bend" src="../assets/picture/card/bearfighter.png"> -->
+    <div class="bend" *ngFor="let char of this.characterPool" (click)="selectCharacter(char)">{{char.name}}<img
+        class="card-pic" src={{char.image_name}}></div>
   </div>
 </div>
+
 <body class="">
   <!-- pass button -->
   <div class="wrapper">
@@ -57,8 +56,8 @@
   </div>
   <div class="right-side">
     <img src="../assets/picture/lock.png" class="lock" style="width: 95px;" *ngIf="this.is_private">
-  <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
-</div>
+    <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
+  </div>
   <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"
     nzWidth="335px" [nzFooter]=null>
     <ng-container *nzModalContent>
@@ -162,132 +161,164 @@
 
   </div>
   <div class="hexagon">
-    <div class="title">
-      WAR4KING
-    </div>
+
     <div class='player-1'>
-      <div class="blocks" (click)="showModalMiddle()">
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
 
       </div>
+      <div class="myCharacter-card">
+        <div class="blocks-s">
 
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
+        </div>
+        <div class="blocks-c">
+          <img class="myCharacter" src={{this.test}}>
+        </div>
 
       </div>
     </div>
 
     <div class='player-2'>
-      <div class="blocks">
+      <div class="myCharacter-card">
+        <div class="blocks-s">
+        </div>
+        <div class="blocks-c-o">
+          <img class="myCharacter" src={{this.img1}}>
+        </div>
 
       </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
       </div>
     </div>
 
     <div class='player-3'>
-      <div class="blocks">
+      <div class="myCharacter-card">
+        <div class="blocks-s">
+
+        </div>
+        <div class="blocks-c-o">
+          <img class="myCharacter" src={{this.img6}}>
+        </div>
+
       </div>
-      <div class="blocks">
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+
       </div>
-      <div class="blocks">
-      </div>
-      <div class="blocks">
-      </div>
-      <div class="blocks">
-      </div>
+
     </div>
 
     <div class='player-4'>
-      <div class="blocks">
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
+        <div class="blocks">
+        </div>
 
       </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
+      <div class="myCharacter-card">
+        <div class="blocks-s">
+        </div>
+        <div class="blocks-c">
+          <img class="myCharacter" src={{this.img2}}>
+        </div>
 
       </div>
     </div>
 
     <div class='player-5'>
-      <div class="blocks">
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
+        <div class="blocks">
+
+        </div>
 
       </div>
+      <div class="myCharacter-card">
+        <div class="blocks-s">
 
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
+        </div>
+        <div class="blocks-c">
+          <img class="myCharacter" src={{this.img3}}>
+        </div>
 
       </div>
     </div>
 
     <div class='player-6'>
-      <div class="blocks">
+      <div class="myCharacter-card">
+        <div class="blocks-s">
+
+        </div>
+        <div class="blocks-c-o">
+          <img class="myCharacter" src={{this.img5}}>
+        </div>
 
       </div>
+      <div class="armor-horse">
+        <!-- <div class="block-empty"></div> -->
+        <div class="blocks">
 
-      <div class="blocks">
+        </div>
+        <div class="blocks">
 
-      </div>
+        </div>
+        <div class="blocks">
 
-      <div class="blocks">
+        </div>
+        <div class="blocks">
 
-      </div>
-
-      <div class="blocks">
-
-      </div>
-
-      <div class="blocks">
+        </div>
 
       </div>
     </div>
     <div class="face1"></div>
     <div class="face2"></div>
   </div>
+
+
+
 </body>
