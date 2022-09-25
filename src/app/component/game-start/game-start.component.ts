@@ -44,7 +44,7 @@ export class GameStartComponent implements OnInit {
   is_private: boolean = false;
   is_started: boolean = false;
   role: any = "king";
-  describe: any = {king:"Kill Traitor and Betrayer to win This Game",knight:"Protect Your king and Kill Everyone Who betray!!",villager:"Kill this Corruption King to Win the game!!",noble:"Spy and Kill Everyone"};
+  describe: any = { king: "Kill Traitor and Betrayer to win This Game", knight: "Protect Your king and Kill Everyone Who betray!!", villager: "Kill this Corruption King to Win the game!!", noble: "Spy and Kill Everyone" };
   extra_hp: any;
   crown1: boolean = false;
   crown2: boolean = false;
@@ -66,6 +66,7 @@ export class GameStartComponent implements OnInit {
   knight_uid: any[] = [];
   villager_uid: any[] = [];
   noble_uid: any[] = [];
+  characterPool: any[] = [];
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -84,81 +85,47 @@ export class GameStartComponent implements OnInit {
   ngOnInit(): void {
     this.socket.listen('random characters').subscribe((data: any) => {
       this.characterCard = true;
-      // if(this.role == "knight"){
-      //   this.describe = this.describe.knight
-      // }else if(this.role == "villager"){
-      //   this.describe = "Kill this Corruption King to Win the game!!"
-      // }else if(this.role == "noble"){
-      //   this.
-      // }
+      this.characterPool = data
+      this.characterPool.forEach((c: any) => {
+        c.image_name = "../assets/picture/card/"+c.image_name
+      });
     });
     this.api.getCharacter().subscribe((res: any) => {
       this.chars = { leader: res.leader, normal: res.normal };
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
       this.started = true
-      console.log(data);
       this.crown1 = false
       this.crown2 = false
       this.crown3 = false
       this.crown4 = false
       this.crown5 = false
       this.crown6 = false
-      data.forEach((data: any) => {
-        if (data.role == 'king') {
-          this.king_pos = data.position
-          this.king_uid = data.uid
-          console.log(this.king_uid);
-
-        }
-        if (data.role == 'knight') {
-          this.knight_uid.push(data.uid)
-          if (this.myPosId.includes(this.knight_uid)) {
-            this.role = 'knight'
-            this.extra_hp = 0
-          }
-        }
-        if (data.role == 'villager') {
-          this.villager_uid.push(data.uid)
-          if (this.myPosId.includes(this.villager_uid)) {
-            this.role = 'villager'
-            this.extra_hp = 0
-          }
-        }
-        if (data.role == 'noble') {
-          this.noble_uid.push(data.uid)
-          if (this.myPosId.includes(this.noble_uid)) {
-            this.role = 'noble'
-            this.extra_hp = 0
-          }
-        }
-
-      });
+      this.king_pos = data.king.position;
+      this.king_uid = data.king.uid;
+      this.role = data.me.role;
+      console.log(this.role);
       if (this.myPosId == this.king_uid) {
-        this.role = 'king'
         this.extra_hp = 1
         this.crown4 = true
       } else {
-        this.crown4 = false
-        data.forEach((data: any) => {
-          if (this.chair1 == this.king_pos) {
-            this.crown1 = true
-          } else if (this.chair2 == this.king_pos) {
-            this.crown2 = true
-          }
-          else if (this.chair3 == this.king_pos) {
-            this.crown3 = true
-          }
-          else if (this.chair4 == this.king_pos) {
-            this.crown4 = true
-          }
-          else if (this.chair5 == this.king_pos) {
-            this.crown5 = true
-          }
-          else if (this.chair6 == this.king_pos) {
-            this.crown6 = true
-          }
-        });
+        if (this.chair1 == this.king_pos) {
+          this.crown1 = true
+        } else if (this.chair2 == this.king_pos) {
+          this.crown2 = true
+        }
+        else if (this.chair3 == this.king_pos) {
+          this.crown3 = true
+        }
+        else if (this.chair4 == this.king_pos) {
+          this.crown4 = true
+        }
+        else if (this.chair5 == this.king_pos) {
+          this.crown5 = true
+        }
+        else if (this.chair6 == this.king_pos) {
+          this.crown6 = true
+        }
       }
     });
     if (this.is_started) {

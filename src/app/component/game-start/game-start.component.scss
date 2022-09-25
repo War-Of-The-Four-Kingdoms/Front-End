@@ -614,8 +614,13 @@ a:hover+.icon {
   transition:0.5s;
 }
 
+.card-pic{
+  width: 350px;
+  height: 560px;
+}
+
 .testing {
-  width:1000px;
+  padding: 20px;
   height:600px;
   display:flex;
   justify-content:center;
