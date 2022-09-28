@@ -83,7 +83,7 @@
   right: 40%;
 }
 
-body {
+.all {
   overflow-y: hidden;
   width: 1900px;
   height: 950px;
@@ -92,6 +92,21 @@ body {
   background: url("https://i.pinimg.com/564x/91/5e/73/915e739ff65e8474f2753fdeea8537dc.jpg"), #111111;
   border: 25px solid #B88846;
   border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75'%3E%3Cg fill='none' stroke='%23B88846' stroke-width='2'%3E%3Cpath d='M1 1h73v73H1z'/%3E%3Cpath d='M8 8h59v59H8z'/%3E%3Cpath d='M8 8h16v16H8zM51 8h16v16H51zM51 51h16v16H51zM8 51h16v16H8z'/%3E%3C/g%3E%3Cg fill='%23B88846'%3E%3Ccircle cx='16' cy='16' r='2'/%3E%3Ccircle cx='59' cy='16' r='2'/%3E%3Ccircle cx='59' cy='59' r='2'/%3E%3Ccircle cx='16' cy='59' r='2'/%3E%3C/g%3E%3C/svg%3E") 25;
+}
+
+.plus{
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  z-index: 9999;
+}
+
+body {
+  background-color: #100e17;
+  font-family: 'Open Sans', sans-serif;
+  padding: 50px;
+  padding-left: 125px;
+  width: 100%;
 }
 
 .text-success {
@@ -515,8 +530,8 @@ body {
 // PASS BUTTON
 .wrapper {
   position: absolute;
-  left: 92%;
-  top: 50%;
+  left: 90%;
+  top: 70%;
   transform: translate(-50%, -50%);
 }
 
@@ -682,4 +697,59 @@ a:hover+.icon {
   text-align: center;
 }
 
+.container {
+  position: absolute;
+  height: 300px;
+  width: 550px;
+  display: flex;
+  top: 80%;
+  left: 68%;
+}
 
+
+.card {
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: #7d6f99;
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #000;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+}
+
+.tab-show{
+  position:absolute;
+  top: 19%;
+  left: 83.5%;
+  text-align: center;
+}
+
+.confirm{
+ display: flex;
+ justify-content: space-around;
+ margin-top: 10px;
+}
+.card-show{
+  height: 340px;
+  width: 250px;
+  background-color: #7d6f99;
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #000;
+}
+
+.card:not(:first-child) {
+  margin-left: -50px;
+}
+
+.card:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.card:hover~.card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}

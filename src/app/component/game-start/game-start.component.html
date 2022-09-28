@@ -1,324 +1,351 @@
-<div id="exist" *ngIf="this.characterCard">
-  <!-- If this role == king -->
-  <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
+<body>
+  <div id="exist" *ngIf="this.characterCard">
+    <!-- If this role == king -->
+    <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
+    </div>
+    <!-- If this role == king -->
+    <div class="testing">
+      <div class="bend" *ngFor="let char of this.characterPool" (click)="selectCharacter(char)">{{char.name}}<img
+          class="card-pic" src={{char.image_name}}></div>
+    </div>
   </div>
-  <!-- If this role == king -->
-  <div class="testing">
-    <div class="bend" *ngFor="let char of this.characterPool" (click)="selectCharacter(char)">{{char.name}}<img
-        class="card-pic" src={{char.image_name}}></div>
+  <div class="all">
+    <img src="../assets/picture/plus.png" class="plus"  style="width: 45px;" (click)="drawCard()">
+    <div class="tab-show" *ngIf="this.cardShow">
+    <div class="card-show">
+    </div>
+    <div class="confirm" >
+    <img src="../assets/picture/correct.png"  style="width: 45px;" (click)="useCard()" *ngIf="this.myPos == this.queue">
+    <img src="../assets/picture/cancel.png"  style="width: 45px;" (click)="cancelShow()">
   </div>
-</div>
-
-<body class="">
-  <!-- pass button -->
-  <div class="wrapper">
-    <div class="link_wrapper" *ngIf="this.myPos == this.queue">
-      <a (click)="pass()">PASS</a>
-      <div class="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
-          <path
-            d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
-        </svg>
+  </div>
+    <div class="container">
+      <div class="card" *ngFor="let card of this.handCard" (click)="showCard(card)">
       </div>
+      <!-- <div class="card">
+    
+      </div>
+      <div class="card">
+    
+      </div>
+      <div class="card">
+    
+    
+      </div>
+      <div class="card">
+    
+    
+      </div> -->
     </div>
-
-  </div>
-  <!-- pass button -->
-  <!-- <div class="chat-content">
-    <div class="chatline w-full">
-      <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
-    </div>
-  </div> -->
-  <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
-  <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
-  <div class="fancy-border">
-    <div class="row">
-      <div class="chat-content">
-        <div class="chatline w-full">
-          <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
+    <!-- pass button -->
+    <div class="wrapper" *ngIf="this.myPos == this.queue">
+      <div class="link_wrapper" >
+        <a (click)="pass()">PASS</a>
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
+            <path
+              d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
+          </svg>
         </div>
       </div>
-      <div class="chat-section">
-        <div class="chat-box">
-          <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+  
+    </div>
+    <!-- pass button -->
+    <!-- <div class="chat-content">
+      <div class="chatline w-full">
+        <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
+      </div>
+    </div> -->
+    <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
+    <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
+    <div class="fancy-border">
+      <div class="row">
+        <div class="chat-content">
+          <div class="chatline w-full">
+            <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
           </div>
         </div>
-
+        <div class="chat-section">
+          <div class="chat-box">
+            <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+            </div>
+          </div>
+  
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
-    <img src="../assets/picture/stopwatch.png" style="width: 95px;" *ngIf="this.clock">
-    <div class="counter" *ngIf="this.clock">
-      {{this.counterTime}}
+    <div
+      [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
+      <img src="../assets/picture/stopwatch.png" style="width: 95px;" *ngIf="this.clock">
+      <div class="counter" *ngIf="this.clock">
+        {{this.counterTime}}
+      </div>
     </div>
-  </div>
-  <div class="right-side">
-    <img src="../assets/picture/lock.png" class="lock" style="width: 95px;" *ngIf="this.is_private">
-    <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
-  </div>
-  <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"
-    nzWidth="335px" [nzFooter]=null>
-    <ng-container *nzModalContent>
-      <img src="../assets/picture/tetttt.PNG" class="imaging" style="width: 290px; height: 500px;">
-    </ng-container>
-  </nz-modal>
-
-
-  <img src="../assets/picture/bubles.png" class="chats" style="width: 95px;">
-  <!-- <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" nzTitle="CHAT" (nzOnClose)="close()">
-    <ng-container *nzDrawerContent>
-      <div class="chat-section">
-        <div class="chat-box">
-          <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+    <div class="right-side">
+      <img src="../assets/picture/lock.png" class="lock" style="width: 95px;" *ngIf="this.is_private">
+      <img src="../assets/picture/setting.png" class="setting" style="width: 95px;">
+    </div>
+    <nz-modal [(nzVisible)]="isVisibleMiddle" nzCentered (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()"
+      nzWidth="335px" [nzFooter]=null>
+      <ng-container *nzModalContent>
+        <img src="../assets/picture/tetttt.PNG" class="imaging" style="width: 290px; height: 500px;">
+      </ng-container>
+    </nz-modal>
+  
+  
+    <img src="../assets/picture/bubles.png" class="chats" style="width: 95px;">
+    <!-- <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" nzTitle="CHAT" (nzOnClose)="close()">
+      <ng-container *nzDrawerContent>
+        <div class="chat-section">
+          <div class="chat-box">
+            <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </nz-drawer> -->
+  
+    <div class="user">
+      <div class="circles" *ngIf="!this.chair1user">
+        <p class="circle-content" (click)="select_position(this.chair1)">
+          {{this.chair1}}
+        </p>
+      </div>
+      <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1">
+        <img
+          [ngClass]="{circle2: this.chair1 == this.queue, circle: this.chair1 != this.queue,circleLeave:this.quitRage.includes(this.chair1) && this.chair1 != this.queue}"
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair1user"><img
+          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown1"></div>
+    </div>
+  
+  
+    <div class="user2">
+      <div class="circles" *ngIf="!this.chair6user">
+        <p class="circle-content" (click)="select_position(this.chair6)">
+          {{this.chair6}}
+        </p>
+      </div>
+      <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler"
+          *ngIf="this.hosting6"><img
+          [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave:this.quitRage.includes(this.chair6) && this.chair6 != this.queue}"
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"><img
+          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
+  
+    </div>
+    <div class="user3">
+      <div class="circles" *ngIf="!this.chair2user">
+        <p class="circle-content" (click)="select_position(this.chair2)">
+          {{this.chair2}}
+        </p>
+      </div>
+      <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
+        <img
+          [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave:this.quitRage.includes(this.chair2) && this.chair2 != this.queue}"
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"><img
+          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2"></div>
+  
+    </div>
+  
+    <div class="user4">
+      <div class="circles" *ngIf="!this.chair5user">
+        <p class="circle-content" (click)="select_position(this.chair5)">
+          {{this.chair5}}
+        </p>
+      </div>
+      <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5">
+      </div>
+      <img
+        [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave:this.quitRage.includes(this.chair5) && this.chair5 != this.queue}"
+        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair5user">
+      <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
+    </div>
+    <div class="user5">
+      <div class="circles" *ngIf="!this.chair3user">
+        <p class="circle-content" (click)="select_position(this.chair3)">
+          {{this.chair3}}
+        </p>
+      </div>
+      <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
+      </div>
+      <img
+        [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
+        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair3user"><img
+        class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
+    </div>
+    <div class="user6">
+      <div class="circles" *ngIf="!this.chair4user">
+        <p class="circle-content" (click)="select_position(this.chair4)">
+          {{this.chair4}}
+        </p>
+      </div>
+      <div> <img
+          [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave:this.quitRage.includes(this.chair4) && this.chair4 != this.queue}"
+          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair4user"> <img
+          class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4"><img
+          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown4">
+      </div>
+  
+    </div>
+    <div class="hexagon">
+  
+      <div class='player-1'>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+  
+        </div>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+  
+          </div>
+          <div class="blocks-c">
+            <img class="myCharacter" src={{this.test}}>
+          </div>
+  
+        </div>
+      </div>
+  
+      <div class='player-2'>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+          </div>
+          <div class="blocks-c-o">
+            <img class="myCharacter" src={{this.img1}}>
+          </div>
+  
+        </div>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
           </div>
         </div>
       </div>
-    </ng-container>
-  </nz-drawer> -->
-
-
-  <div class="user">
-    <div class="circles" *ngIf="!this.chair1user">
-      <p class="circle-content" (click)="select_position(this.chair1)">
-        {{this.chair1}}
-      </p>
+  
+      <div class='player-3'>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+  
+          </div>
+          <div class="blocks-c-o">
+            <img class="myCharacter" src={{this.img6}}>
+          </div>
+  
+        </div>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <div class='player-4'>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+          <div class="blocks">
+          </div>
+  
+        </div>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+          </div>
+          <div class="blocks-c">
+            <img class="myCharacter" src={{this.img2}}>
+          </div>
+  
+        </div>
+      </div>
+  
+      <div class='player-5'>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+  
+        </div>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+  
+          </div>
+          <div class="blocks-c">
+            <img class="myCharacter" src={{this.img3}}>
+          </div>
+  
+        </div>
+      </div>
+  
+      <div class='player-6'>
+        <div class="myCharacter-card">
+          <div class="blocks-s">
+  
+          </div>
+          <div class="blocks-c-o">
+            <img class="myCharacter" src={{this.img5}}>
+          </div>
+  
+        </div>
+        <div class="armor-horse">
+          <!-- <div class="block-empty"></div> -->
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+          <div class="blocks">
+  
+          </div>
+  
+        </div>
+      </div>
+      <div class="face1"></div>
+      <div class="face2"></div>
     </div>
-    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1">
-      <img
-        [ngClass]="{circle2: this.chair1 == this.queue, circle: this.chair1 != this.queue,circleLeave:this.quitRage.includes(this.chair1) && this.chair1 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair1user"><img
-        class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown1"></div>
+  
+  
+  
   </div>
-
-
-  <div class="user2">
-    <div class="circles" *ngIf="!this.chair6user">
-      <p class="circle-content" (click)="select_position(this.chair6)">
-        {{this.chair6}}
-      </p>
-    </div>
-    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler"
-        *ngIf="this.hosting6"><img
-        [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave:this.quitRage.includes(this.chair6) && this.chair6 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"><img
-        class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
-
-  </div>
-  <div class="user3">
-    <div class="circles" *ngIf="!this.chair2user">
-      <p class="circle-content" (click)="select_position(this.chair2)">
-        {{this.chair2}}
-      </p>
-    </div>
-    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
-      <img
-        [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave:this.quitRage.includes(this.chair2) && this.chair2 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"><img
-        class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2"></div>
-
-  </div>
-
-  <div class="user4">
-    <div class="circles" *ngIf="!this.chair5user">
-      <p class="circle-content" (click)="select_position(this.chair5)">
-        {{this.chair5}}
-      </p>
-    </div>
-    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5">
-    </div>
-    <img
-      [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave:this.quitRage.includes(this.chair5) && this.chair5 != this.queue}"
-      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair5user">
-    <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
-  </div>
-  <div class="user5">
-    <div class="circles" *ngIf="!this.chair3user">
-      <p class="circle-content" (click)="select_position(this.chair3)">
-        {{this.chair3}}
-      </p>
-    </div>
-    <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
-    </div>
-    <img
-      [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
-      src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair3user"><img
-      class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
-  </div>
-  <div class="user6">
-    <div class="circles" *ngIf="!this.chair4user">
-      <p class="circle-content" (click)="select_position(this.chair4)">
-        {{this.chair4}}
-      </p>
-    </div>
-    <div> <img
-        [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave:this.quitRage.includes(this.chair4) && this.chair4 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair4user"> <img
-        class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4"><img
-        class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown4">
-    </div>
-
-  </div>
-  <div class="hexagon">
-
-    <div class='player-1'>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-
-      </div>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-
-        </div>
-        <div class="blocks-c">
-          <img class="myCharacter" src={{this.test}}>
-        </div>
-
-      </div>
-    </div>
-
-    <div class='player-2'>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-        </div>
-        <div class="blocks-c-o">
-          <img class="myCharacter" src={{this.img1}}>
-        </div>
-
-      </div>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-      </div>
-    </div>
-
-    <div class='player-3'>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-
-        </div>
-        <div class="blocks-c-o">
-          <img class="myCharacter" src={{this.img6}}>
-        </div>
-
-      </div>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class='player-4'>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-        <div class="blocks">
-        </div>
-
-      </div>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-        </div>
-        <div class="blocks-c">
-          <img class="myCharacter" src={{this.img2}}>
-        </div>
-
-      </div>
-    </div>
-
-    <div class='player-5'>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-
-      </div>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-
-        </div>
-        <div class="blocks-c">
-          <img class="myCharacter" src={{this.img3}}>
-        </div>
-
-      </div>
-    </div>
-
-    <div class='player-6'>
-      <div class="myCharacter-card">
-        <div class="blocks-s">
-
-        </div>
-        <div class="blocks-c-o">
-          <img class="myCharacter" src={{this.img5}}>
-        </div>
-
-      </div>
-      <div class="armor-horse">
-        <!-- <div class="block-empty"></div> -->
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-        <div class="blocks">
-
-        </div>
-
-      </div>
-    </div>
-    <div class="face1"></div>
-    <div class="face2"></div>
-  </div>
-
-
-
-</body>
+  </body>

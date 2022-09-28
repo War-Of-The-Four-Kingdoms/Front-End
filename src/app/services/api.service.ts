@@ -29,4 +29,14 @@ export class ApiService {
     return this.http.get(this.apiUrl + '/getCharacter');
   }
 
+  drawCard() {
+    return this.http.get(this.apiUrl + '/drawCard');
+  }
+
+  // drawCard(){
+  //   re
+  // }
+
+  
+
 }

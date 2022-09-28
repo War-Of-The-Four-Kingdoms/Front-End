@@ -68,6 +68,7 @@ export class GameStartComponent implements OnInit {
   noble_uid: any[] = [];
   characterPool: any[] = [];
   myCharacter: any;
+  handCard: any[] = [12, 4, 5, 2, 6]
   test: any;
   img1: any;
   img2: any;
@@ -75,6 +76,8 @@ export class GameStartComponent implements OnInit {
   img4: any;
   img5: any;
   img6: any;
+  cardShow: boolean = false;
+  cardCheck: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -91,6 +94,8 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
+    console.log(this.handCard);
+
     this.socket.listen('random characters').subscribe((data: any) => {
       console.log(data);
       this.characterCard = true;
@@ -309,6 +314,9 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('ready to start').subscribe((data: any) => {
       console.log("ready to start");
+      this.api.drawCard().subscribe((res: any) => {
+        console.log(res);
+      });
       this.characterCard = false;
       console.log(this.myCharacter);
     });
@@ -338,6 +346,29 @@ export class GameStartComponent implements OnInit {
 
     });
   }
+
+  showCard(card: any) {
+    this.cardShow = true
+    this.cardCheck = card
+    console.log(this.cardCheck);
+  }
+
+  cancelShow() {
+    this.cardShow = false
+  }
+
+  drawCard() {
+    this.handCard.push(18)
+  }
+
+  useCard() {
+    const index = this.handCard.indexOf(this.cardCheck);
+    if (index > -1) { 
+      this.handCard.splice(index, 1);
+    }
+    this.cardShow = false
+  }
+
 
   selectCharacter(char: any) {
     console.log(char.id);
