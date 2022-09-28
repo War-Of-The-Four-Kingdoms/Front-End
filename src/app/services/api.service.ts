@@ -29,14 +29,15 @@ export class ApiService {
     return this.http.get(this.apiUrl + '/getCharacter');
   }
 
-  drawCard() {
-    return this.http.get(this.apiUrl + '/drawCard');
+  drawCard(code: any) {
+    let params = new HttpParams().set('room_code', code);
+    return this.http.get(this.apiUrl + '/drawCard',{ params: params });
   }
 
   // drawCard(){
   //   re
   // }
 
-  
+
 
 }

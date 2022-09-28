@@ -314,7 +314,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('ready to start').subscribe((data: any) => {
       console.log("ready to start");
-      this.api.drawCard().subscribe((res: any) => {
+      this.api.drawCard(this.roomcode).subscribe((res: any) => {
         console.log(res);
       });
       this.characterCard = false;
@@ -363,7 +363,7 @@ export class GameStartComponent implements OnInit {
 
   useCard() {
     const index = this.handCard.indexOf(this.cardCheck);
-    if (index > -1) { 
+    if (index > -1) {
       this.handCard.splice(index, 1);
     }
     this.cardShow = false
@@ -523,7 +523,6 @@ export class GameStartComponent implements OnInit {
   }
 
   start(): void {
-
     this.socket.emit('start game', { code: this.lobbyCode, roles: this.roles, characters: this.chars });
   }
 
