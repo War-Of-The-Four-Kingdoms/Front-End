@@ -187,7 +187,7 @@ export class GameStartComponent implements OnInit {
       this.hosting6 = false
       console.log(room);
 
-      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
+      // this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
@@ -313,7 +313,7 @@ export class GameStartComponent implements OnInit {
       this.api.drawCard(this.roomcode).subscribe((res: any) => {
         console.log(res);
         this.handCard = res;
-        this.socket.emit('draw card ',{ hand: this.handCard, code: this.roomcode });
+        this.socket.emit('draw card ', { hand: this.handCard, code: this.roomcode });
       });
       this.characterCard = false;
       console.log(this.myCharacter);
