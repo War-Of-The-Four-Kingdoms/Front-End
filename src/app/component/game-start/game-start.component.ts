@@ -104,9 +104,6 @@ export class GameStartComponent implements OnInit {
         c.image_name = "../assets/picture/card/" + c.image_name
       });
     });
-    this.api.getCharacter().subscribe((res: any) => {
-      this.chars = { leader: res.leader, normal: res.normal };
-    });
     this.socket.listen('assign roles').subscribe((data: any) => {
       this.started = true
       this.crown1 = false
@@ -181,9 +178,6 @@ export class GameStartComponent implements OnInit {
       this.appendChat('<p class="text-right" style="font-size:18px;width:90%;color:white;">' + data.username + ': ' + data.message + '</p>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
-      this.api.getRole(room.positions.length).subscribe((res: any) => {
-        this.roles = res.roles;
-      });
       this.hosting1 = false
       this.hosting2 = false
       this.hosting3 = false
@@ -312,12 +306,13 @@ export class GameStartComponent implements OnInit {
       console.log("waiting");
       this.characterCard = false;
     });
-    
+
     this.socket.listen('ready to start').subscribe((data: any) => {
       console.log("ready to start");
       this.api.drawCard(this.roomcode).subscribe((res: any) => {
         console.log(res);
         this.handCard = res;
+        this.socket.emit('draw card ',{ hand: this.handCard, code: this.roomcode });
       });
       this.characterCard = false;
       console.log(this.myCharacter);
@@ -364,11 +359,18 @@ export class GameStartComponent implements OnInit {
   }
 
   useCard() {
-    const index = this.handCard.indexOf(this.cardCheck);
-    if (index > -1) {
-      this.handCard.splice(index, 1);
+    //   console.log(this.handCard);
+    // this.handCard.forEach(element => {
+      
+    // });
+    // const index = this.handCard.indexOf(this.cardCheck.id);
+    // this.handCard.splice(index);
+    // this.cardShow = false
+    for (let i = this.handCard.length - 1; i >= 0; i--) {
+      if (this.handCard[i].id === this.cardCheck.id) {
+        this.handCard.splice(i, 1);
+      }
     }
-    this.cardShow = false
   }
 
 

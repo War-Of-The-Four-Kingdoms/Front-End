@@ -20,14 +20,6 @@ export class ApiService {
     };
   }
 
-  getRole(num: any) {
-    let params = new HttpParams().set('player_num', num);
-    return this.http.get(this.apiUrl + '/getRole', { params: params });
-  }
-
-  getCharacter() {
-    return this.http.get(this.apiUrl + '/getCharacter');
-  }
 
   drawCard(code: any) {
     let params = new HttpParams().set('room_code', code);
