@@ -54,13 +54,13 @@
 }
 
 .stage2 {
-  top: -40px;
-  left: -150px;
+  left: -40px;
+  bottom: -40px;
 }
 
 .stage3 {
-  top: -40px;
-  right: -165px;
+  bottom: -40px;
+  right: -49px;
 }
 
 
@@ -136,8 +136,6 @@
 body {
   background-color: #100e17;
   font-family: 'Open Sans', sans-serif;
-  padding: 50px;
-  padding-left: 125px;
   width: 100%;
 }
 
@@ -368,14 +366,14 @@ body {
 
 .user4 {
   top: 65%;
-  left: 24%;
+  left: 23.6%;
   position: absolute;
 
 }
 
 .user5 {
   top: 65%;
-  left: 71%;
+  left: 71.8%;
   position: absolute;
 }
 
