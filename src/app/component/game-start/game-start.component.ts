@@ -68,7 +68,7 @@ export class GameStartComponent implements OnInit {
   noble_uid: any[] = [];
   characterPool: any[] = [];
   myCharacter: any;
-  handCard: any[] = [12, 4, 5, 2, 6]
+  handCard: any[] = []
   test: any;
   img1: any;
   img2: any;
@@ -312,10 +312,12 @@ export class GameStartComponent implements OnInit {
       console.log("waiting");
       this.characterCard = false;
     });
+    
     this.socket.listen('ready to start').subscribe((data: any) => {
       console.log("ready to start");
       this.api.drawCard(this.roomcode).subscribe((res: any) => {
         console.log(res);
+        this.handCard = res;
       });
       this.characterCard = false;
       console.log(this.myCharacter);
@@ -371,8 +373,6 @@ export class GameStartComponent implements OnInit {
 
 
   selectCharacter(char: any) {
-    console.log(char.id);
-    console.log(this.roomcode);
     this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
     this.myCharacter = char
   }
@@ -413,9 +413,6 @@ export class GameStartComponent implements OnInit {
             this.hosting4 = true
           }
         } else if (this.chair5 == d.position) {
-          console.log(this.chair5);
-          console.log(d.position);
-
           this.chair5user = true
           if (d.uid == this.roomHost) {
             this.hosting5 = true
