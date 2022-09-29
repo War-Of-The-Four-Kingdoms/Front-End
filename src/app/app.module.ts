@@ -19,6 +19,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { LoginPageComponent } from './component/login-page/login-page.component';
 import { GameStartComponent } from './component/game-start/game-start.component';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 registerLocaleData(en);
 
 @NgModule({
@@ -32,6 +33,7 @@ registerLocaleData(en);
   imports: [
     NzButtonModule,
     NzCarouselModule,
+    NzCollapseModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -42,7 +44,7 @@ registerLocaleData(en);
     NzSwitchModule,
     NzDrawerModule,
     ReactiveFormsModule,
-    
+
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

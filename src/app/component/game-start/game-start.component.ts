@@ -78,6 +78,7 @@ export class GameStartComponent implements OnInit {
   img6: any;
   cardShow: boolean = false;
   cardCheck: any;
+  panel = { active: true, name: 'This is panel header 1', disabled: false };
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -361,7 +362,7 @@ export class GameStartComponent implements OnInit {
   useCard() {
     //   console.log(this.handCard);
     // this.handCard.forEach(element => {
-      
+
     // });
     // const index = this.handCard.indexOf(this.cardCheck.id);
     // this.handCard.splice(index);

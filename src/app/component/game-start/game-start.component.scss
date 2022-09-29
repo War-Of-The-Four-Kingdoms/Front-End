@@ -277,10 +277,6 @@ body {
   left: 70%;
 }
 
-// #chatInput{
-// background-color: red;
-// }
-.chat-input {}
 
 // ======================
 .hexagon {
@@ -457,10 +453,6 @@ body {
   z-index: 9999;
 }
 
-.chat-content {
-  position: absolute;
-  left: 27%;
-}
 
 .chitty {
   color: #ffffff;
@@ -652,25 +644,7 @@ a:hover+.icon {
   }
 }
 
-.chat-section {
-  position: absolute;
-  bottom: 8px;
-  width: 90%;
-  left: 0;
-}
 
-.chat-input {
-  height: 50px;
-}
-
-.chatline {
-  top: -37px;
-  position: absolute;
-  width: 90%;
-  left: -22%;
-  overflow-y: scroll;
-  height: 200px;
-}
 
 .counter {
   background: lightblue;
@@ -720,6 +694,87 @@ a:hover+.icon {
 .testing img:hover {
   transform: perspective(800px) rotateZ(0deg);
   opacity: 1;
+}
+
+.show-chat{
+  top: 45%;
+  left: 0%;
+  height: 10%;
+  width: 40px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #000000;
+  border-radius: 0px 20px 20px 0px;
+  background: rgba(255, 255, 255, 1);
+  position: absolute;
+}
+
+.chat-input {
+  height: 20%;
+  background-color: rgba(255, 255, 255,1);
+}
+[contenteditable] {
+  margin-left: 10px;
+  margin-right: 10px;
+  outline: 0px solid transparent;
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+.chatline {
+  width: 100%;
+  height: 80%;
+}
+
+.chat-sidebar{
+  top: 25%;
+  left: 0%;
+  height: 50%;
+  width: 20%;
+  margin: 0;
+  display: flex;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .5);
+  position: absolute;
+}
+
+.chat-sidebar .chat-content{
+  height: 100%;
+  width: 90%;
+}
+
+.chat-sidebar .chat-hide{
+  height: 100%;
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  border-radius: 0 20px 20px 0;
+  background-color: rgb(197, 197, 197);;
+  align-items: center;
+}
+
+.lobbycode{
+  position: absolute;
+  bottom: 10%;
+  left: 0%;
+  color: white;
+  margin: auto;
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  padding-top: 10px;
+}
+
+.lobbycode img{
+  filter: invert(100%);
+  margin-left: 20px;
+}
+
+.code-text{
+  text-transform: uppercase;
 }
 
 .role {

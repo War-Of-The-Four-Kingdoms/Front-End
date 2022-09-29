@@ -26,18 +26,18 @@
         {{card.id}}
       </div>
       <!-- <div class="card">
-    
+
       </div>
       <div class="card">
-    
+
       </div>
       <div class="card">
-    
-    
+
+
       </div>
       <div class="card">
-    
-    
+
+
       </div> -->
     </div>
     <!-- pass button -->
@@ -59,8 +59,30 @@
         <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
       </div>
     </div> -->
+    <div class="lobbycode">
+      LOBBY
+      <div>
+        <span class="show_code"></span>
+        <img src="../assets/picture/copy.png" width="27px" height="35px">
+      </div>
+    </div>
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
     <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
+    <div class="show-chat" ><img src="../assets/picture/greater.png" height="60px"></div>
+    <div class="chat-sidebar">
+      <div class="chat-content">
+        <div class="chatline w-full">
+          <p class="text-right" style="font-size:18px;width:90%;color:white;">ATP : hi bro</p>
+          <p class="text-end  message" style="font-size:18px;width:90%;color:green;">Hi ATP :Me</p>
+        </div>
+        <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+        </div>
+      </div>
+      <div class="chat-hide">
+        <img src="../assets/picture/less.png" height="60px">
+      </div>
+
+    </div>
     <!-- <div class="fancy-border">
       <div class="row">
         <div class="chat-content">
