@@ -19,9 +19,36 @@
   font-size: 20px;
   margin-bottom: 5px;
   padding: 10px;
-
+}
+.roomlist{
+  height: 300px;
+  overflow: overlay;
+  overflow-x: hidden;
+}
+/* width */
+.roomlist::-webkit-scrollbar {
+  width: 15px;
+  display: none;
 }
 
+.roomlist:hover::-webkit-scrollbar{
+  display: block;
+}
+
+/* Track */
+.roomlist::-webkit-scrollbar-track {
+}
+
+/* Handle */
+.roomlist::-webkit-scrollbar-thumb {
+  background: rgb(168, 147, 107);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.roomlist::-webkit-scrollbar-thumb:hover {
+  background: rgb(110, 94, 65);
+}
 h1 {
   margin-bottom: 15px;
 }
@@ -80,7 +107,6 @@ aside {
   margin-top: 15px;
   margin: 10px;
   height: 450px;
-  overflow-y: scroll;
 }
 
 .textalign {
@@ -581,6 +607,16 @@ $brown: #786450;
   text-align: center;
   font-size: 42px;
   margin-top: 20px;
+}
+.reRoomList{
+  filter: brightness(0) invert(1);
+  width: 70px;
+}
+.reRoomList:hover{
+  filter: brightness(0) invert(0.7);
+}
+.customroom{
+  width: 100%;
 }
 
 .exit-door {

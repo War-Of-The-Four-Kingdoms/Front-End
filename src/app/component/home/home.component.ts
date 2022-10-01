@@ -37,13 +37,16 @@ export class HomeComponent implements OnInit {
       this.roomsarray = rooms
     });
     this.getDetails();
+    this.socket.listen('no room').subscribe((data: any) => {
+      alert("Room "+data.code+" not exists!");
+    });
     this.socket.listen('user checked').subscribe((data: any) => {
       if (data.is_created) {
         console.log('do');
         this.router.navigate(['start' + '/' + data.code]);
       } else {
         console.log('not');
-        alert("User Not Found!!");
+        alert("User Not Found!");
         setTimeout(function () {
           window.location.reload();
         }, 2000)
@@ -53,6 +56,9 @@ export class HomeComponent implements OnInit {
   }
   onNameChange(val: any) {
     console.log("Changed", val)
+  }
+  refreshRoomList(){
+    this.socket.emit('list room', {});
   }
   logout(): void {
     localStorage.clear()

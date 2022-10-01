@@ -363,7 +363,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('set player character').subscribe((data: any) => {
       console.log(data);
-      
+
       console.log(this.myPos);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character
@@ -630,6 +630,7 @@ export class GameStartComponent implements OnInit {
   appendChat(message: string): void {
     var cl = this.elementRef.nativeElement.querySelector('.chatline');
     cl.insertAdjacentHTML('beforeend', message);
+    cl.scrollTop = cl.scrollHeight;
   }
   leave() {
     this.socket.emit('select position', { position: 0, code: this.lobbyCode });
