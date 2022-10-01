@@ -34,10 +34,10 @@ export class AppComponent {
           localStorage.setItem('access_token', res.access_token);
           localStorage.setItem('refresh_token', res.refresh_token);
           localStorage.setItem('expires_in', timestamp);
-          let a = this.getDetails();
+          this.getDetails();
         });
       } else {
-        let a = this.getDetails();
+        this.getDetails();
       }
       this.is_login = true;
     }
@@ -54,8 +54,8 @@ export class AppComponent {
     localStorage.clear()
     window.location.reload();
   }
-  getDetails(): string {
-    this.authService.detail().subscribe((res: any) => {
+  async getDetails(): Promise<any> {
+    await this.authService.detail().subscribe((res: any) => {
       this.socket.emit('start', {
         username: res.success.name,
         uuid: res.success.uuid,
@@ -63,6 +63,5 @@ export class AppComponent {
       sessionStorage.setItem('username',res.success.name);
       sessionStorage.setItem('uuid',res.success.uuid);
     });
-    return 'success';
   }
 }

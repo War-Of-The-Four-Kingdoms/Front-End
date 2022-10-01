@@ -1,4 +1,3 @@
-
 <body>
   <div id="exist" *ngIf="this.characterCard">
     <!-- If this role == king -->
@@ -44,7 +43,7 @@
     <!-- pass button -->
     <div class="wrapper" *ngIf="this.myPos == this.queue">
       <div class="link_wrapper">
-        <a (click)="pass()">PASS</a>
+        <a (click)="pass()">Next Stage</a>
         <div class="icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
             <path
@@ -60,29 +59,34 @@
         <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
       </div>
     </div> -->
-    <div class="lobbycode">
-      LOBBY
-      <div>
-        <span class="show_code"></span>
-        <img src="../assets/picture/copy.png" width="27px" height="35px">
+    <div class="lobbycode align-items-center">
+      CODE:
+      <div class="h-100 d-flex align-items-center">
+        <span class="show_code display-5"></span>
+        <button class="copy-btn" (click)="copyCodeToClipboard()">
+          <img src="../assets/picture/copy.png" width="27px" height="35px">
+        </button>
       </div>
     </div>
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
     <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
-    <div class="show-chat" (click)="openChat()"><img src="../assets/picture/greater.png" height="60px"></div>
-    <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
-      <div class="chat-content">
-        <div class="chatline w-full">
-          <p class="text-right" style="font-size:18px;width:90%;color:white;">ATP : hi bro</p>
-          <p class="text-end  message" style="font-size:18px;width:90%;color:green;">Hi ATP :Me</p>
+    <div class="show-chat" (click)="openChat()" *ngIf="!this.showChat"><img src="../assets/picture/greater.png"
+        height="60px"></div>
+    <div class="hideChat">
+      <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
+        <div class="chat-content">
+          <div class="chatline w-full">
+          </div>
+          <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+          </div>
         </div>
-        <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
+        <div class="chat-hide" (click)="openChat()">
+          <img src="../assets/picture/less.png" height="60px">
         </div>
       </div>
-      <div class="chat-hide" (click)="openChat()">
-        <img src="../assets/picture/less.png" height="60px">
-      </div>
-
+    </div>
+    <div class="copy-noti hidden" aria-readonly="true">
+      CODE was copied to clipboard.
     </div>
     <!-- <div class="fancy-border">
       <div class="row">
@@ -138,12 +142,12 @@
         </p>
       </div>
       <div class="stage stage1">
-        <img src="../assets/picture/magic-ball.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/card.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker-cards.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/recycle-bin.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/flag.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
+        <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="11" width="30px">
+        <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="12" width="30px">
+        <img src="../assets/picture/card.png" class="stageIcon nonfinish" id="13" width="30px">
+        <img src="../assets/picture/poker-cards.png" class="stageIcon nonfinish" id="14" width="30px">
+        <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" id="15" width="30px">
+        <img src="../assets/picture/flag.png" class="stageIcon nonfinish" id="16" width="30px">
       </div>
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1">
         <img
@@ -160,12 +164,12 @@
         </p>
       </div>
       <div class="stage stage1">
-        <img src="../assets/picture/magic-ball.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/card.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker-cards.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/recycle-bin.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/flag.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
+        <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="61" width="30px">
+        <img src="../assets/picture/poker.png" class="stageIcon nonfinish" width="30px" id="62">
+        <img src="../assets/picture/card.png" class="stageIcon nonfinish" width="30px" id="63">
+        <img src="../assets/picture/poker-cards.png" class="stageIcon nonfinish" width="30px" id="64">
+        <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" width="30px" id="65">
+        <img src="../assets/picture/flag.png" class="stageIcon nonfinish" width="30px" id="66">
       </div>
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler"
           *ngIf="this.hosting6"><img
@@ -181,12 +185,12 @@
         </p>
       </div>
       <div class="stage stage1">
-        <img src="../assets/picture/magic-ball.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/card.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker-cards.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/recycle-bin.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/flag.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
+        <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="21" width="30px">
+        <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="22" width="30px">
+        <img src="../assets/picture/card.png" class="stageIcon nonfinish" id="23" width="30px">
+        <img src="../assets/picture/poker-cards.png" class="stageIcon nonfinish" id="24" width="30px">
+        <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" id="25" width="30px">
+        <img src="../assets/picture/flag.png" class="stageIcon nonfinish" id="26" width="30px">
       </div>
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
         <img
@@ -203,12 +207,12 @@
         </p>
       </div>
       <div class="stage stage2">
-        <img src="../assets/picture/magic-ball.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/card.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker-cards.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/recycle-bin.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/flag.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
+        <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="51" width="30px">
+        <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="52" width="30px">
+        <img src="../assets/picture/card.png" class="stageIcon nonfinish" id="53" width="30px">
+        <img src="../assets/picture/poker-cards.png" class="stageIcon nonfinish" id="54" width="30px">
+        <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" id="55" width="30px">
+        <img src="../assets/picture/flag.png" class="stageIcon nonfinish" id="56" width="30px">
       </div>
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5">
       </div>
@@ -224,12 +228,12 @@
         </p>
       </div>
       <div class="stage stage3">
-        <img src="../assets/picture/magic-ball.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/card.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/poker-cards.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/recycle-bin.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
-        <img src="../assets/picture/flag.png" [ngClass]="{nonfinish: true,finish:false}" width="30px">
+        <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="31" width="30px">
+        <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="32" width="30px">
+        <img src="../assets/picture/card.png" class="stageIcon nonfinish" id="33" width="30px">
+        <img src="../assets/picture/poker-cards.png" class="stageIcon nonfinish" id="34" width="30px">
+        <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" id="35" width="30px">
+        <img src="../assets/picture/flag.png" class="stageIcon nonfinish" id="36" width="30px">
       </div>
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
       </div>

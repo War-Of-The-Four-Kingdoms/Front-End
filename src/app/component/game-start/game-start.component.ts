@@ -13,6 +13,7 @@ export class GameStartComponent implements OnInit {
   characterCard: boolean = false;
   visible = false;
   lobbyCode: string = '';
+  stage_list = ['prepare', 'decide', 'draw', 'play', 'drop', 'end'];
   chair1: any = 1;
   chair6: any = 6;
   chair2: any = 2;
@@ -80,6 +81,13 @@ export class GameStartComponent implements OnInit {
   cardCheck: any;
   panel = { active: true, name: 'This is panel header 1', disabled: false };
   showChat: boolean = true;
+  stage1: any;
+  stage2: any;
+  stage3: any;
+  stage4: any;
+  stage5: any;
+  stage6: any;
+  chairPos: any[] = [];
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -96,7 +104,13 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
-    console.log(this.handCard);
+      window.addEventListener("beforeunload", function (e) {
+        return e.returnValue = "Your message here";
+    });
+
+    // window.onbeforeunload = function () {
+    //   return "Leaving this page will reset the wizard";
+    // }
 
     this.socket.listen('random characters').subscribe((data: any) => {
       console.log(data);
@@ -150,24 +164,52 @@ export class GameStartComponent implements OnInit {
     }
 
     this.socket.listen('next turn').subscribe((pos: any) => {
+      console.log(pos);
       this.clock = true
-      if (this.myPos == pos) {
-        this.counterTime = 0
-        console.log('your turn');
-      } else {
-        this.counterTime = 0
-        console.log('other turn');
+      // if (this.myPos == pos) {
+      //   // this.counterTime = 0
+      //   console.log('your turn');
+      // } else {
+      //   // this.counterTime = 0
+      //   console.log('other turn');
 
+      // }
+
+      // var interval = this.interval = setInterval(() => {
+      //   this.counterTime++;
+      //   console.log(this.counterTime);
+      //   if (this.counterTime >= 30) {
+      //     clearInterval(interval);
+      //   }
+      // }, 1000);
+      this.queue = pos
+    });
+    this.socket.listen('change stage').subscribe((data: any) => {
+      console.log(data);
+      let othericon = this.elementRef.nativeElement.querySelector('.finish')
+      if (othericon != null) {
+        othericon.classList.remove("finish")
+        othericon.classList.add("nonfinish")
       }
+      if (data.position != this.myPos) {
+        let chairIndex = this.chairPos.indexOf(data.position)
+        let stageIndex = this.stage_list.indexOf(data.stage)
+        let icon = this.elementRef.nativeElement.querySelector("#" + CSS.escape(String(chairIndex) + String(stageIndex + 1)))
+        icon.classList.remove("nonfinish")
+        icon.classList.add("finish")
+      }
+      this.counterTime = 0
       var interval = this.interval = setInterval(() => {
         this.counterTime++;
         console.log(this.counterTime);
-        if (this.counterTime >= 5) {
+        if (this.counterTime >= 30) {
           clearInterval(interval);
         }
       }, 1000);
-      this.queue = pos
+
     });
+
+
 
     this.listen_position();
 
@@ -188,7 +230,7 @@ export class GameStartComponent implements OnInit {
       this.hosting6 = false
       console.log(room);
 
-      // this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
@@ -320,6 +362,8 @@ export class GameStartComponent implements OnInit {
       console.log(this.myCharacter);
     });
     this.socket.listen('set player character').subscribe((data: any) => {
+      console.log(data);
+      
       console.log(this.myPos);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character
@@ -346,6 +390,17 @@ export class GameStartComponent implements OnInit {
     });
   }
 
+  loopChair() {
+    // const element = array[index];
+    this.chairPos[1] = this.chair1
+    this.chairPos[2] = this.chair2
+    this.chairPos[3] = this.chair3
+    this.chairPos[4] = this.chair4
+    this.chairPos[5] = this.chair5
+    this.chairPos[6] = this.chair6
+  }
+
+
   showCard(card: any) {
     this.cardShow = true
     this.cardCheck = card
@@ -360,11 +415,19 @@ export class GameStartComponent implements OnInit {
     this.handCard.push(18)
   }
 
-  openChat(){
+  openChat() {
     this.showChat = !this.showChat
     console.log(this.showChat);
   }
 
+  copyCodeToClipboard() {
+    navigator.clipboard.writeText(this.roomcode);
+    let a = this.elementRef.nativeElement.querySelector('.copy-noti');
+    a.classList.remove('hidden');
+    a.classList.add('visible');
+    let hidenoti = setTimeout(() => { a.classList.remove('visible'); a.classList.add('hidden'); }, 1000);
+
+  }
   useCard() {
     //   console.log(this.handCard);
     // this.handCard.forEach(element => {
@@ -435,6 +498,7 @@ export class GameStartComponent implements OnInit {
         }
       });
     });
+    this.loopChair()
   }
 
   select_position(pos: any): void {
@@ -526,6 +590,7 @@ export class GameStartComponent implements OnInit {
       default:
         break;
     }
+    this.loopChair();
   }
 
   start(): void {
@@ -534,7 +599,7 @@ export class GameStartComponent implements OnInit {
 
   pass(): void {
     clearInterval(this.interval);
-    this.socket.emit('pass turn', { code: this.lobbyCode });
+    this.socket.emit('end stage', { code: this.lobbyCode });
   }
 
   showModalMiddle(): void {

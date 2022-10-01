@@ -763,11 +763,13 @@ a:hover+.icon {
   width: 20%;
   margin: 0;
   display: flex;
-  border-radius: 20px;
+  border-radius: 0 20px 20px 0;
   background: rgba(255, 255, 255, .5);
   position: absolute;
   animation: fadeIn 2s;
 }
+
+
 
 @keyframes fadeIn {
   0% {
@@ -799,7 +801,6 @@ a:hover+.icon {
   height: 50%;
   width: 0%;
   margin: 0;
-  border-radius: 20px;
   display: flex;
   background: rgba(255, 255, 255, .5);
   position: absolute;
@@ -839,24 +840,79 @@ a:hover+.icon {
 
 .lobbycode {
   position: absolute;
-  bottom: 10%;
+  bottom: 8%;
   left: 0%;
   color: white;
   margin: auto;
-  width: 15%;
+  width: 19%;
   display: flex;
   justify-content: space-between;
   font-size: 20px;
-  padding-top: 10px;
 }
 
 .lobbycode img {
   filter: invert(100%);
-  margin-left: 20px;
 }
 
-.code-text {
+.copy-btn{
+  background-color: rgb(65, 65, 65);
+  border-radius: 2px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  margin-left: 20px;
+  outline: none;
+  padding: 5px 5px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 10;
+}
+
+.copy-btn:hover{
+  background-color: #a3a3a3;
+}
+.code-text{
   text-transform: uppercase;
+}
+.copy-noti{
+  position: absolute;
+  left: 19%;
+  bottom: 5%;
+  color: white;
+  background-color: rgb(65, 65, 65);
+  padding: 10px 10px;
+  border-radius: 0 0 4px 4px ;
+  display: flex;
+  justify-content: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+
+.copy-noti.visible{
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+
+.copy-noti.hidden{
+  opacity: 0;
+  transition: opacity 0.5s linear;
 }
 
 .role {
@@ -871,7 +927,7 @@ a:hover+.icon {
   height: 300px;
   width: 550px;
   display: flex;
-  top: 80%;
+  top: 85%;
   left: 68%;
 }
 
