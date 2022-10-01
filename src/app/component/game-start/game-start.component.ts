@@ -79,6 +79,7 @@ export class GameStartComponent implements OnInit {
   cardShow: boolean = false;
   cardCheck: any;
   panel = { active: true, name: 'This is panel header 1', disabled: false };
+  showChat: boolean = true;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -357,6 +358,11 @@ export class GameStartComponent implements OnInit {
 
   drawCard() {
     this.handCard.push(18)
+  }
+
+  openChat(){
+    this.showChat = !this.showChat
+    console.log(this.showChat);
   }
 
   useCard() {

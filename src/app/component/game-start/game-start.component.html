@@ -1,3 +1,4 @@
+
 <body>
   <div id="exist" *ngIf="this.characterCard">
     <!-- If this role == king -->
@@ -68,8 +69,8 @@
     </div>
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
     <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
-    <div class="show-chat" ><img src="../assets/picture/greater.png" height="60px"></div>
-    <div class="chat-sidebar">
+    <div class="show-chat" (click)="openChat()"><img src="../assets/picture/greater.png" height="60px"></div>
+    <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
       <div class="chat-content">
         <div class="chatline w-full">
           <p class="text-right" style="font-size:18px;width:90%;color:white;">ATP : hi bro</p>
@@ -78,7 +79,7 @@
         <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
         </div>
       </div>
-      <div class="chat-hide">
+      <div class="chat-hide" (click)="openChat()">
         <img src="../assets/picture/less.png" height="60px">
       </div>
 
@@ -118,7 +119,6 @@
     </nz-modal>
 
 
-    <img src="../assets/picture/bubles.png" class="chats" style="width: 95px;">
     <!-- <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" nzTitle="CHAT" (nzOnClose)="close()">
       <ng-container *nzDrawerContent>
         <div class="chat-section">
