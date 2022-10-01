@@ -655,6 +655,7 @@ export class GameStartComponent implements OnInit {
   appendChat(message: string): void {
     var cl = this.elementRef.nativeElement.querySelector('.chatline');
     cl.insertAdjacentHTML('beforeend', message);
+    cl.scrollTop = cl.scrollHeight;
   }
   leave() {
     this.socket.emit('select position', { position: 0, code: this.lobbyCode });

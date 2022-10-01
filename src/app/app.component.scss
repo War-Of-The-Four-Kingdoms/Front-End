@@ -28,3 +28,9 @@
 .exit-door:hover{
 
 }
+::ng-deep body,
+::ng-deep html{
+   overflow: hidden;
+   margin: 0;
+   padding: 0;
+}
