@@ -59,11 +59,13 @@
         <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
       </div>
     </div> -->
-    <div class="lobbycode">
-      LOBBY
-      <div>
-        <span class="show_code"></span>
-        <img src="../assets/picture/copy.png" width="27px" height="35px">
+    <div class="lobbycode align-items-center">
+      CODE:
+      <div class="h-100 d-flex align-items-center">
+        <span class="show_code display-5"></span>
+        <button class="copy-btn" (click)="copyCodeToClipboard()">
+          <img src="../assets/picture/copy.png" width="27px" height="35px">
+        </button>
       </div>
     </div>
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
@@ -72,8 +74,6 @@
     <div class="chat-sidebar">
       <div class="chat-content">
         <div class="chatline w-full">
-          <p class="text-right" style="font-size:18px;width:90%;color:white;">ATP : hi bro</p>
-          <p class="text-end  message" style="font-size:18px;width:90%;color:green;">Hi ATP :Me</p>
         </div>
         <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
         </div>
@@ -82,6 +82,9 @@
         <img src="../assets/picture/less.png" height="60px">
       </div>
 
+    </div>
+    <div class="copy-noti hidden" aria-readonly="true">
+        CODE was copied to clipboard.
     </div>
     <!-- <div class="fancy-border">
       <div class="row">

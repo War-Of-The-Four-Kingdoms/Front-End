@@ -187,7 +187,7 @@ export class GameStartComponent implements OnInit {
       this.hosting6 = false
       console.log(room);
 
-      // this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
@@ -359,6 +359,14 @@ export class GameStartComponent implements OnInit {
     this.handCard.push(18)
   }
 
+  copyCodeToClipboard(){
+    navigator.clipboard.writeText(this.roomcode);
+    let a = this.elementRef.nativeElement.querySelector('.copy-noti');
+    a.classList.remove('hidden');
+    a.classList.add('visible');
+    let hidenoti = setTimeout(() => {a.classList.remove('visible');a.classList.add('hidden');},1000);
+
+  }
   useCard() {
     //   console.log(this.handCard);
     // this.handCard.forEach(element => {
