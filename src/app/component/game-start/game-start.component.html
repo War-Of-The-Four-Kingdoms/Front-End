@@ -10,6 +10,12 @@
     </div>
   </div>
   <div class="all">
+    <div class="heart myheart" *ngIf="this.heartShow">
+      <img src="../assets/picture/myHeart.png" width="55px">
+      <div class="myboxHeart" *ngIf="this.myCharacter != null|| this.myCharacter != undefined ">
+        <div class="mybox" *ngFor="let i of [].constructor(this.myCharacter.hp)"></div>
+      </div>
+    </div>
     <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard()">
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">
@@ -141,6 +147,12 @@
           {{this.chair1}}
         </p>
       </div>
+      <div class="heart heart1" *ngIf="this.life1 != null|| this.life1 != undefined ">
+        <img src="../assets/picture/myHeart.png" width="23px">
+        <div class="boxHeart" >
+          <div class="box" *ngFor="let i of [].constructor(life1)"></div>
+        </div>
+      </div>
       <div class="stage stage1">
         <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="11" width="30px">
         <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="12" width="30px">
@@ -163,6 +175,12 @@
           {{this.chair6}}
         </p>
       </div>
+      <div class="heart heart1" *ngIf="this.life6 != null|| this.life6 != undefined ">
+        <img src="../assets/picture/myHeart.png" width="23px">
+        <div class="boxHeart" >
+          <div class="box" *ngFor="let i of [].constructor(life6)"></div>
+        </div>
+      </div>
       <div class="stage stage1">
         <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="61" width="30px">
         <img src="../assets/picture/poker.png" class="stageIcon nonfinish" width="30px" id="62">
@@ -183,6 +201,12 @@
         <p class="circle-content" (click)="select_position(this.chair2)">
           {{this.chair2}}
         </p>
+      </div>
+      <div class="heart heart1" *ngIf="this.life2 != null|| this.life2 != undefined ">
+        <img src="../assets/picture/myHeart.png" width="23px">
+        <div class="boxHeart" >
+          <div class="box" *ngFor="let i of [].constructor(life2)"></div>
+        </div>
       </div>
       <div class="stage stage1">
         <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="21" width="30px">
@@ -206,6 +230,12 @@
           {{this.chair5}}
         </p>
       </div>
+      <div class="heart heart2" *ngIf="this.life5 != null|| this.life5 != undefined ">
+        <img src="../assets/picture/myHeart.png" width="23px">
+        <div class="boxHeart" >
+          <div class="box" *ngFor="let i of [].constructor(life5)"></div>
+        </div>
+      </div>
       <div class="stage stage2">
         <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="51" width="30px">
         <img src="../assets/picture/poker.png" class="stageIcon nonfinish" id="52" width="30px">
@@ -226,6 +256,12 @@
         <p class="circle-content" (click)="select_position(this.chair3)">
           {{this.chair3}}
         </p>
+      </div>
+      <div class="heart heart2" *ngIf="this.life3 != null|| this.life3 != undefined ">
+        <img src="../assets/picture/myHeart.png" width="23px">
+        <div class="boxHeart" >
+          <div class="box" *ngFor="let i of [].constructor(life3)"></div>
+        </div>
       </div>
       <div class="stage stage3">
         <img src="../assets/picture/magic-ball.png" class="stageIcon nonfinish" id="31" width="30px">

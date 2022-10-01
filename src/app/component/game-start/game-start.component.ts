@@ -88,6 +88,16 @@ export class GameStartComponent implements OnInit {
   stage5: any;
   stage6: any;
   chairPos: any[] = [];
+  hellos: any[] = [];
+  count: number = 3;
+  heartShow: boolean = false;
+  life1: any;
+  life2: any;
+  life3: any;
+  life4: any;
+  life5: any;
+  life6: any;
+
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -104,9 +114,9 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
-      window.addEventListener("beforeunload", function (e) {
-        return e.returnValue = "Your message here";
-    });
+    // window.addEventListener("beforeunload", function (e) {
+    //   return e.returnValue = "Your message here";
+    // });
 
     // window.onbeforeunload = function () {
     //   return "Leaving this page will reset the wizard";
@@ -360,33 +370,45 @@ export class GameStartComponent implements OnInit {
       });
       this.characterCard = false;
       console.log(this.myCharacter);
+
     });
     this.socket.listen('set player character').subscribe((data: any) => {
       console.log(data);
-      
+
       console.log(this.myPos);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character
+          this.life1 = data.hp
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character
+          this.life2 = data.hp
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character
+          this.life3 = data.hp
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character
+          this.life4 = data.hp
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character
+          this.life5 = data.hp
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character
+          this.life6 = data.hp
         }
-
       }
       console.log(data);
-
+      // if (data.position != this.myPos) {
+      //   let chairIndex = this.chairPos.indexOf(data.position)
+      //   let stageIndex = this.stage_list.indexOf(data.stage)
+      //   let icon = this.elementRef.nativeElement.querySelector("#" + CSS.escape(String(chairIndex) + String(stageIndex + 1)))
+      //   icon.classList.remove("nonfinish")
+      //   icon.classList.add("finish")
+      // }
     });
   }
 
@@ -615,6 +637,9 @@ export class GameStartComponent implements OnInit {
     this.isVisibleMiddle = false;
   }
 
+  counter(i: any) {
+    return new Array(i);
+  }
 
   typingChat(e: any): boolean {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
