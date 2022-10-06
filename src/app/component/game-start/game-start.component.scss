@@ -769,11 +769,11 @@ a:hover+.icon {
     opacity: 0;
   }
 
-  50% {
+  40% {
     opacity: 0;
   }
 
-  60% {
+  50% {
     opacity: 1;
   }
 
@@ -806,7 +806,9 @@ a:hover+.icon {
   overflow-y: 300px;
   overflow-x: hidden;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 10px;
+  scrollbar-color: rgb(210,210,210) rgb(46,54,69) !important;
+  scrollbar-width: thin !important;
 }
 
 *::-webkit-scrollbar {
@@ -834,15 +836,15 @@ a:hover+.icon {
   background: rgba(49, 49, 49, .5);
   border-radius: 0 20px 20px 0;
   position: absolute;
-  animation: fadeIn 2s;
+  animation: fadeIn 1s;
 }
 
 @keyframes fadeIn {
   0% {
     left: 0;
-    top: 50%;
+    top: 45%;
     width: 2.1%;
-    height: 0%;
+    height: 10%;
     opacity: 1;
   }
 
@@ -874,12 +876,20 @@ a:hover+.icon {
     opacity: 1;
   }
 
-  100% {
+  90% {
     left: 0;
-    top: 50%;
+    top: 45%;
     width: 2.1%;
-    height: 0%;
+    height: 10%;
     opacity: 1;
+  }
+
+  100%{
+    left: 0;
+    top: 45%;
+    width: 2.1%;
+    height: 10%;
+    opacity: 0;
   }
 }
 @keyframes fadeIn-content {
@@ -943,13 +953,13 @@ a:hover+.icon {
   background: rgba(49, 49, 49, 0.5);
   position: absolute;
   opacity: 0;
-  animation: fadeOut 2s;
+  animation: fadeOut 1s;
 }
 
 .closeChating .chat-content {
   height: 100%;
   width: 0%;
-  animation: fadeOut-content 2s;
+  animation: fadeOut-content 1s;
 }
 
 .closeChating .chat-hide {
@@ -965,7 +975,7 @@ a:hover+.icon {
 .chatsidebar .chat-content {
   height: 100%;
   width: 90%;
-  animation: fadeIn-content 2s;
+  animation: fadeIn-content 1s;
 }
 
 .chatsidebar .chat-hide {

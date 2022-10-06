@@ -16,7 +16,7 @@
         <div class="mybox" *ngFor="let i of [].constructor(this.life4)"></div>
       </div>
     </div>
-    <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard()">
+    <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard(1)">
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">
         {{this.cardCheck.id}}
@@ -82,12 +82,21 @@
       <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
         <div class="chat-content">
           <div class="chatline w-full">
-            <!-- <div class="text-end w-100 p-2">
-              <span class="m-2 p-2 message me" style="font-size:15px;">message</span>
+
+            <!-- <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD; margin-left: auto;">
+                <span style="overflow-wrap: break-word;">sfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsa</span>
+              </div>
             </div>
-            <div class="text-start w-100 p-2">
-              <p class="m-2 p-2 pb-0" style="color:#C2C2C2;">ptaatp</p>
-              <span class="m-2 p-2 message others" style="font-size:15px;">message</span>
+            <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD;max-width: fit-content; margin-left: auto; ">
+                <span style="overflow-wrap: break-word;">sfasfafssffsa</span>
+              </div>
+            </div>
+            <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">
+                <span style="overflow-wrap: break-word;">sfasfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsafasfassfasfasff</span>
+              </div>
             </div> -->
           </div>
           <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
