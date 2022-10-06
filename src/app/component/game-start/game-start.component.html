@@ -77,17 +77,24 @@
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
     <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
     <div class="show-chat" (click)="openChat()" *ngIf="!this.showChat"><img src="../assets/picture/greater.png"
-        height="60px"></div>
+        height="40px"></div>
     <div class="hideChat">
       <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
         <div class="chat-content">
           <div class="chatline w-full">
+            <!-- <div class="text-end w-100 p-2">
+              <span class="m-2 p-2 message me" style="font-size:15px;">message</span>
+            </div>
+            <div class="text-start w-100 p-2">
+              <p class="m-2 p-2 pb-0" style="color:#C2C2C2;">ptaatp</p>
+              <span class="m-2 p-2 message others" style="font-size:15px;">message</span>
+            </div> -->
           </div>
           <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
           </div>
         </div>
         <div class="chat-hide" (click)="openChat()">
-          <img src="../assets/picture/less.png" height="60px">
+          <img src="../assets/picture/less.png" height="40px">
         </div>
       </div>
     </div>

@@ -229,7 +229,7 @@ export class GameStartComponent implements OnInit {
       alert('This game require atleast 4 players.')
     });
     this.socket.listen('sctc').subscribe((data: any) => {
-      this.appendChat('<p class="text-right" style="font-size:18px;width:90%;color:white;">' + data.username + ': ' + data.message + '</p>');
+      this.appendChat('<div class="text-start w-100 p-2"><p class="m-2 p-2 pb-0" style="color:#C2C2C2;">'+data.username+'</p><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">'+data.message+'</span></div>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
       this.hosting1 = false
@@ -651,7 +651,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<p class="text-end  message" style="font-size:18px;width:90%;color:green;">' + message + ':Me' + '</p>');
+      this.appendChat('<div class="text-end w-100 p-2"><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color: #9A20DD;">'+message+'</span></div>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
