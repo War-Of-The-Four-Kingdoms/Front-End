@@ -97,6 +97,11 @@ export class GameStartComponent implements OnInit {
   life4: any;
   life5: any;
   life6: any;
+  //processing
+  attackDistance: any;
+  trickDistance: any;
+  targetedDistance: any;
+  specialDefense: any;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -675,6 +680,27 @@ export class GameStartComponent implements OnInit {
     this.visible = false;
   }
 
+
+  charEffectMatching: { [K: string]: Function } = {
+    foxia: this.foxiaEffect,
+    owliver: this.owliverEffect,
+  };
+
+  charMethod(name: string) {
+    if (this.charEffectMatching[name]) {
+      return this.charEffectMatching[name]();
+    }
+    throw new Error(`Character '${name}' is not implemented.`);
+  }
   //Character Effect Method
+
+  foxiaEffect(): void {
+    this.specialDefense = ['club','spade'];
+    // in prepare stage can open decision card until get diamond/heart
+  }
+
+  owliverEffect(): void {
+
+  }
 
 }
