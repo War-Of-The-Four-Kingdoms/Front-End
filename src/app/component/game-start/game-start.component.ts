@@ -445,7 +445,6 @@ export class GameStartComponent implements OnInit {
 
   openChat() {
     this.showChat = !this.showChat
-    console.log(this.showChat);
   }
 
   copyCodeToClipboard() {

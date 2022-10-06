@@ -760,10 +760,27 @@ a:hover+.icon {
   justify-content: center;
   align-items: center;
   border-radius: 0px 20px 20px 0px;
-  background: rgba(255, 255, 255, 1);
+  background: rgba(180, 180, 180);
   position: absolute;
+  animation: showing 2s;
 }
+@keyframes showing {
+  0% {
+    opacity: 0;
+  }
 
+  50% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 
 
 .chat-input {
