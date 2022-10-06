@@ -10,10 +10,10 @@
     </div>
   </div>
   <div class="all">
-    <div class="heart myheart" *ngIf="this.heartShow">
+    <div class="heart myheart" *ngIf="this.life4 != null|| this.life4 != undefined ">
       <img src="../assets/picture/myHeart.png" width="55px">
-      <div class="myboxHeart" *ngIf="this.myCharacter != null|| this.myCharacter != undefined ">
-        <div class="mybox" *ngFor="let i of [].constructor(this.myCharacter.hp)"></div>
+      <div class="myboxHeart">
+        <div class="mybox" *ngFor="let i of [].constructor(this.life4)"></div>
       </div>
     </div>
     <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard()">

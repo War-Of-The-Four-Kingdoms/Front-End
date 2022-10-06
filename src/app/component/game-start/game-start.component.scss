@@ -390,10 +390,10 @@ body {
   position: absolute;
   gap: 10px;
   justify-content: center;
-  
+
 }
 
-.heart1{
+.heart1 {
   top: -68%;
   width: 300px;
   justify-content: center;
@@ -401,7 +401,7 @@ body {
   left: -85%;
 }
 
-.heart2{
+.heart2 {
   top: 145%;
   width: 300px;
   justify-content: center;
@@ -409,37 +409,39 @@ body {
   left: -85%;
 }
 
-.myheart{
-  top: 92%;
+.myheart {
+  top: 90%;
   left: 22%;
 }
 
-.box{
+.box {
   width: 20px;
-  background: red;
+  background: #9b2020;
   border-radius: 3px;
 }
 
-.boxHeart{
+.boxHeart {
   width: auto;
-  border:1px solid rgb(255, 255, 255);
+  border: 1px solid rgb(255, 255, 255);
   display: flex;
-  gap: 2px  ;
+  gap: 2px;
   border-radius: 5px;
+  transform: skewX(-20deg);
 }
 
-.mybox{
+.mybox {
   width: 40px;
-  background: red;
+  background: #9b2020;
   border-radius: 3px;
 }
 
-.myboxHeart{
+.myboxHeart {
   width: auto;
-  border:1px solid rgb(255, 255, 255);
+  border: 1px solid rgb(255, 255, 255);
   display: flex;
-  gap: 4px  ;
+  gap: 4px;
   border-radius: 5px;
+  transform: skewX(-20deg);
 }
 
 .circle {
@@ -822,8 +824,15 @@ a:hover+.icon {
 
 @keyframes fadeIn {
   0% {
-    width: 0%;
-    opacity: 0;
+    width: 5%;
+    height: 0%;
+    opacity: 1;
+  }
+
+  50% {
+    width: 5%;
+    height: 50%;
+    opacity: 1;
   }
 
   100% {
@@ -838,8 +847,15 @@ a:hover+.icon {
     width: 20%;
   }
 
+  50% {
+    width: 5%;
+    height: 50%;
+    opacity: 1;
+  }
+
   100% {
-    width: 0%;
+    width: 5%;
+    height: 0%;
     opacity: 0;
   }
 }
@@ -978,8 +994,9 @@ a:hover+.icon {
   height: 300px;
   width: 550px;
   display: flex;
-  top: 85%;
+  top: 87%;
   left: 68%;
+
 }
 
 

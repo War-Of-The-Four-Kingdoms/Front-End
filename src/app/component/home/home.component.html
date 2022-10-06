@@ -76,31 +76,11 @@
           <div>PLAYER:{{data.positions.length}}/{{data.max}}</div>
           <div class="btn join-btn" (click)="joinLobbys(data.code)">JOIN LOBBY</div>
         </div>
-        <div class="rooms-align">
-          <div>ROOM's Name:AAAAAA</div>
-          <div>PLAYER:1/6</div>
-          <div class="btn join-btn">JOIN LOBBY</div>
-        </div>
-        <div class="rooms-align">
-          <div>ROOM's Name:AAAAAA</div>
-          <div>PLAYER:1/6</div>
-          <div class="btn join-btn">JOIN LOBBY</div>
-        </div>
-        <div class="rooms-align">
-          <div>ROOM's Name:AAAAAA</div>
-          <div>PLAYER:1/6</div>
-          <div class="btn join-btn">JOIN LOBBY</div>
-        </div>
-        <div class="rooms-align">
-          <div>ROOM's Name:AAAAAA</div>
-          <div>PLAYER:1/6</div>
-          <div class="btn join-btn">JOIN LOBBY</div>
-        </div>
+        <div *ngIf="this.roomsarray == 0"  class="noroom">
+          <img src="../assets/picture/noroom.png" style="width: 200px;text-align: center;" ><div>No rooms Found</div></div>
+      </div>
       </div>
 
-      <div *ngIf="this.roomsarray == 0"  class="noroom">
-        <img src="../assets/picture/noroom.png" style="width: 200px;text-align: center;" ><div>No rooms Found</div></div>
-    </div>
     <div class="profile row">
       <div class="avatar">
         <img src="../assets/picture/kid1.png" class="" style="width: 350px ;">

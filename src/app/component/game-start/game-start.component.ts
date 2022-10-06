@@ -378,30 +378,36 @@ export class GameStartComponent implements OnInit {
       console.log(this.myPos);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character
+        this.life4 = data.remain_hp
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character
-          this.life1 = data.hp
+          this.life1 = data.remain_hp
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character
-          this.life2 = data.hp
+          this.life2 = data.remain_hp
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character
-          this.life3 = data.hp
+          this.life3 = data.remain_hp
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character
-          this.life4 = data.hp
+          this.life4 = data.remain_hp
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character
-          this.life5 = data.hp
+          this.life5 = data.remain_hp
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character
-          this.life6 = data.hp
+          this.life6 = data.remain_hp
         }
       }
-      console.log(data);
+      console.log(this.life6);
+      console.log(this.life5);
+      console.log(this.life4);
+      console.log(this.life3);
+      console.log(this.life2);
+      console.log(this.life1);
       // if (data.position != this.myPos) {
       //   let chairIndex = this.chairPos.indexOf(data.position)
       //   let stageIndex = this.stage_list.indexOf(data.stage)
