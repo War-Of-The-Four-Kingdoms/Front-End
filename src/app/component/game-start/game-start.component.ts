@@ -677,4 +677,8 @@ export class GameStartComponent implements OnInit {
 
   //Character Effect Method
 
+vetarn():void{
+  
+}
+
 }
