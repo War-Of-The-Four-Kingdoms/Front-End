@@ -674,4 +674,7 @@ export class GameStartComponent implements OnInit {
   close(): void {
     this.visible = false;
   }
+
+  //Character Effect Method
+
 }
