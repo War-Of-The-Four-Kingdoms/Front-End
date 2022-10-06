@@ -102,7 +102,7 @@ export class GameStartComponent implements OnInit {
   trickDistance: any;
   targetedDistance: any;
   specialDefense: any;
-
+  specialStage: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -681,14 +681,18 @@ export class GameStartComponent implements OnInit {
   }
 
 
-  charEffectMatching: { [K: string]: Function } = {
+  methodMatching: { [K: string]: Function } = {
+    //character
     foxia: this.foxiaEffect,
     owliver: this.owliverEffect,
+
+    //special effect
+    foxiaGambling: this.foxiaGambling,
   };
 
   charMethod(name: string) {
-    if (this.charEffectMatching[name]) {
-      return this.charEffectMatching[name]();
+    if (this.methodMatching[name]) {
+      return this.methodMatching[name]();
     }
     throw new Error(`Character '${name}' is not implemented.`);
   }
@@ -696,11 +700,15 @@ export class GameStartComponent implements OnInit {
 
   foxiaEffect(): void {
     this.specialDefense = ['club','spade'];
+    this.specialStage.push({stage: 'prepare', method: 'foxiaDecision'});
     // in prepare stage can open decision card until get diamond/heart
+  }
+  foxiaGambling(): void{
+    this.drawCard();
   }
 
   owliverEffect(): void {
-
+    this.specialStage.push({stage: ''});
   }
 
 }
