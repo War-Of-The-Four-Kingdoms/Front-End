@@ -97,7 +97,16 @@ export class GameStartComponent implements OnInit {
   life4: any;
   life5: any;
   life6: any;
-
+  //processing
+  attackCount: any
+  attackDistance: any;
+  trickDistance: any;
+  targetedDistance: any;
+  specialDefense: any;
+  specialAttack: any;
+  specialStage: any;
+  showRole: any;
+  showText: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -141,6 +150,24 @@ export class GameStartComponent implements OnInit {
       this.king_pos = data.king.position;
       this.king_uid = data.king.uid;
       this.role = data.me.role;
+      switch (this.role) {
+        case 'king':
+          this.showRole = "../assets/picture/crowns.png"
+          this.showText = "Kill all Betrayer and Villager"
+          break;
+        case 'knight':
+          this.showRole = "../assets/picture/plus.png"
+          this.showText = "Protect Your King to win this Game"
+          break;
+        case 'betrayer':
+          this.showRole = "../assets/picture/plus.png"
+          this.showText = "Be the last one to win this Game"
+          break;
+        case 'villager':
+          this.showRole = "../assets/picture/plus.png"
+          this.showText = "Kill the King to win this GAME"
+          break;
+      }
       console.log(this.role);
       if (this.myPosId == this.king_uid) {
         this.extra_hp = 1
@@ -229,7 +256,7 @@ export class GameStartComponent implements OnInit {
       alert('This game require atleast 4 players.')
     });
     this.socket.listen('sctc').subscribe((data: any) => {
-      this.appendChat('<div class="text-start w-100 p-2"><p class="m-2 p-2 pb-0" style="color:#C2C2C2;">'+data.username+'</p><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">'+data.message+'</span></div>');
+      this.appendChat('<div class="text-start w-100 p-2"><p class="m-2 p-2 pb-0" style="color:#C2C2C2;">' + data.username + '</p><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">' + data.message + '</span></div>');
     });
     this.socket.listen('set room').subscribe((room: any) => {
       this.hosting1 = false
@@ -650,7 +677,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<div class="text-end w-100 p-2"><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color: #9A20DD;">'+message+'</span></div>');
+      this.appendChat('<div class="text-end w-100 p-2"><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color: #9A20DD;">' + message + '</span></div>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
@@ -675,10 +702,76 @@ export class GameStartComponent implements OnInit {
     this.visible = false;
   }
 
-  //Character Effect Method
 
-vetarn():void{
-  
-}
+  methodMatching: { [K: string]: Function } = {
+    //character
+    foxia: this.foxiaEffect,
+    owliver: this.owliverEffect,
+    vetarn: this.vetarnEffect,
+    luckyGhost: this.luckyGhostEffect,
+    witch: this.witchEffect,
+    ninjaGappa: this.ninjaGappaEffect,
+    lucifer: this.luciferEffect,
+
+    //special effect
+    foxiaGambling: this.foxiaGambling,
+  };
+
+  charMethod(name: string) {
+    if (this.methodMatching[name]) {
+      return this.methodMatching[name]();
+    }
+    throw new Error(`Character '${name}' is not implemented.`);
+  }
+  //Character Effect Method
+  foxiaEffect(): void {
+    this.specialDefense = ['club', 'spade'];
+    this.specialStage.push({ stage: 'prepare', method: 'foxiaGambling' });
+    // in prepare stage can open decision card until get diamond/heart
+  }
+  foxiaGambling(): void {
+    this.drawCard();
+  }
+
+  owliverEffect(): void {
+    this.specialStage.push({ stage: '' });
+  }
+
+  vetarnEffect(): void {
+    this.trickDistance = 10;
+    //นิทานหลอกเด็ก : เมื่อใช้การ์ดอุบาย สามารถจั่วการ์ดได้ 1 ใบ 
+  }
+
+  luckyGhostEffect(): void {
+    this.trickDistance + 1;
+    this.attackDistance + 1;
+    //วัดใจ : เมื่อใช้การ์ดโจมตี ให้เปิดการ์ดตัดสิน 1 ใบ ถ้าเป็น ♥/♦ จะถือว่าสำเร็จ 
+  }
+  ninjaGappaEffect(): void {
+    this.specialDefense = ['attack', 'defense'];
+    this.specialAttack = ['attack', 'defense'];
+  }
+
+  witchEffect(): void {
+    if (this.handCard.length == 0) {
+      this.targetedDistance = 9999;
+    }
+    //หยั่งรู้ : ก่อนจั่วการ์ด สามารถเปิดดูการ์ดบนสุดของกองการ์ดได้ x ใบ (x เท่ากับจำนวนผู้เล่นทั้งหมดในเกมนั้น แต่ไม่เกิน 5 ใบ) แล้วจัดเรียงการ์ดเหล่านั้นใหม่ โดยนำการ์ดที่ต้องการ (กี่ใบก็ได้) ไว้ด้านบนสุดของกองการ์ด ที่เหลือไว้ใต้กอง  
+  }
+
+  luciferEffect(): void {
+    this.attackCount = 10
+  }
+
+  redGhostEffect(): void {
+    this.specialAttack = ['heart', 'diamond'];
+  }
+
+  pigKing(): void {
+    //สมบัตฺิผู้นำ : ระหว่างการจั่วการ์ด สามารถมอบการ์ดในมือให้กับผู้เล่นคนอื่นได้ หากมอบการ์ดตั้งแต่ 2 ใบขึ้นไป ในรอบนี้ฟื้นฟูพลังชีวิต 1 หน่วย 
+  }
+
+
+
 
 }

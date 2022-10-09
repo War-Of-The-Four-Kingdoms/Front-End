@@ -1,13 +1,17 @@
 <body>
-  <div id="exist" *ngIf="this.characterCard">
-    <!-- If this role == king -->
-    <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
+  <div id="exist">
+    <div class="showRole">
+      <div class="textrole">Kill all Betrayer and Villager</div>
+      <img class="rolepic" src="../assets/picture/crowns.png">
     </div>
-    <!-- If this role == king -->
+    <div class="cardSelect" *ngFor="let char of this.characterPool"><img class="card-pic"
+      src={{char.image_name}} (click)="selectCharacter(char)"></div>
+    <!-- <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
+    </div>
     <div class="testing">
       <div class="bend" *ngFor="let char of this.characterPool">{{char.name}}<img class="card-pic"
           src={{char.image_name}} (click)="selectCharacter(char)"></div>
-    </div>
+    </div> -->
   </div>
   <div class="all">
     <div class="heart myheart" *ngIf="this.life4 != null|| this.life4 != undefined ">
@@ -156,7 +160,7 @@
       </div>
       <div class="heart heart1" *ngIf="this.life1 != null|| this.life1 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
-        <div class="boxHeart" >
+        <div class="boxHeart">
           <div class="box" *ngFor="let i of [].constructor(life1)"></div>
         </div>
       </div>
@@ -184,7 +188,7 @@
       </div>
       <div class="heart heart1" *ngIf="this.life6 != null|| this.life6 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
-        <div class="boxHeart" >
+        <div class="boxHeart">
           <div class="box" *ngFor="let i of [].constructor(life6)"></div>
         </div>
       </div>
@@ -211,7 +215,7 @@
       </div>
       <div class="heart heart1" *ngIf="this.life2 != null|| this.life2 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
-        <div class="boxHeart" >
+        <div class="boxHeart">
           <div class="box" *ngFor="let i of [].constructor(life2)"></div>
         </div>
       </div>
@@ -239,7 +243,7 @@
       </div>
       <div class="heart heart2" *ngIf="this.life5 != null|| this.life5 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
-        <div class="boxHeart" >
+        <div class="boxHeart">
           <div class="box" *ngFor="let i of [].constructor(life5)"></div>
         </div>
       </div>
@@ -266,7 +270,7 @@
       </div>
       <div class="heart heart2" *ngIf="this.life3 != null|| this.life3 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
-        <div class="boxHeart" >
+        <div class="boxHeart">
           <div class="box" *ngFor="let i of [].constructor(life3)"></div>
         </div>
       </div>

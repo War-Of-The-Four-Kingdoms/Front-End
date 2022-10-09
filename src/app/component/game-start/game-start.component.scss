@@ -136,7 +136,7 @@
   top: 50%;
   left: 50%;
   position: absolute;
-  z-index: 9999;
+  z-index: 9998;
 }
 
 body {
@@ -332,10 +332,100 @@ body {
   height: 100%;
   position: absolute;
   float: right;
-  z-index: 50;
+  z-index: 9999;
   opacity: 95%;
   display: grid;
   place-items: center;
+  animation: chooseIn 1s;
+}
+
+@keyframes chooseIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.rolepic {
+  opacity: 0.8;
+  z-index: 9999;
+  position: absolute;
+  width: 300px;
+  left: 42.3%;
+  top: 2%;
+  text-align: center;
+  animation: choosePic 10s;
+}
+
+
+.textrole {
+  color: white;
+  z-index: 9999;
+  position: absolute;
+  left: 40%;
+  top: 25%;
+  text-align: center;
+  font-size: 32px;
+  animation: chooseText 10s;
+}
+
+@keyframes chooseText {
+  0% {
+    top: 53%;
+    opacity: 0;
+  }
+
+  15% {
+    top: 53%;
+    opacity: 0;
+  }
+
+  30% {
+    top: 53%;
+    opacity: 0.8;
+  }
+
+  60% {
+    top: 53%;
+    opacity: 0.8;
+  }
+
+  100% {
+    top: 25%;
+    opacity: 0.8;
+  }
+}
+
+
+@keyframes choosePic {
+  0% {
+    top: 30%;
+    opacity: 0;
+  }
+
+  15% {
+    top: 30%;
+    opacity: 0;
+  }
+
+
+  30% {
+    top: 30%;
+    opacity: 0.8;
+  }
+
+  60% {
+    top: 30%;
+    opacity: 0.8;
+  }
+
+  100% {
+    top: 2%;
+    opacity: 0.8;
+  }
 }
 
 
@@ -725,9 +815,35 @@ a:hover+.icon {
   text-align: center;
 }
 
+.cardSelect {
+  display: flex;
+  gap: 10px;
+}
+
 .card-pic {
   width: 350px;
   height: 560px;
+  border: 1px solid salmon;
+  opacity: 0.5;
+  animation: cardpic 12s;
+}
+
+@keyframes cardpic {
+  0% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.card-pic:hover {
+  opacity: 1;
 }
 
 .testing {
@@ -764,6 +880,7 @@ a:hover+.icon {
   position: absolute;
   animation: showing 2s;
 }
+
 @keyframes showing {
   0% {
     opacity: 0;
@@ -882,6 +999,7 @@ a:hover+.icon {
     opacity: 1;
   }
 }
+
 @keyframes fadeIn-content {
   0% {
     left: 0;
