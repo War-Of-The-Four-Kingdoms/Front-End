@@ -3,6 +3,7 @@ import { WebSocketService } from "../../services/web-socket.service";
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
+import { Queue } from 'queue-typescript';
 
 @Component({
   selector: 'app-game-start',
@@ -25,6 +26,7 @@ export class GameStartComponent implements OnInit {
   host: boolean = false;
   arr: any[] = [];
   interval: any;
+  martinQueue: boolean = false;
   chair: boolean = false;
   chair6user: boolean = false;
   chair1user: boolean = false;
@@ -243,7 +245,26 @@ export class GameStartComponent implements OnInit {
           clearInterval(interval);
         }
       }, 1000);
+      switch (data.stage) {
+        case 'prepare':
 
+          break;
+        case 'decide':
+
+          break;
+        case 'draw':
+
+          break;
+        case 'play':
+
+          break;
+        case 'drop':
+
+          break;
+        case 'end':
+
+          break;
+      }
     });
 
 
@@ -256,7 +277,17 @@ export class GameStartComponent implements OnInit {
       alert('This game require atleast 4 players.')
     });
     this.socket.listen('sctc').subscribe((data: any) => {
-      this.appendChat('<div class="text-start w-100 p-2"><p class="m-2 p-2 pb-0" style="color:#C2C2C2;">' + data.username + '</p><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">' + data.message + '</span></div>');
+      let lastchat = this.elementRef.nativeElement.querySelector('.chatline').lastElementChild;
+      if (lastchat != null) {
+        if (lastchat.getAttribute("attr-username") == data.username) {
+          this.appendChat('<div class="w-100 pb-1 px-3" attr-username="' + data.username + '"><div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;max-width: fit-content;"><span style="overflow-wrap: break-word;">' + data.message + '</span></div></div>');
+        } else {
+          this.appendChat('<div class="w-100 pb-1 px-3" attr-username="' + data.username + '"><p class="mx-2 my-1 p-2 pb-0" style="color:#C2C2C2;">' + data.username + '</p><div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;max-width: fit-content;"><span style="overflow-wrap: break-word;">' + data.message + '</span></div></div>');
+        }
+      } else {
+        this.appendChat('<div class="w-100 pb-1 px-3" attr-username="' + data.username + '"><p class="mx-2 my-1 p-2 pb-0" style="color:#C2C2C2;">' + data.username + '</p><div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;max-width: fit-content;"><span style="overflow-wrap: break-word;">' + data.message + '</span></div></div>');
+      }
+
     });
     this.socket.listen('set room').subscribe((room: any) => {
       this.hosting1 = false
@@ -390,7 +421,7 @@ export class GameStartComponent implements OnInit {
 
     this.socket.listen('ready to start').subscribe((data: any) => {
       console.log("ready to start");
-      this.api.drawCard(this.roomcode).subscribe((res: any) => {
+      this.api.drawCard(this.roomcode, 4).subscribe((res: any) => {
         console.log(res);
         this.handCard = res;
         this.socket.emit('draw card ', { hand: this.handCard, code: this.roomcode });
@@ -466,8 +497,85 @@ export class GameStartComponent implements OnInit {
     this.cardShow = false
   }
 
-  drawCard() {
-    this.handCard.push(18)
+  drawCard(num: any) {
+    this.api.drawCard(this.roomcode, num).subscribe((data: any) => {
+      return data;
+    });
+  }
+
+  openDecisionCard(data: { symbol?: any, code?: any, store?: boolean, store_by_decision?: boolean, store_condition?: string }) { //store_condition ['and','or']
+    let x: any;
+    x = this.drawCard(1);
+    if (typeof (data.store) !== 'undefined') {
+      this.handCard.push(x);
+    }
+    if (typeof (data.symbol) !== 'undefined') {
+      if (typeof (data.code) !== 'undefined') {
+        let c_check = false;
+        let s_check = false;
+        data.symbol.forEach((sb: any) => {
+          if (x.symbol == sb) {
+            s_check = true;
+          }
+        });
+        data.code.forEach((cd: any) => {
+          if (x.code == cd) {
+            c_check = true;
+          }
+        });
+        if (s_check && c_check) {
+          if (typeof (data.store_by_decision) !== 'undefined' && typeof (data.store_condition) !== 'undefined') {
+            if (data.store_by_decision && data.store_condition == 'and') {
+              this.handCard.push(x);
+            }
+          }
+          return 1; //match code and symbol
+        } else if (s_check && !c_check) {
+          if (typeof (data.store_by_decision) !== 'undefined' && typeof (data.store_condition) !== 'undefined') {
+            if (data.store_by_decision && data.store_condition == 'or') {
+              this.handCard.push(x);
+            }
+          }
+          return 2; //match only symbol
+        } else if (!s_check && c_check) {
+          if (typeof (data.store_by_decision) !== 'undefined' && typeof (data.store_condition) !== 'undefined') {
+            if (data.store_by_decision && data.store_condition == 'or') {
+              this.handCard.push(x);
+            }
+          }
+          return 3; //match only code
+        } else {
+          return 4; //not match
+        }
+      } else {
+        let s_check = false;
+        data.symbol.forEach((sb: any) => {
+          if (x.symbol == sb) {
+            s_check = true;
+          }
+          if (typeof (data.store_by_decision) !== 'undefined') {
+            if (data.store_by_decision) {
+              this.handCard.push(x);
+            }
+          }
+        });
+        return s_check;
+      }
+    } else {
+      let c_check = false;
+      data.code.forEach((cd: any) => {
+        if (x.code == cd) {
+          c_check = true;
+        }
+        if (typeof (data.store_by_decision) !== 'undefined') {
+          if (data.store_by_decision) {
+            this.handCard.push(x);
+          }
+        }
+      });
+      return c_check;
+    }
+
   }
 
   openChat() {
@@ -479,7 +587,7 @@ export class GameStartComponent implements OnInit {
     let a = this.elementRef.nativeElement.querySelector('.copy-noti');
     a.classList.remove('hidden');
     a.classList.add('visible');
-    let hidenoti = setTimeout(() => { a.classList.remove('visible'); a.classList.add('hidden'); }, 1000);
+    setTimeout(() => { a.classList.remove('visible'); a.classList.add('hidden'); }, 1000);
 
   }
   useCard() {
@@ -677,7 +785,7 @@ export class GameStartComponent implements OnInit {
     let message = this.elementRef.nativeElement.querySelector('.chat-input').textContent;
     if (e.which === 13 && !e.shiftKey) {
       this.socket.emit('scts', { message: message, code: this.lobbyCode });
-      this.appendChat('<div class="text-end w-100 p-2"><span class="m-2 p-2" style="font-size:15px;border-radius: 20px;color: white;background-color: #9A20DD;">' + message + '</span></div>');
+      this.appendChat('<div class="w-100 pb-1 px-3"><div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD;max-width: fit-content; margin-left: auto;"><span style="overflow-wrap: break-word;">' + message + '</span></div>');
       this.elementRef.nativeElement.querySelector('.chat-input').textContent = '';
       return false;
     }
@@ -710,11 +818,13 @@ export class GameStartComponent implements OnInit {
     vetarn: this.vetarnEffect,
     luckyGhost: this.luckyGhostEffect,
     witch: this.witchEffect,
-    ninjaGappa: this.ninjaGappaEffect,
+    ninjaKappa: this.ninjakappaEffect,
     lucifer: this.luciferEffect,
+    bearyl: this.bearylEffect,
+    snale: this.snaleEffect,
+    porcky: this.porckyEffect,
+    merguin: this.merguinEffect,
 
-    //special effect
-    foxiaGambling: this.foxiaGambling,
   };
 
   charMethod(name: string) {
@@ -730,13 +840,8 @@ export class GameStartComponent implements OnInit {
     // in prepare stage can open decision card until get diamond/heart
   }
   foxiaGambling(): void {
-    this.drawCard();
+    // this.drawCard();
   }
-
-  owliverEffect(): void {
-    this.specialStage.push({ stage: '' });
-  }
-
   vetarnEffect(): void {
     this.trickDistance = 10;
     //นิทานหลอกเด็ก : เมื่อใช้การ์ดอุบาย สามารถจั่วการ์ดได้ 1 ใบ 
@@ -747,7 +852,7 @@ export class GameStartComponent implements OnInit {
     this.attackDistance + 1;
     //วัดใจ : เมื่อใช้การ์ดโจมตี ให้เปิดการ์ดตัดสิน 1 ใบ ถ้าเป็น ♥/♦ จะถือว่าสำเร็จ 
   }
-  ninjaGappaEffect(): void {
+  ninjakappaEffect(): void {
     this.specialDefense = ['attack', 'defense'];
     this.specialAttack = ['attack', 'defense'];
   }
@@ -763,15 +868,45 @@ export class GameStartComponent implements OnInit {
     this.attackCount = 10
   }
 
-  redGhostEffect(): void {
+  bloodyknightEffect(): void {
     this.specialAttack = ['heart', 'diamond'];
   }
 
-  pigKing(): void {
+  buta(): void {
     //สมบัตฺิผู้นำ : ระหว่างการจั่วการ์ด สามารถมอบการ์ดในมือให้กับผู้เล่นคนอื่นได้ หากมอบการ์ดตั้งแต่ 2 ใบขึ้นไป ในรอบนี้ฟื้นฟูพลังชีวิต 1 หน่วย 
   }
 
 
+
+  // in prepare stage can openDecisionCard if symbol is club/spade store it - openDecisionCard({symbol: ['club','spade'],store_by_decision: true})
+
+
+  owliverEffect(): void {
+    // in openDecisionCard stage can store that card - openDecisionCard({store: true})
+    // when damaged draw 2 card and give it to other player [can store its]
+  }
+
+  bearylEffect(): void {
+    // in draw stage if draw only 1 card, this round 'attack' and 'duel' deal +1 damage
+  }
+
+  snaleEffect(): void {
+    // in draw stage if not draw, can steal 1 other player inhand-card [ 1 or 2 player]
+  }
+
+  porckyEffect(): void {
+    // when damaged can openDecisionCard if not heart offender choose drop 2 card or get 1 damaged
+  }
+
+  merguinEffect(): void {
+    // when damaged can steal 1 card from offender [in-hand or in equipment field]
+    // every decide stage can use effect to use in-hand card to be the result, after that drop this card
+  }
+
+  sealgameshEffect(): void {
+    // when damaged can get the card that damaged you
+    // can request to other animal tribe to use defense card for you [can refuse]
+  }
 
 
 }

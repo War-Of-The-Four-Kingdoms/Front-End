@@ -1,17 +1,45 @@
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+
 <body>
-  <div id="exist">
+  <div id="exist" *ngIf="this.characterCard">
     <div class="showRole">
       <div class="textrole">Kill all Betrayer and Villager</div>
       <img class="rolepic" src="../assets/picture/crowns.png">
     </div>
-    <div class="cardSelect" *ngFor="let char of this.characterPool"><img class="card-pic"
-      src={{char.image_name}} (click)="selectCharacter(char)"></div>
+    <div class="cardSelect" *ngFor="let char of this.characterPool"><img class="card-pic" src={{char.image_name}}
+        (click)="selectCharacter(char)"></div>
     <!-- <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
     </div>
     <div class="testing">
       <div class="bend" *ngFor="let char of this.characterPool">{{char.name}}<img class="card-pic"
           src={{char.image_name}} (click)="selectCharacter(char)"></div>
     </div> -->
+  </div>
+  <div id="exist" *ngIf="true">
+    <img class="quickAction" src="../assets/picture/thunder.png" width="92px">
+    <div class="actionPhrase">
+      <div class="action-content">
+        <div class="effecttrigger">Martin Scorpion Ability On!</div>
+        <p class="effectdescription">Martin Scorpion: <label style="color:rgb(163, 0, 0) ;">Can Sabotage Queue to make
+            him be a first person to play !!</label></p>
+        <div class="decision">
+          <div *ngIf="false"><img src="../assets/picture/accept.png" width="65px">
+            <img src="../assets/picture/cancels.png" width="54px">
+          </div>
+          <div *ngIf="true" class="waitingaction">Waiting Martin Scorpion to decide <div class="lds-ellipsis">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="all">
     <div class="heart myheart" *ngIf="this.life4 != null|| this.life4 != undefined ">
@@ -20,7 +48,7 @@
         <div class="mybox" *ngFor="let i of [].constructor(this.life4)"></div>
       </div>
     </div>
-    <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard()">
+    <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard(1)">
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">
         {{this.cardCheck.id}}
@@ -86,12 +114,21 @@
       <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
         <div class="chat-content">
           <div class="chatline w-full">
-            <!-- <div class="text-end w-100 p-2">
-              <span class="m-2 p-2 message me" style="font-size:15px;">message</span>
+
+            <!-- <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD; margin-left: auto;">
+                <span style="overflow-wrap: break-word;">sfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsa</span>
+              </div>
             </div>
-            <div class="text-start w-100 p-2">
-              <p class="m-2 p-2 pb-0" style="color:#C2C2C2;">ptaatp</p>
-              <span class="m-2 p-2 message others" style="font-size:15px;">message</span>
+            <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD;max-width: fit-content; margin-left: auto; ">
+                <span style="overflow-wrap: break-word;">sfasfafssffsa</span>
+              </div>
+            </div>
+            <div class="w-100 p-2">
+              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">
+                <span style="overflow-wrap: break-word;">sfasfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsafasfassfasfasff</span>
+              </div>
             </div> -->
           </div>
           <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">

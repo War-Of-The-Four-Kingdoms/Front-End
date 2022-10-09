@@ -295,7 +295,7 @@ body {
   z-index: 1;
   /* Text styling */
   text-align: center;
-  font-family: sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 45px;
   font-weight: bold;
   letter-spacing: 18px;
@@ -337,7 +337,121 @@ body {
   display: grid;
   place-items: center;
   animation: chooseIn 1s;
+  border: 25px solid #B88846;
+  border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75'%3E%3Cg fill='none' stroke='%23B88846' stroke-width='2'%3E%3Cpath d='M1 1h73v73H1z'/%3E%3Cpath d='M8 8h59v59H8z'/%3E%3Cpath d='M8 8h16v16H8zM51 8h16v16H51zM51 51h16v16H51zM8 51h16v16H8z'/%3E%3C/g%3E%3Cg fill='%23B88846'%3E%3Ccircle cx='16' cy='16' r='2'/%3E%3Ccircle cx='59' cy='16' r='2'/%3E%3Ccircle cx='59' cy='59' r='2'/%3E%3Ccircle cx='16' cy='59' r='2'/%3E%3C/g%3E%3C/svg%3E") 25;
 }
+
+.actionPhrase {
+  width: 91.5%;
+  height: 350px;
+  background-color: white;
+  transform: skewX(-25deg);
+  animation: leftRight 1.5s;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-family: 'Oswald', sans-serif;
+}
+
+.action-content {
+  padding-top: 50px;
+  transform: skewX(25deg);
+}
+
+.quickAction {
+  position: absolute;
+  top: 27%;
+  left: 48%;
+  transform: skewX(-25deg);
+  z-index: 999;
+
+}
+
+.effecttrigger {
+  font-size: 72px;
+}
+
+.effectdescription {
+  font-size: 36px;
+}
+
+.waitingaction{
+  font-size: 30px;
+}
+
+.lds-ellipsis {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 61%;
+  top: 91%;
+  
+}
+.lds-ellipsis div {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgb(196, 12, 12);
+  // animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+
+@keyframes leftRight {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+
+  50%{
+    opacity: 0;
+  }
+
+  100% {
+    width: 91%;
+  }
+}
+
 
 @keyframes chooseIn {
   0% {
@@ -602,7 +716,7 @@ body {
   color: #ffffff;
   white-space: nowrap;
   margin-right: 15px;
-  font-family: sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 24px;
   font-weight: bold;
   letter-spacing: 11px;
@@ -886,11 +1000,11 @@ a:hover+.icon {
     opacity: 0;
   }
 
-  50% {
+  40% {
     opacity: 0;
   }
 
-  60% {
+  50% {
     opacity: 1;
   }
 
@@ -923,7 +1037,9 @@ a:hover+.icon {
   overflow-y: 300px;
   overflow-x: hidden;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 10px;
+  scrollbar-color: rgb(210, 210, 210) rgb(46, 54, 69) !important;
+  scrollbar-width: thin !important;
 }
 
 *::-webkit-scrollbar {
@@ -951,15 +1067,15 @@ a:hover+.icon {
   background: rgba(49, 49, 49, .5);
   border-radius: 0 20px 20px 0;
   position: absolute;
-  animation: fadeIn 2s;
+  animation: fadeIn 1s;
 }
 
 @keyframes fadeIn {
   0% {
     left: 0;
-    top: 50%;
+    top: 45%;
     width: 2.1%;
-    height: 0%;
+    height: 10%;
     opacity: 1;
   }
 
@@ -991,12 +1107,20 @@ a:hover+.icon {
     opacity: 1;
   }
 
+  90% {
+    left: 0;
+    top: 45%;
+    width: 2.1%;
+    height: 10%;
+    opacity: 1;
+  }
+
   100% {
     left: 0;
-    top: 50%;
+    top: 45%;
     width: 2.1%;
-    height: 0%;
-    opacity: 1;
+    height: 10%;
+    opacity: 0;
   }
 }
 
@@ -1061,13 +1185,13 @@ a:hover+.icon {
   background: rgba(49, 49, 49, 0.5);
   position: absolute;
   opacity: 0;
-  animation: fadeOut 2s;
+  animation: fadeOut 1s;
 }
 
 .closeChating .chat-content {
   height: 100%;
   width: 0%;
-  animation: fadeOut-content 2s;
+  animation: fadeOut-content 1s;
 }
 
 .closeChating .chat-hide {
@@ -1083,7 +1207,7 @@ a:hover+.icon {
 .chatsidebar .chat-content {
   height: 100%;
   width: 90%;
-  animation: fadeIn-content 2s;
+  animation: fadeIn-content 1s;
 }
 
 .chatsidebar .chat-hide {
