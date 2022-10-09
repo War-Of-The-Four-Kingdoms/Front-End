@@ -286,7 +286,7 @@ export class GameStartComponent implements OnInit {
       if (room.is_host == true) {
         this.host = true
       } else {
-        room.positions.forEach((d: any) => {
+        room.players.forEach((d: any) => {
           if (this.chair1 == d.position) {
             this.chair1user = true
             if (d.uid == this.roomHost) {
@@ -340,7 +340,7 @@ export class GameStartComponent implements OnInit {
       } else {
         console.log('no');
         this.host = false
-        uid.positions.forEach((d: any) => {
+        uid.players.forEach((d: any) => {
           if (this.chair1 == d.position) {
             this.chair1user = true
             if (d.uid == uid.host) {
