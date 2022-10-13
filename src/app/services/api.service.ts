@@ -22,14 +22,18 @@ export class ApiService {
 
 
   drawCard(code: any,num: any) {
-    let params = new HttpParams().set('room_code', code);
-    params.set('num',num);
+    let params = new HttpParams().set('room_code', code).set('num',num);
     return this.http.get(this.apiUrl + '/drawCard',{ params: params });
   }
 
-  // drawCard(){
-  //   re
-  // }
+  dropCard(code: any,cards: any) {
+    return this.http.put(this.apiUrl + '/dropCard',{ roomcode: code,cards: cards });
+  }
+
+  updateInUse(code: any,cards: any) {
+    return this.http.put(this.apiUrl + '/updateCardInUse',{ roomcode: code,cards: cards });
+  }
+
 
 
 

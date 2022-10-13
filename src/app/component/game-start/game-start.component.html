@@ -1,4 +1,30 @@
 <body>
+
+  <div class="droptemplate row m-0 p-0" *ngIf="this.showDropTemplate">
+    <div class="card-canvas d-flex flex-wrap justify-content-center">
+      <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
+        <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}" (change)="checkedState($event)"/>
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="confirmdrop" (click)="dropSelectedCard()">DROP</button>
+    </div>
+  </div>
+
+  <div class="droptemplate d-flex m-0 p-0" *ngIf="this.showFoxiaEffect">
+    <div class="h-100 w-25 d-flex justify-content-center align-items-center">
+      <button class="confirmdrop bg-danger display-4" (click)="this.foxiaCancel()">Cancel</button>
+    </div>
+    <div class="h-100 w-50 d-flex justify-content-center align-items-center">
+      <div class="cardInfo" *ngIf="this.foxiaDecisionResult != null">{{ this.foxiaDecisionResult.name }}</div>
+    </div>
+    <div class="h-100 w-25 d-flex justify-content-center align-items-center">
+      <button class="confirmdrop bg-success display-4" (click)="this.foxiaDraw()">Draw</button>
+    </div>
+  </div>
+  <button class="storeConfirm" *ngIf="this.storeConfirm" (click)="this.foxiaStore()">Keep</button>
+
   <div id="exist" *ngIf="this.characterCard">
     <!-- If this role == king -->
     <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
@@ -16,7 +42,7 @@
         <div class="mybox" *ngFor="let i of [].constructor(this.life4)"></div>
       </div>
     </div>
-    <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)="drawCard(1)">
+    <!-- <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)=""> -->
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">
         {{this.cardCheck.id}}
@@ -57,7 +83,6 @@
           </svg>
         </div>
       </div>
-
     </div>
     <!-- pass button -->
     <!-- <div class="chat-content">
