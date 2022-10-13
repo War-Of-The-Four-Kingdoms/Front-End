@@ -214,6 +214,7 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('change stage').subscribe((data: any) => {
+      clearInterval(this.interval)
       let othericon = this.elementRef.nativeElement.querySelector('.finish')
       if (othericon != null) {
         othericon.classList.remove("finish")
@@ -404,9 +405,6 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('player leave').subscribe((data: any) => {
       this.quitRage.push(data.position)
     });
-    this.socket.listen('skip').subscribe(() => {
-      clearInterval(this.interval);
-    });
 
     this.socket.listen('waiting other select character').subscribe((data: any) => {
       this.characterCard = false;
@@ -521,6 +519,7 @@ export class GameStartComponent implements OnInit {
         this.charMethod(q.name);
       }
     }else{
+      clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
