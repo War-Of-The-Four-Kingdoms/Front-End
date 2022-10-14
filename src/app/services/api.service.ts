@@ -22,8 +22,7 @@ export class ApiService {
 
 
   drawCard(code: any,num: any) {
-    let params = new HttpParams().set('room_code', code);
-    params.set('num',num);
+    let params = new HttpParams().set('room_code', code).set('num',num);
     return this.http.get(this.apiUrl + '/drawCard',{ params: params });
   }
 

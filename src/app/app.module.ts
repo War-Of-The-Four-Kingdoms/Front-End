@@ -45,7 +45,6 @@ registerLocaleData(en);
     NzSwitchModule,
     NzDrawerModule,
     ReactiveFormsModule,
-
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

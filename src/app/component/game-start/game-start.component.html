@@ -10,8 +10,10 @@
       <div class="textrole">Kill all Betrayer and Villager</div>
       <img class="rolepic" src="../assets/picture/crowns.png">
     </div>
-    <div class="cardSelect" *ngFor="let char of this.characterPool"><img class="card-pic" src={{char.image_name}}
-        (click)="selectCharacter(char)"></div>
+    <div class="testing">
+      <div class="bend" *ngFor="let char of this.characterPool">{{char.name}}<img class="card-pic"
+          src={{char.image_name}} (click)="selectCharacter(char)"></div>
+    </div>
     <!-- <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
     </div>
     <div class="testing">
@@ -19,18 +21,48 @@
           src={{char.image_name}} (click)="selectCharacter(char)"></div>
     </div> -->
   </div>
-  <div id="exist" *ngIf="true">
-    <img class="quickAction" src="../assets/picture/thunder.png" width="92px">
-    <div class="actionPhrase">
-      <div class="action-content">
-        <div class="effecttrigger">Martin Scorpion Ability On!</div>
-        <p class="effectdescription">Martin Scorpion: <label style="color:rgb(163, 0, 0) ;">Can Sabotage Queue to make
-            him be a first person to play !!</label></p>
+  <!-- แทรกเทินชาวบ้าน -->
+  <div id="exist" *ngIf="this.showTrigger == true">
+    <div class="bigbang"></div>
+    <div>
+      <img class="lightning" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
+      <img class="lightningper" src="../assets/picture/lightning.png" alt="Tyler" width="150px">
+      <img class="lightning2" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
+      <img class="lightning3" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
+      <img class="lightning4" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
+    </div>
+    <div class="beforeOn" *ngIf="this.showTrigger == true && this.waiting == false">
+      <img class="quickAction" src="../assets/picture/thunderp.png" alt="Tyler">
+      <img class="effect-pattern effectuser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
+        alt="Tyler">
+      <div class="playerEffect cardEffect">
+
+      </div>
+      <img class="effect-pattern effecteduser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
+        alt="Tyler">
+      <div class="playerEffect cardEffected">
+
+      </div>
+    </div>
+
+    <img class="quickAction" src="../assets/picture/thunder.png" width="92px"
+      *ngIf="this.showTrigger == true && this.waiting == true">
+
+
+    <!-- <div
+      [ngClass]="{actionPhrase:this.showTrigger == true && this.waiting == true,actionPhrase2:this.showTrigger == true && this.waiting == false}">
+      <div
+        [ngClass]="{actioncontent:this.showTrigger == true && this.waiting == true,actioncontent2:this.showTrigger == true && this.waiting == false}">
+        <div class="effecttrigger">{{this.effectCharacter}} Ability On!</div>
+        <p class="effectdescription">{{this.effectCharacter}}: <label
+            style="color:rgb(163, 0, 0) ;">{{this.effectDescription}}</label></p>
         <div class="decision">
-          <div *ngIf="false"><img src="../assets/picture/accept.png" width="65px">
+          <div *ngIf="!this.waiting"><img src="../assets/picture/accept.png" width="65px"
+              (click)="this.specialEffect()">
             <img src="../assets/picture/cancels.png" width="54px">
           </div>
-          <div *ngIf="true" class="waitingaction">Waiting Martin Scorpion to decide <div class="lds-ellipsis">
+          <div *ngIf="this.waiting" class="waitingaction">Waiting {{this.effectCharacter}} to decide <div
+              class="lds-ellipsis">
               <div></div>
               <div></div>
               <div></div>
@@ -39,8 +71,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
+  <!-- แทรกเทินชาวบ้าน -->
   <div class="all">
     <div class="heart myheart" *ngIf="this.life4 != null|| this.life4 != undefined ">
       <img src="../assets/picture/myHeart.png" width="55px">

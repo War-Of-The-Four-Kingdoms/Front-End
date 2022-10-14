@@ -124,7 +124,7 @@
 .all {
   overflow-y: hidden;
   width: 1900px;
-  height: 950px;
+  height: 100%;
   position: relative;
   animation: scroll 70s linear infinite;
   background: url("https://i.pinimg.com/564x/91/5e/73/915e739ff65e8474f2753fdeea8537dc.jpg"), #111111;
@@ -328,12 +328,12 @@ body {
 
 #exist {
   background-color: #000000;
-  width: 100%;
+  width: 1900px;
   height: 100%;
   position: absolute;
   float: right;
   z-index: 9999;
-  opacity: 95%;
+  opacity: 85%;
   display: grid;
   place-items: center;
   animation: chooseIn 1s;
@@ -351,20 +351,59 @@ body {
   color: black;
   font-weight: bold;
   font-family: 'Oswald', sans-serif;
+
 }
 
-.action-content {
+.actionPhrase2 {
+  width: 91.5%;
+  height: 350px;
+  background-color: white;
+  transform: skewX(0deg);
+  animation: actioner 5s;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-family: 'Oswald', sans-serif;
+  position: absolute;
+  top: 0%;
+  box-shadow: rgb(255, 166, 166) 0px 0px 0px 2px, rgba(255, 166, 166) 0px 4px 6px -1px, rgba(255, 166, 166) 0px 1px 0px inset;
+}
+
+.choice {
+  transform: skewX(-25deg);
+  height: 175px;
+  width: 45%;
+  left: 0%;
+  background-color: white;
+  position: absolute;
+  bottom: 10%;
+}
+
+.choice2 {
+  transform: skewX(-25deg);
+  height: 175px;
+  width: 45%;
+  right: 10%;
+  background-color: white;
+  position: absolute;
+  bottom: 10%;
+}
+
+.actioncontent {
   padding-top: 50px;
   transform: skewX(25deg);
 }
 
+.actioncontent2 {
+  padding-top: 50px;
+  transform: skewX(0deg);
+}
+
 .quickAction {
   position: absolute;
-  top: 27%;
-  left: 48%;
-  transform: skewX(-25deg);
-  z-index: 999;
-
+  top: 20%;
+  left: 35%;
+  opacity: 40%;
 }
 
 .effecttrigger {
@@ -375,7 +414,7 @@ body {
   font-size: 36px;
 }
 
-.waitingaction{
+.waitingaction {
   font-size: 30px;
 }
 
@@ -385,8 +424,9 @@ body {
   position: absolute;
   left: 61%;
   top: 91%;
-  
+
 }
+
 .lds-ellipsis div {
   position: absolute;
   width: 13px;
@@ -395,42 +435,52 @@ body {
   background: rgb(196, 12, 12);
   // animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
+
 .lds-ellipsis div:nth-child(1) {
   left: 8px;
   animation: lds-ellipsis1 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(2) {
   left: 8px;
   animation: lds-ellipsis2 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(3) {
   left: 32px;
   animation: lds-ellipsis2 0.6s infinite;
 }
+
 .lds-ellipsis div:nth-child(4) {
   left: 56px;
   animation: lds-ellipsis3 0.6s infinite;
 }
+
 @keyframes lds-ellipsis1 {
   0% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
 }
+
 @keyframes lds-ellipsis3 {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(0);
   }
 }
+
 @keyframes lds-ellipsis2 {
   0% {
     transform: translate(0, 0);
   }
+
   100% {
     transform: translate(24px, 0);
   }
@@ -443,12 +493,35 @@ body {
     opacity: 0;
   }
 
-  50%{
+  50% {
     opacity: 0;
   }
 
   100% {
     width: 91%;
+  }
+}
+
+@keyframes actioner {
+  0% {
+    top: 30%;
+    width: 0%;
+    opacity: 0;
+    transform: skewX(-25deg);
+  }
+
+  30% {
+    opacity: 1;
+    width: 91%;
+  }
+
+  80% {
+    top: 30%;
+  }
+
+  100% {
+    transform: skewX(0deg);
+    top: 0%;
   }
 }
 
@@ -459,7 +532,7 @@ body {
   }
 
   100% {
-    opacity: 1;
+    opacity: 0.85;
   }
 }
 
@@ -676,6 +749,28 @@ body {
   -webkit-filter: grayscale(100%);
 }
 
+.bigbang{
+  animation: bigbang 3.8s;
+  position: absolute;
+  top: 50%;
+}
+
+@keyframes bigbang {
+  0% {
+    box-shadow: 0 0 rgba(#ef61ef, 1);
+  }
+
+  80% {
+    box-shadow: 0 0 rgba(#ef61ef, 1);
+  }
+
+
+  100% {
+    box-shadow: 0 0 1050px 1050px transparent;
+    border-width: 10px;
+  }
+}
+
 @keyframes anim-glow {
   0% {
     box-shadow: 0 0 rgba(#61EF61, 1);
@@ -711,6 +806,168 @@ body {
   z-index: 9999;
 }
 
+.effect-pattern {
+  background: rgba(122, 132, 161, 0.125);
+  border-radius: 50%;
+  height: 8em;
+  object-fit: cover;
+  width: 8em;
+  z-index: 9999;
+  position: absolute;
+}
+
+.effectuser {
+  left: 5%;
+  top: 20%;
+  animation: versusLeftuser 4s;
+}
+
+@keyframes versusLeftuser {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+    left: 5%
+  }
+
+  80% {
+    left: 32%;
+  }
+
+  100% {
+    left: 5%;
+  }
+
+}
+
+@keyframes versusRightuser {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+    right: 5%
+  }
+
+  80% {
+    right: 32%;
+  }
+
+  100% {
+    right: 5%;
+  }
+
+}
+
+.effecteduser {
+  right: 5%;
+  top: 20%;
+  animation: versusRightuser 4s;
+}
+
+.playerEffect {
+  background-color: white;
+  width: 300px;
+  height: 450px;
+  position: absolute;
+  border-radius: 5px;
+  
+
+}
+
+
+.yesCard {
+  background-color: rgb(29, 104, 29);
+  bottom: 27%;
+}
+
+.noCard {
+  bottom: 1%;
+  background-color: rgb(92, 16, 16);
+}
+
+
+
+.discission {
+  width: 850px;
+  height: 25%;
+  position: absolute;
+  border-radius: 5px;
+  animation: fadeIns 7s;
+}
+
+.cardEffect {
+  left: 8%;
+  top: 25%;
+  animation: versusLeft 4s;
+  box-shadow: rgba(228, 90, 255, 0.25) 0px 54px 55px, rgba(228, 90, 255, 0.12) 0px -12px 30px, rgba(228, 90, 255, 0.12) 0px 4px 6px, rgba(228, 90, 255, 0.17) 0px 12px 13px, rgba(228, 90, 255, 0.09) 0px -3px 5px;
+}
+
+.cardEffected {
+  right: 8%;
+  top: 25%;
+  animation: versusRight 4s;
+  box-shadow: rgba(255, 255, 255, 0.25) 0px 54px 55px, rgba(255, 255, 255, 0.12) 0px -12px 30px, rgba(255, 255, 255, 0.12) 0px 4px 6px, rgba(255, 255, 255, 0.17) 0px 12px 13px, rgba(255, 255, 255, 0.09) 0px -3px 5px;
+}
+
+@keyframes versusLeft {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+    left: 8%
+  }
+
+  80% {
+    left: 35%;
+  }
+
+  100% {
+    left: 8%;
+  }
+
+}
+
+@keyframes versusRight {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 1;
+    right: 8%
+  }
+
+  80% {
+    right: 35%;
+  }
+
+  100% {
+    right: 8%;
+  }
+
+}
 
 .chitty {
   color: #ffffff;
@@ -902,7 +1159,41 @@ a:hover+.icon {
   }
 }
 
+.lightning{
+  position: absolute;
+  top: -5%;
+  right: -2%;
+  opacity: 1;
+}
+.lightning2{
+  position: absolute;
+  bottom: -5%;
+  left: -2%;
+  opacity: 1;
+  transform: rotateZ(180deg);
+}
+.lightning3{
+  position: absolute;
+  top: -5%;
+  left: -2%;
+  opacity: 1;
+  transform: rotateZ(270deg);
+}
+.lightning4{
+  position: absolute;
+  bottom: -5%;
+  right: -2%;
+  opacity: 1;
+  transform: rotateZ(90deg);
+}
 
+.lightningper{
+  position: absolute;
+  top: 12%;
+  left: 2%;
+  opacity: 1;
+  transform: rotateZ(20deg);
+}
 
 .counter {
   background: lightblue;
@@ -993,6 +1284,7 @@ a:hover+.icon {
   background: rgba(180, 180, 180);
   position: absolute;
   animation: showing 2s;
+  z-index: 9999;
 }
 
 @keyframes showing {
@@ -1068,6 +1360,25 @@ a:hover+.icon {
   border-radius: 0 20px 20px 0;
   position: absolute;
   animation: fadeIn 1s;
+}
+
+.beforeOn {
+  // animation: fadeIns 7s;
+}
+
+@keyframes fadeIns {
+  0% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+
 }
 
 @keyframes fadeIn {
