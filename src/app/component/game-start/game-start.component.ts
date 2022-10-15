@@ -117,6 +117,9 @@ export class GameStartComponent implements OnInit {
   waiting: boolean = false;
   effectCharacter: any;
   effectDescription: any;
+  testing: any[] = [];
+  chairNone1: boolean = true;
+  
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -149,6 +152,17 @@ export class GameStartComponent implements OnInit {
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
+      for (var i = 1; i < 7; i++) {
+        if (this.testing.includes(this.chairPos[i])) {
+        }else{
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + i)
+          let icons = this.elementRef.nativeElement.querySelector("#card" + i)
+          icon.classList.remove("user"+i)
+          icons.classList.remove("player"+i)
+          icons.classList.add("none")
+          icon.classList.add("none")
+        }
+      }
       this.started = true
       this.crown1 = false
       this.crown2 = false
@@ -683,7 +697,11 @@ export class GameStartComponent implements OnInit {
       this.hosting4 = false
       this.hosting5 = false
       this.hosting6 = false
+      console.log(data);
+      this.testing = []
       data.forEach((d: any) => {
+        this.testing.push(d.position)
+        console.log(this.testing);
         if (this.chair1 == d.position) {
           this.chair1user = true
           if (d.uid == this.roomHost) {
@@ -718,6 +736,7 @@ export class GameStartComponent implements OnInit {
         }
       });
     });
+
     this.loopChair()
   }
 

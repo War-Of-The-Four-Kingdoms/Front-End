@@ -80,6 +80,19 @@
   filter: invert(100%)
 }
 
+.waitingDes {
+  position: absolute;
+  left: 27%;
+  top: 25%;
+  background-color: rgba(186, 120, 224, 0.699);
+  width: 850px;
+  height: 450px;
+  border-radius: 5px;
+  color: whitesmoke;
+  font-size: 32px;
+  text-align: center;
+  padding-top: 80px;
+}
 
 @keyframes color-change {
   0% {
@@ -219,7 +232,7 @@ body {
   transform: rotateX(0deg) rotateZ(180deg) scale(1);
 }
 
-.player-1 {
+.player4 {
   position: absolute;
   top: 28%;
   left: 71%;
@@ -227,7 +240,7 @@ body {
   transform: rotateX(0deg) rotateZ(90deg) scale(1);
 }
 
-.player-2 {
+.player1 {
   position: absolute;
   top: 29%;
   left: 4%;
@@ -236,7 +249,7 @@ body {
 
 }
 
-.player-3 {
+.player6 {
   position: absolute;
   top: 80%;
   left: 20%;
@@ -244,7 +257,7 @@ body {
 
 }
 
-.player-4 {
+.player2 {
   position: absolute;
   top: -24%;
   left: 18%;
@@ -252,7 +265,7 @@ body {
 
 }
 
-.player-5 {
+.player3 {
   position: absolute;
   top: -25%;
   left: 52%;
@@ -260,7 +273,7 @@ body {
 
 }
 
-.player-6 {
+.player5 {
   position: absolute;
   top: 74%;
   left: 56%;
@@ -307,6 +320,10 @@ body {
 
 .myCharacter-card {
   width: 300px;
+}
+
+.none{
+  display: none;
 }
 
 
@@ -403,7 +420,86 @@ body {
   position: absolute;
   top: 20%;
   left: 35%;
-  opacity: 40%;
+  opacity: 20%;
+  z-index: 0;
+}
+
+.useAbillity {
+  position: absolute;
+  left: 27%;
+  top: 28%;
+  background-color: rgba(163, 32, 146, 0.699);
+  width: 850px;
+  height: 200px;
+  border-radius: 5px;
+  z-index: 9999;
+
+}
+
+.textDiscription {
+  font-size: 32px;
+  font-family: "Oswald", sans-serif;
+  text-align: end;
+  padding-top: 75px;
+  color: whitesmoke;
+  padding-right: 10px;
+}
+
+.noUse{
+  font-size: 32px;
+  font-family: "Oswald", sans-serif;
+  text-align: start;
+  padding-top: 75px;
+  color: whitesmoke;
+  padding-left: 75px;
+}
+
+.noAbillity {
+  position: absolute;
+  left: 27%;
+  top: 53%;
+  background-color: rgba(156, 127, 152, 0.699);
+  width: 850px;
+  height: 200px;
+  border-radius: 5px;
+}
+
+
+
+
+
+.spell {
+  position: absolute;
+  left: 2%;
+  top: 10%;
+}
+
+.spells {
+  position: absolute;
+  left: 41%;
+  top: 50%;
+  animation: bigger 3s infinite;
+}
+
+@keyframes bigger {
+  0% {
+    width: 150px;
+  }
+
+  50% {
+    width: 170px;
+  }
+
+  100% {
+    width: 150px;
+  }
+
+}
+
+.nospell {
+  position: absolute;
+  right: 2%;
+  top: 10%;
 }
 
 .effecttrigger {
@@ -616,7 +712,7 @@ body {
 }
 
 
-.user {
+.user1 {
   top: 9%;
   left: 47%;
   position: absolute;
@@ -631,32 +727,32 @@ body {
 }
 
 
-.user2 {
+.user6 {
   top: 31%;
   left: 23%;
   position: absolute;
 }
 
-.user3 {
+.user2 {
   top: 30%;
   left: 71.8%;
   position: absolute;
 }
 
-.user4 {
+.user5 {
   top: 65%;
   left: 23.6%;
   position: absolute;
 
 }
 
-.user5 {
+.user3 {
   top: 65%;
   left: 71.8%;
   position: absolute;
 }
 
-.user6 {
+.user4 {
   top: 87%;
   left: 48%;
   position: absolute;
@@ -749,10 +845,33 @@ body {
   -webkit-filter: grayscale(100%);
 }
 
-.bigbang{
+.bigbang {
   animation: bigbang 3.8s;
   position: absolute;
   top: 50%;
+}
+
+.whoUse {
+  animation: fadeinCha 4s;
+}
+
+.whoNot {
+  animation: fadeinCha 4s;
+}
+
+@keyframes fadeinCha {
+  0% {
+    opacity: 0;
+  }
+
+  90% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+
 }
 
 @keyframes bigbang {
@@ -882,7 +1001,7 @@ body {
   height: 450px;
   position: absolute;
   border-radius: 5px;
-  
+
 
 }
 
@@ -1159,27 +1278,30 @@ a:hover+.icon {
   }
 }
 
-.lightning{
+.lightning {
   position: absolute;
   top: -5%;
   right: -2%;
   opacity: 1;
 }
-.lightning2{
+
+.lightning2 {
   position: absolute;
   bottom: -5%;
   left: -2%;
   opacity: 1;
   transform: rotateZ(180deg);
 }
-.lightning3{
+
+.lightning3 {
   position: absolute;
   top: -5%;
   left: -2%;
   opacity: 1;
   transform: rotateZ(270deg);
 }
-.lightning4{
+
+.lightning4 {
   position: absolute;
   bottom: -5%;
   right: -2%;
@@ -1187,7 +1309,7 @@ a:hover+.icon {
   transform: rotateZ(90deg);
 }
 
-.lightningper{
+.lightningper {
   position: absolute;
   top: 12%;
   left: 2%;
