@@ -20,6 +20,7 @@ import { LoginPageComponent } from './component/login-page/login-page.component'
 import { GameStartComponent } from './component/game-start/game-start.component';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+
 registerLocaleData(en);
 
 @NgModule({
