@@ -13,11 +13,23 @@
   </div>
 
   <div class="droptemplate d-flex m-0 p-0" *ngIf="this.showFoxiaEffect">
+    <!-- <div class="droptemplate d-flex m-0 p-0" *ngIf="true"> -->
     <div class="h-100 w-25 d-flex justify-content-center align-items-center">
       <button class="confirmdrop bg-danger display-4" (click)="this.foxiaCancel()">Cancel</button>
     </div>
-    <div class="h-100 w-50 d-flex justify-content-center align-items-center">
-      <div class="cardInfo" *ngIf="this.foxiaDecisionResult != null">{{ this.foxiaDecisionResult.name }}</div>
+    <div class="h-100 w-50 d-flex">
+      <div class="flip-card">
+        <div class="flip-card-inner" *ngIf="this.foxiaDecisionResult != null">
+          {{ this.foxiaDecisionResult.name }}
+          <div class="flip-card-front">
+            <img src="../assets/picture/card/bearfighter.png" alt="Avatar" width="400px" height="560px">
+          </div>
+          <div class="flip-card-back bg-secondary">
+
+          </div>
+        </div>
+        <div class=" w-100 h-100 bg-secondary" *ngIf="this.foxiaDecisionResult == null"></div>
+      </div>
     </div>
     <div class="h-100 w-25 d-flex justify-content-center align-items-center">
       <button class="confirmdrop bg-success display-4" (click)="this.foxiaDraw()">Draw</button>

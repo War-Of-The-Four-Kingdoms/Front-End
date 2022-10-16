@@ -883,7 +883,7 @@ export class GameStartComponent implements OnInit {
     // in prepare stage can openDecisionCard if symbol is club/spade store it - openDecisionCard({symbol: ['club','spade'],store_by_decision: true})
   }
 
-  async foxiaDraw(){
+  foxiaDraw(){
     this.api.drawCard(this.roomcode,1).subscribe((cards: any) => {
       let x = cards[0];
       let symbols = ['club','spade'];
@@ -897,7 +897,7 @@ export class GameStartComponent implements OnInit {
       if(s_check){
         this.storeConfirm = true;
       }else{
-        this.foxiaCancel();
+        setTimeout(()=>{this.foxiaCancel()},3000);
       }
     })
   }
@@ -906,6 +906,7 @@ export class GameStartComponent implements OnInit {
     console.log(this.foxiaDecisionResult.id);
     this.handCard.push(this.foxiaDecisionResult);
     this.foxiaStoredCard.push(this.foxiaDecisionResult.id);
+    this.foxiaDecisionResult = null;
     this.storeConfirm = false;
   }
 
