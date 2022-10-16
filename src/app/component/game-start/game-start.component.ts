@@ -118,7 +118,7 @@ export class GameStartComponent implements OnInit {
   effectCharacter: any;
   effectDescription: any;
   testing: any[] = [];
-  chairNone1: boolean = true;
+  groupEffect:boolean = false;
   
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {

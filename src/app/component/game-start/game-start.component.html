@@ -21,8 +21,32 @@
           src={{char.image_name}} (click)="selectCharacter(char)"></div>
     </div> -->
   </div>
+  <!-- เอฟเฟคหมู่ -->
+  <div id="exist" *ngIf="this.groupEffect">
+    <!-- จิบชา -->
+    <div id="containers">
+      <div class="steam" id="steam1"> </div>
+      <div class="steam" id="steam2"> </div>
+      <div class="steam" id="steam3"> </div>
+      <div class="steam" id="steam4"> </div>
+    
+      <div id="cup">
+        <div id="cup-body">
+          <div id="cup-shade"></div>
+        </div>
+        <div id="cup-handle"></div>
+      </div>
+    
+      <div id="saucer"></div>
+    
+      <div id="shadow"></div>
+    </div>
+    <!-- จิบชา -->
+  </div>
+   <!-- เอฟเฟคหมู่ -->
   <!-- แทรกเทินชาวบ้าน -->
   <div id="exist" *ngIf="this.showTrigger">
+    <!-- เอฟเฟคตัวละคร -->
     <div class="bigbang"></div>
     <div class="decorateEffect">
       <img class="lightning" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
@@ -60,34 +84,10 @@
 
       </div>
     </div>
+<!-- เอฟเฟคตัวละคร -->
+<!-- โจมตีและป้องกัน -->
 
-    <!-- <img class="quickAction" src="../assets/picture/thunder.png" width="92px"
-      *ngIf="this.showTrigger == true && this.waiting == true"> -->
-
-
-    <!-- <div
-      [ngClass]="{actionPhrase:this.showTrigger == true && this.waiting == true,actionPhrase2:this.showTrigger == true && this.waiting == false}">
-      <div
-        [ngClass]="{actioncontent:this.showTrigger == true && this.waiting == true,actioncontent2:this.showTrigger == true && this.waiting == false}">
-        <div class="effecttrigger">{{this.effectCharacter}} Ability On!</div>
-        <p class="effectdescription">{{this.effectCharacter}}: <label
-            style="color:rgb(163, 0, 0) ;">{{this.effectDescription}}</label></p>
-        <div class="decision">
-          <div *ngIf="!this.waiting"><img src="../assets/picture/accept.png" width="65px"
-              (click)="this.specialEffect()">
-            <img src="../assets/picture/cancels.png" width="54px">
-          </div>
-          <div *ngIf="this.waiting" class="waitingaction">Waiting {{this.effectCharacter}} to decide <div
-              class="lds-ellipsis">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
+<!-- โจมตีและป้องกัน -->
   </div>
   <!-- แทรกเทินชาวบ้าน -->
   <div class="all">
@@ -225,20 +225,7 @@
       </ng-container>
     </nz-modal>
 
-
-    <!-- <nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="left" nzTitle="CHAT" (nzOnClose)="close()">
-      <ng-container *nzDrawerContent>
-        <div class="chat-section">
-          <div class="chat-box">
-            <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </nz-drawer> -->
-
     <div class="user1" id="chair1">
-
       <div class="circles" *ngIf="!this.chair1user">
         <p class="circle-content" (click)="select_position(this.chair1)">
           {{this.chair1}}
