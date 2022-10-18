@@ -129,7 +129,7 @@ export class GameStartComponent implements OnInit {
   effectCharacter: any;
   effectDescription: any;
   testing: any[] = [];
-  groupEffect:boolean = true;
+  groupEffect:boolean = false;
   
   chairNone1: boolean = true;
 
@@ -627,6 +627,8 @@ export class GameStartComponent implements OnInit {
   // }
 
   openDecisionCard(data: {symbol?:any , code?:any}){ //store_condition ['and','or']
+    console.log('draw');
+    
     this.api.drawCard(this.roomcode,1).subscribe((cards: any) => {
       let x = cards[0];
 
