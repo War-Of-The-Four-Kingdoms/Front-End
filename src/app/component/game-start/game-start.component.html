@@ -6,6 +6,7 @@
 
 <body>
 
+  <!-- ทิ้งการ์ด -->
   <div class="droptemplate row m-0 p-0" *ngIf="this.showDropTemplate">
     <div class="card-canvas d-flex flex-wrap justify-content-center">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
@@ -18,15 +19,15 @@
     </div>
   </div>
 
-  <div class="droptemplate d-flex m-0 p-0" *ngIf="this.showFoxiaEffect">
-    <!-- <div class="droptemplate d-flex m-0 p-0" *ngIf="true"> -->
+  <!-- เปิดการ์ดตัดสิน -->
+  <div *ngIf="this.showDecisionTemplate">
+    <div class="droptemplate d-flex m-0 p-0">
     <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-      <button class="confirmdrop bg-danger display-4" (click)="this.foxiaCancel()">Cancel</button>
     </div>
     <div class="h-100 w-50 d-flex">
       <div class="flip-card">
-        <div class="flip-card-inner" *ngIf="this.foxiaDecisionResult != null">
-          {{ this.foxiaDecisionResult.name }}
+        <div class="flip-card-inner" *ngIf="this.decisionResult != null">
+          {{ this.decisionResult.symbol }}
           <div class="flip-card-front">
             <img src="../assets/picture/card/bearfighter.png" alt="Avatar" width="400px" height="560px">
           </div>
@@ -34,14 +35,31 @@
 
           </div>
         </div>
-        <div class=" w-100 h-100 bg-secondary" *ngIf="this.foxiaDecisionResult == null"></div>
+        <div class=" w-100 h-100 bg-secondary" *ngIf="this.decisionResult == null"></div>
       </div>
     </div>
     <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-      <button class="confirmdrop bg-success display-4" (click)="this.foxiaDraw()">Draw</button>
+      <button class="storeConfirm" *ngIf="this.storeConfirm" (click)="this.foxiaStore()">เก็บ</button>
     </div>
   </div>
-  <button class="storeConfirm" *ngIf="this.storeConfirm" (click)="this.foxiaStore()">Keep</button>
+  <div class="buttonField d-flex justify-content-center">
+    <button *ngIf="this.isFoxiaEffect" class="openDecisionButton cancel-button mx-3" (click)="this.foxiaCancel()"><span class="text">ยกเลิก</span></button>
+    <button *ngIf="this.isFoxiaEffect" class="openDecisionButton open-button mx-3" (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
+    <button *ngIf="!this.isFoxiaEffect" class="openDecisionButton open-button mx-3" (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
+  </div>
+</div>
+<!-- merguin effect -->
+<div class="droptemplate row m-0 p-0" *ngIf="this.merguinSelection">
+    <div class="card-canvas d-flex flex-wrap justify-content-center">
+      <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
+        <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}" (change)="checkedMerguin($event)"/>
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="confirmdrop" (click)="useMerguinEffect()">Confirm</button>
+    </div>
+  </div>
 
   <div id="exist" *ngIf="this.characterCard">
     <div class="showRole">

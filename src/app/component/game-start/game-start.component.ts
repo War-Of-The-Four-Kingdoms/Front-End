@@ -72,6 +72,7 @@ export class GameStartComponent implements OnInit {
   characterPool: any[] = [];
   myCharacter: any;
   handCard: any[] = []
+  decisionCard: any[] = [];
   test: any;
   img1: any;
   img2: any;
@@ -101,7 +102,13 @@ export class GameStartComponent implements OnInit {
   life6: any;
   inGameChar: any[] = [];
   prepareQueue: any;
+  decideQueue: any;
+  drawQueue: any;
+  playQueue: any;
+  dropQueue: any;
+  endQueue: any;
   currentQueue: any;
+  showDecisionTemplate: boolean = false;
   //processing
   attackCount: any
   drawAdjust: any;
@@ -112,14 +119,13 @@ export class GameStartComponent implements OnInit {
   specialAttack: any;
   specialStage: any;
   decisionResult: any = null;
+  dc_condition:any = null;
 
   //dropcard
   selectedItems: any[] = [];
   showDropTemplate: boolean = false;
 
   //foxia
-  showFoxiaEffect: boolean = false;
-  foxiaDecisionResult: any = null;
   storeConfirm: boolean = false;
   foxiaStoredCard: any[] = [];
   showRole: any;
@@ -130,7 +136,10 @@ export class GameStartComponent implements OnInit {
   effectDescription: any;
   testing: any[] = [];
   chairNone1: boolean = true;
+  isFoxiaEffect: boolean = false;
 
+  //merguin
+  merguinSelection: boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -154,7 +163,9 @@ export class GameStartComponent implements OnInit {
     // window.onbeforeunload = function () {
     //   return "Leaving this page will reset the wizard";
     // }
-
+    this.socket.listen('set decision result').subscribe((data: any) => {
+      this.decisionResult = data.card;
+    });
     this.socket.listen('random characters').subscribe((data: any) => {
       this.characterCard = true;
       this.characterPool = data
@@ -292,18 +303,42 @@ export class GameStartComponent implements OnInit {
             this.prepareStage();
             break;
           case 'decide':
+            this.currentQueue = 'decide';
+            this.decideQueue = new Queue<Object>();
 
+            if(this.decisionCard.length > 0){
+              this.decisionCard.forEach(d => {
+                if(this.inGameChar.find(c => c.character.char_name == 'merguin') && this.myCharacter.char_name != 'merguin'){
+                  this.decideQueue.enqueue({waiting: true, name: 'merguin'});
+                }
+                  this.decideQueue.enqueue({waiting: false, name: d.item_name});
+              });
+            }
+            this.decideStage();
             break;
           case 'draw':
+            this.currentQueue = 'draw';
+            this.drawQueue = new Queue<Object>();
+            this.drawQueue.enqueue({ waiting: false, name: 'draw'});
+            this.drawStage();
             break;
           case 'play':
-
+            this.currentQueue = 'play';
+            this.playQueue = new Queue<Object>();
+            this.playStage();
             break;
           case 'drop':
-
+            this.currentQueue = 'drop';
+            this.dropQueue = new Queue<Object>();
+            if(this.handCard.length > this.life4){
+              this.dropQueue.enqueue({ waiting: false, name: 'drop'});
+            }
+            this.dropStage();
             break;
           case 'end':
-
+            this.currentQueue = 'end';
+            this.endQueue = new Queue<Object>();
+            this.endStage();
             break;
         }
       }
@@ -512,29 +547,120 @@ export class GameStartComponent implements OnInit {
         this.prepareStage();
         break;
       case 'decide':
-
+        this.decideStage();
         break;
       case 'draw':
-
+        this.drawStage();
         break;
       case 'play':
-
+        this.playStage();
         break;
       case 'drop':
-
+        this.dropStage();
         break;
       case 'end':
-
+        this.endStage();
         break;
     }
   }
+
+  decideStage(){
+    if (this.decideQueue.length > 0) {
+      let q = this.decideQueue.dequeue();
+      if (q.waiting) {
+        this.flexAction(q.name);
+        this.waiting = true
+        this.showTrigger = true
+        this.cardMethod(q.name);
+      } else {
+        this.cardMethod(q.name);
+      }
+    }else{
+      clearInterval(this.interval);
+      this.socket.emit('end stage', { code: this.lobbyCode });
+    }
+  }
+
+  drawStage(){
+    if (this.drawQueue.length > 0) {
+      let q = this.drawQueue.dequeue();
+      if (q.waiting) {
+        this.cardMethod(q.name);
+      }else {
+        if(q.name == 'draw'){
+          this.api.drawCard(this.roomcode,2+this.drawAdjust).subscribe((data: any) => {
+            //effect
+            data.forEach((card: any)=> {
+              this.handCard.push(card);
+            });
+          });
+          this.socket.emit("update inhand card",{ code: this.lobbyCode , hand: this.handCard});
+        }else{
+          this.cardMethod(q.name);
+        }
+      }
+    }else{
+      clearInterval(this.interval);
+      this.socket.emit('end stage', { code: this.lobbyCode });
+    }
+  }
+
+  playStage(){
+    if (this.playQueue.length > 0) {
+      let q = this.playQueue.dequeue();
+      if (q.waiting) {
+
+        this.cardMethod(q.name);
+      } else {
+
+        this.cardMethod(q.name);
+      }
+    }else{
+      clearInterval(this.interval);
+      this.socket.emit('end stage', { code: this.lobbyCode });
+    }
+  }
+
+  dropStage(){
+    if (this.dropQueue.length > 0) {
+      let q = this.dropQueue.dequeue();
+      if (q.waiting) {
+
+        this.cardMethod(q.name);
+      } else {
+        if(q.name == 'drop'){
+          this.showDrop();
+        }else{
+          this.cardMethod(q.name);
+        }
+      }
+    }else{
+      clearInterval(this.interval);
+      this.socket.emit('end stage', { code: this.lobbyCode });
+    }
+  }
+
+  endStage(){
+    if (this.endQueue.length > 0) {
+      let q = this.endQueue.dequeue();
+      if (q.waiting) {
+
+        this.cardMethod(q.name);
+      } else {
+
+        this.cardMethod(q.name);
+      }
+    }else{
+      clearInterval(this.interval);
+      this.socket.emit('end stage', { code: this.lobbyCode });
+    }
+  }
+
 
   showDrop(){
     this.showDropTemplate = !this.showDropTemplate;
   }
   checkedState(event: any) {
-    console.log('do');
-    console.log(this.selectedItems);
     if(event.target.checked === true){
       if (this.selectedItems.length < (this.handCard.length - this.life4)){
         this.selectedItems.push(event.target.value)
@@ -547,16 +673,41 @@ export class GameStartComponent implements OnInit {
     console.log(this.selectedItems);
 
   }
+  checkedMerguin(event: any) {
+    if(event.target.checked === true){
+      if (this.selectedItems.length < 1){
+        this.selectedItems.push(event.target.value)
+      }else{
+        event.target.checked = false;
+      }
+    }else{
+      this.selectedItems = this.selectedItems.filter(sc => sc != event.target.value)
+    }
+  }
+  useMerguinEffect(){
+    let result_card = this.handCard.find(hc => hc.id == this.selectedItems[0]);
+    this.socket.emit('merguin effect', { code: this.roomcode, card: result_card});
+    this.handCard = this.handCard.filter(hc => hc.id != this.selectedItems[0]);
+    this.socket.emit("update inhand card",{ code: this.lobbyCode , hand: this.handCard});
+    this.api.dropCard(this.roomcode,this.selectedItems).subscribe( (data:any) => {
+      console.log(data);
+    });
+    this.selectedItems = [];
+    this.socket.emit('special effect end', { code: this.roomcode });
+    this.merguinSelection = false;
+  }
 
   dropSelectedCard(){
     this.selectedItems.forEach(item => {
       this.handCard = this.handCard.filter(hc => hc.id != item)
     });
+    this.socket.emit("update inhand card",{ code: this.lobbyCode , hand: this.handCard});
     this.api.dropCard(this.roomcode,this.selectedItems).subscribe( (data:any) => {
       console.log(data);
     });
     this.showDropTemplate = false;
     this.selectedItems = [];
+    this.next_queue();
   }
 
   prepareStage() {
@@ -565,19 +716,14 @@ export class GameStartComponent implements OnInit {
       console.log(q);
       if (q.waiting) {
         //waitng others
-        console.log(q);
-        console.log(q.waiting);
         this.flexAction(q.name);
         this.waiting = true
         this.showTrigger = true
-        console.log(this.waiting);
-        console.log(this.showTrigger);
-        this.charMethod(q.name);
+        this.cardMethod(q.name);
       } else {
-        console.log(q.waiting);
         this.waiting = false
         this.showTrigger = false
-        this.charMethod(q.name);
+        this.cardMethod(q.name);
       }
     }else{
       clearInterval(this.interval);
@@ -588,11 +734,14 @@ export class GameStartComponent implements OnInit {
     if (this.myCharacter.char_name == 'martin') {
       //this.drawCard();
       this.socket.emit('martin effect', { code: this.roomcode });
+      this.socket.emit('special effect end', { code: this.roomcode });
+    }else if(this.myCharacter.char_name == 'merguin'){
+      this.merguinSelection = true;
     }
     // else if(){
 
     // }
-    this.socket.emit('special effect end', { code: this.roomcode });
+
     this.showTrigger = false
   }
 
@@ -618,60 +767,100 @@ export class GameStartComponent implements OnInit {
     this.cardShow = false
   }
 
-  // drawCard(num: any) {
-  //   return this.api.drawCard(this.roomcode,num).subscribe((data: any) => {
-  //     return data
-  //   });
-  // }
-
-  openDecisionCard(data: {symbol?:any , code?:any}){ //store_condition ['and','or']
-    this.api.drawCard(this.roomcode,1).subscribe((cards: any) => {
-      let x = cards[0];
-
-      if(typeof(data.symbol) !== 'undefined'){
-        if(typeof(data.code) !== 'undefined'){
-          let c_check = false;
+  openDecisionCard(is_draw: boolean){
+    if(is_draw){
+      this.api.openCard(this.roomcode).subscribe((card: any) => {
+        let x = card;
+        if(this.myCharacter.char_name == 'foxia'){
+          let symbols = ['club','spade'];
           let s_check = false;
-          data.symbol.forEach((sb: any) => {
-            if(x.symbol == sb){
-              s_check = true;
-            }
-          });
-          data.code.forEach((cd: any) => {
-            if(x.code == cd){
-              c_check = true;
-            }
-          });
-          if(s_check && c_check){
-            this.decisionResult = {result: 'both', cards: x};
-          }else if(s_check && !c_check){
-            this.decisionResult = {result: 'symbol', cards: x};
-          }else if(!s_check && c_check){
-            this.decisionResult = {result: 'code', cards: x};
+            symbols.forEach((sb: any) => {
+              if(x.symbol == sb){
+                s_check = true;
+              }
+            });
+          this.decisionResult = x;
+          if(s_check){
+            this.storeConfirm = true;
           }else{
-            this.decisionResult = {result: 'none', cards: x};
+            setTimeout(()=>{this.foxiaCancel()},3000);
           }
-        }else{
-          let s_check = false;
-          data.symbol.forEach((sb: any) => {
-            if(x.symbol == sb){
-              s_check = true;
-            }
-          });
-          this.decisionResult = {result: s_check, cards: x};
+        }else {
+          if(this.myCharacter.char_name == 'owliver'){
+            this.handCard.push(x);
+            this.api.updateInUse(this.roomcode,[x.id]).subscribe( (data:any) => {
+              console.log(data);
+            });
+            this.socket.emit("update inhand card",{ code: this.lobbyCode , hand: this.handCard});
+          }
+          this.conditionCheck(x);
         }
-      }
-      else if(typeof(data.code) !== 'undefined'){
-        let c_check = false;
-        data.code.forEach((cd: any) => {
-          if (x.code == cd) {
-            c_check = true;
-          }
-        });
-        this.decisionResult = {result: c_check, cards: x};
-      }
-    })
+      })
+    }else{
+      this.conditionCheck(this.decisionResult);
+    }
   }
+  conditionCheck(card: any){
+    switch(this.dc_condition){
+      case 'russianroulette':
+        console.log(true);
+        break;
+      case 'coaching':
+        console.log(true);
+        break;
+    }
+    this.showDecisionTemplate = false;
+    this.decisionResult = null;
+    this.next_queue();
+  }
+  // openDecisionCard(data: {symbol?:any , code?:any}){ //store_condition ['and','or']
+  //   this.api.openCard(this.roomcode).subscribe((card: any) => {
+  //     let x = card;
+
+  //     if(typeof(data.symbol) !== 'undefined'){
+  //       if(typeof(data.code) !== 'undefined'){
+  //         let c_check = false;
+  //         let s_check = false;
+  //         data.symbol.forEach((sb: any) => {
+  //           if(x.symbol == sb){
+  //             s_check = true;
+  //           }
+  //         });
+  //         data.code.forEach((cd: any) => {
+  //           if(x.code == cd){
+  //             c_check = true;
+  //           }
+  //         });
+  //         if(s_check && c_check){
+  //           this.decisionResult = {result: 'both', cards: x};
+  //         }else if(s_check && !c_check){
+  //           this.decisionResult = {result: 'symbol', cards: x};
+  //         }else if(!s_check && c_check){
+  //           this.decisionResult = {result: 'code', cards: x};
+  //         }else{
+  //           this.decisionResult = {result: 'none', cards: x};
+  //         }
+  //       }else{
+  //         let s_check = false;
+  //         data.symbol.forEach((sb: any) => {
+  //           if(x.symbol == sb){
+  //             s_check = true;
+  //           }
+  //         });
+  //         this.decisionResult = {result: s_check, cards: x};
+  //       }
+  //     }
+  //     else if(typeof(data.code) !== 'undefined'){
+  //       let c_check = false;
+  //       data.code.forEach((cd: any) => {
+  //         if (x.code == cd) {
+  //           c_check = true;
+  //         }
+  //       });
+  //       this.decisionResult = {result: c_check, cards: x};
+  //     }
+  //   })
+  // }
 
   openChat() {
     this.showChat = !this.showChat
@@ -765,8 +954,12 @@ export class GameStartComponent implements OnInit {
   flexAction(data: any) {
     switch (data) {
       case 'martin':
-        this.effectCharacter = "Martin Scorpion"
-        this.effectDescription = "Can Sabotage Queue to make target Skip prepare turn !!"
+        this.effectCharacter = "มาติน สกอร์เปี้ยน"
+        this.effectDescription = "จองหอง : ในขั้นตอนการเตรียมการของราชา สามารถจั่วการ์ดได้ 1 ใบ หากเลือกที่จะจั่วการ์ด ขีดจำกัดสูงสุดของการ์ดในมือราชาจะลดลง 1 ใบในรอบนี้้ "
+        break;
+      case 'merguin':
+        this.effectCharacter = "เมอกวิ้น"
+        this.effectDescription = "ศุนย์กลางของโลก : สามารถใช้สัญลักษณ์ของการ์ดบนมือ แทนผลการเปิดการ์ดตัดสินของทุกคนได้ (หลังจากนั้นให้ทิ้งการ์ดที่ถูกนำมาใช้) "
         break;
     }
 
@@ -931,8 +1124,9 @@ export class GameStartComponent implements OnInit {
   //   martin: this.martinEffect,
   // };
 
-  charMethod(name: string) {
+  cardMethod(name: string) {
     switch (name) {
+      //character
       case 'martin':
         this.martinEffect();
         break;
@@ -944,6 +1138,14 @@ export class GameStartComponent implements OnInit {
         break;
       case 'bearyl':
         this.bearylEffect();
+        break;
+
+      //trick
+      case 'russianroulette':
+        this.russianrouletteEffect();
+        break;
+      case 'coaching':
+        this.coachingEffect();
         break;
     }
   }
@@ -991,43 +1193,25 @@ export class GameStartComponent implements OnInit {
 
   martinEffect() {
     let m = this.inGameChar.find(c => c.character.char_name == 'martin');
-    console.log(m);
-    console.log("======");
-
     this.socket.emit('trigger others effect', { code: this.roomcode, position: m.position, character: m.character.char_name });
   }
 
   foxiaEffect() {
-    this.showFoxiaEffect = true;
+    this.isFoxiaEffect = true;
+    this.showDecisionTemplate = true;
     //this.specialDefense = ['club','spade'];
     // in prepare stage can openDecisionCard if symbol is club/spade store it - openDecisionCard({symbol: ['club','spade'],store_by_decision: true})
   }
 
-  foxiaDraw(){
-    this.api.drawCard(this.roomcode,1).subscribe((cards: any) => {
-      let x = cards[0];
-      let symbols = ['club','spade'];
-      let s_check = false;
-        symbols.forEach((sb: any) => {
-          if(x.symbol == sb){
-            s_check = true;
-          }
-        });
-      this.foxiaDecisionResult = x;
-      if(s_check){
-        this.storeConfirm = true;
-      }else{
-        setTimeout(()=>{this.foxiaCancel()},3000);
-      }
-    })
-  }
+
 
   foxiaStore(){
-    console.log(this.foxiaDecisionResult.id);
-    this.handCard.push(this.foxiaDecisionResult);
-    this.foxiaStoredCard.push(this.foxiaDecisionResult.id);
-    this.foxiaDecisionResult = null;
+    console.log(this.decisionResult.id);
+    this.handCard.push(this.decisionResult);
+    this.foxiaStoredCard.push(this.decisionResult.id);
+    this.decisionResult = null;
     this.storeConfirm = false;
+    this.socket.emit("update inhand card",{ code: this.lobbyCode , hand: this.handCard});
   }
 
   foxiaCancel(){
@@ -1036,8 +1220,9 @@ export class GameStartComponent implements OnInit {
         console.log(data);
       });
     }
-    this.showFoxiaEffect = false;
-    this.foxiaDecisionResult = null;
+    this.isFoxiaEffect = false;
+    this.showDecisionTemplate = false;
+    this.decisionResult = null;
     this.next_queue();
   }
 
@@ -1059,6 +1244,8 @@ export class GameStartComponent implements OnInit {
   }
 
   merguinEffect() {
+    let m = this.inGameChar.find(c => c.character.char_name == 'merguin');
+    this.socket.emit('trigger others effect', { code: this.roomcode, position: m.position, character: m.character.char_name });
     // when damaged can steal 1 card from offender [in-hand or in equipment field]
     // every decide stage can use effect to use in-hand card to be the result, after that drop this card
   }
@@ -1068,5 +1255,25 @@ export class GameStartComponent implements OnInit {
     // can request to other animal tribe to use defense card for you [can refuse]
   }
 
+  // Trick Method
+  russianrouletteEffect(){
+    this.dc_condition = 'russianroulette';
+    if(this.decisionResult != null){
+      this.openDecisionCard(false);
+    }
+    else{
+      this.showDecisionTemplate = true;
+    }
+  }
+
+  coachingEffect(){
+    this.dc_condition = 'coaching';
+    if(this.decisionResult != null){
+      this.openDecisionCard(false);
+    }
+    else{
+      this.showDecisionTemplate = true;
+    }
+  }
 
 }
