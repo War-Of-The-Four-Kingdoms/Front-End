@@ -1,7 +1,7 @@
 // จิบชา
-#container {
+#containers {
 	position: absolute;
-	top: 50%;
+	top: 60%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -463,13 +463,12 @@ body {
 }
 
 #exist {
-  background-color: #000000;
+  background-color: rgba(0, 0, 0, 0.85);
   width: 1900px;
   height: 100%;
   position: absolute;
   float: right;
-  z-index: 9999;
-  opacity: 85%;
+  z-index: 9000;
   display: grid;
   place-items: center;
   animation: chooseIn 1s;
@@ -760,6 +759,28 @@ body {
   top: 2%;
   text-align: center;
   animation: choosePic 10s;
+}
+
+.party{
+  position: absolute;
+  width: 100%;
+  bottom:-130%;
+}
+
+.effectAll{
+  position: absolute;
+  color: white;
+  text-align: center;
+  top: 10%;
+
+}
+
+.crowd{
+  position: absolute;
+  width: 150%;
+  height: 100%;
+  opacity: 1;
+  bottom: -50%;
 }
 
 
@@ -1917,4 +1938,117 @@ a:hover+.icon {
   position: relative;
   left: 50px;
   transition: 0.4s ease-out;
+}
+
+.droptemplate{
+  position: absolute;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.85);
+  width: 100%;
+  height: 100%;
+}
+
+.card-canvas{
+  margin: auto;
+  width: 1690px;
+  min-height: 10%;
+  padding: 0 10px 0 0;
+}
+
+.carddrop{
+  margin: 0px 10px 10px 0px;
+  height: 280px;
+  width: 200px;
+  background-color: #7d6f99;
+  border-radius: 10px;
+  position: relative;
+  font-size: 28px;
+  transition: transform .2s;
+}
+
+.dropcard-checkbox{
+  display: none;
+}
+
+.carddrop:hover{
+  z-index: 9999;
+  transform: scale(1.2);
+}
+
+input[type=checkbox] + label {
+  border: none;
+}
+input[type=checkbox]:checked + label {
+  border: 5px solid rgb(255, 196, 0);
+}
+
+.confirmdrop{
+  border-radius: 100px;
+  width: 200px;
+  height: 200px;
+}
+.cardInfo{
+  margin: 0px 10px 10px 0px;
+  height: 560px;
+  width: 400px;
+  background-color: #7d6f99;
+  border-radius: 10px;
+  position: relative;
+  font-size: 28px;
+  padding: 0;
+}
+
+.storeConfirm{
+  border-radius: 50px;
+  background-color: rgb(255, 166, 0);
+  position: absolute;
+  z-index: 50;
+  width: 10%;
+  height: 50px;
+  bottom: 10%;
+  left: 45%;
+}
+
+.flip-card {
+  margin: auto;
+  background-color: transparent;
+  width: 400px;
+  height: 560px;
+  perspective: 1000px;
+
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  animation: cardDraw 2s;
+  transform: rotateY(0deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  color: black;
+}
+
+.flip-card-back {
+  color: white;
+  transform: rotateY(180deg);
+}
+
+@keyframes cardDraw {
+  0%{
+    transform: rotateY(180deg);
+  }
 }

@@ -26,9 +26,14 @@ export class ApiService {
     return this.http.get(this.apiUrl + '/drawCard',{ params: params });
   }
 
-  // drawCard(){
-  //   re
-  // }
+  dropCard(code: any,cards: any) {
+    return this.http.put(this.apiUrl + '/dropCard',{ roomcode: code,cards: cards });
+  }
+
+  updateInUse(code: any,cards: any) {
+    return this.http.put(this.apiUrl + '/updateCardInUse',{ roomcode: code,cards: cards });
+  }
+
 
 
 
