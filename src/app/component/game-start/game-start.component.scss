@@ -1,57 +1,52 @@
-*{
+* {
   font-family: 'Oswald', sans-serif;
 }
 
 .mo-fire {
+  width: 200px;
   height: auto;
   position: absolute;
-  left:20%;
-  bottom: -60px;
-  z-index: 4;
+  left:50%;
+  margin-left: -100px;
+  top: 100px;
 }
-
-#svg-view {
-	width: 700px;
-	height: 125px;
-	left: 0px;
-}
-
 .mo-fire svg {
+  width: 100%;
   height: auto;
-  position:relative;
-  right:610px;
+  position: ABSOLUTE;
+  left: -20px;
+  top: -35px;
 }
 .flame {
-  animation-name: flameDisappear;
+  animation-name: flamefly;
   animation-duration: 2s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  opacity: 0.5;
-  transform-origin: 45% 45% 0;
+  opacity: 0;
+  transform-origin: 50% 50% 0;
 }
 .flame.one {
   animation-delay: 1s;
   animation-duration: 3s;
 }
-.flame.two{
+.flame3.two{
   animation-duration: 5s;
   animation-delay: 1s;
 }
 
-
 .flame-main {
-  animation-name: flameMovement;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
+  animation-name: flameWobble;
+  animation-duration: 3s;
+  animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 .flame-main.one {
-  animation-duration: 2.2s;
+  animation-duration: 4s;
   animation-delay: 1s;
 }
 .flame-main.two {
-  animation-duration: 2s;
-  animation-delay: 1s;
+  animation-duration: 3s;
+  animation-delay: 2s;
 }
 .flame-main.three {
   animation-duration: 2.1s;
@@ -65,20 +60,20 @@
   animation-duration: 2.5s;
   animation-delay: 5s;
 }
-@keyframes flameMovement {
+@keyframes flameWobble {
   50% {
-    transform: scale(0.98,1.0) translate(0, 2px) rotate(-1deg);
+    transform: scale(1,1.2) translate(0, -30px) rotate(-2deg);
   }
 }
-@keyframes flameDisappear {
+@keyframes flamefly {
   0%{
     transform: translate(0) rotate(180deg);
   }
-  50% {
+   50% {
      opacity: 1;
   }
   100% {
-    transform: translate(-10px, -40px) rotate(180deg);
+    transform: translate(-20px, -100px) rotate(180deg);
     opacity: 0;
   }
 }
@@ -97,25 +92,26 @@
 }
 
 @keyframes phraseChange {
-  0%{
+  0% {
     left: 100%;
   }
 
-  50%{
+  50% {
     left: -10%;
   }
 
-  100%{
+  100% {
     left: -150%;
   }
 }
 
-.fontTurn{
+.fontTurn {
   font-size: 120px;
   color: white;
   -webkit-text-stroke: 5px rgb(50, 41, 54);
- 
+
 }
+
 .scene {
   position: absolute;
   width: 1000px;
@@ -1740,6 +1736,17 @@ a:hover+.icon {
   text-align: center;
 }
 
+.droped {
+  width: 30%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-box-reflect: below 2px linear-gradient(transparent, transparent, #0004);
+  transform-origin: center;
+  transform: perspective(800px) rotateY(0deg);
+  color: white;
+  text-align: center;
+}
+
 .cardSelect {
   display: flex;
   gap: 10px;
@@ -1753,6 +1760,39 @@ a:hover+.icon {
   filter: brightness(50%);
   animation: cardpic 12s;
 }
+
+.card-drop {
+  width: 350px;
+  height: 560px;
+  // opacity: 0.5;
+  filter: brightness(100%);
+  // animation: cardpic 12s;
+}
+
+.overlay {
+  content: '';
+  width: 355px;
+  height: 560px;
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 50px;
+  animation: burnbaby 1.5s;
+  background-color: rgb(41, 16, 1);
+}
+
+@keyframes burnbaby {
+  0%{
+    background-color: rgba(41, 16, 1, 0);
+  }
+  100%{
+    background-color: rgb(41, 16, 1);
+    cursor: pointer;
+    -webkit-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+}
+
 
 @keyframes cardpic {
   0% {
@@ -1781,11 +1821,21 @@ a:hover+.icon {
   align-items: center;
   gap: 20px;
   z-index: 51;
-
 }
 
-.drop{
-  width: 100%;
+.dropTest {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 51;
+  padding-top: 10%;
+  padding-left: 10px;
+}
+
+.drop {
+  width: 1900px;
   height: 100%;
 }
 
@@ -2209,7 +2259,7 @@ a:hover+.icon {
   position: absolute;
   z-index: 20;
   background-color: rgba(0, 0, 0, 0.85);
-  width: 100%;
+  width: 1920px;
   height: 100%;
   animation: chooseIn 1s;
 }
@@ -2453,3 +2503,4 @@ input[type=checkbox]:checked+label {
 }
 
 // ---- Glowing border button end ----
+

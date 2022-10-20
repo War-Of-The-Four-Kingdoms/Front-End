@@ -11,7 +11,7 @@ import { Queue } from 'queue-typescript';
   styleUrls: ['./game-start.component.scss']
 })
 export class GameStartComponent implements OnInit {
-  dropFire:boolean = false;
+  dropFire:boolean = true;
   turnChange:boolean = false;
   textTurn:any = "";
   characterCard: boolean = false;
@@ -126,7 +126,7 @@ export class GameStartComponent implements OnInit {
 
   //dropcard
   selectedItems: any[] = [];
-  showDropTemplate: boolean = false;
+  showDropTemplate: boolean = true;
 
   //foxia
   storeConfirm: boolean = false;
@@ -412,7 +412,7 @@ export class GameStartComponent implements OnInit {
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
-      this.myPosId = room.uid;
+      this.myPosId = room.uid;  
       this.roomHost = room.host
       this.is_private = room.private;
       sessionStorage.setItem('private', room.private);
@@ -697,6 +697,7 @@ export class GameStartComponent implements OnInit {
       this.selectedItems = this.selectedItems.filter(dc => dc != event.target.value)
     }
     console.log(this.selectedItems);
+    this.dropCard = this.selectedItems
 
   }
   checkedMerguin(event: any) {
@@ -733,7 +734,7 @@ export class GameStartComponent implements OnInit {
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
     this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
       console.log(data);
-      this.dropCard = data
+      
     });
     this.showDropTemplate = false;
     this.selectedItems = [];
