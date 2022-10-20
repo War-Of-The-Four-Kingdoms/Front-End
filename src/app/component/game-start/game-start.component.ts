@@ -298,7 +298,7 @@ export class GameStartComponent implements OnInit {
       }, 1000);
       if (data.position == this.myPos) {
         console.log(data.stage);
-        switch (data.stage) {     
+        switch (data.stage) {
           case 'prepare':
             this.drawAdjust = 0;
             this.currentQueue = 'prepare';
@@ -328,10 +328,13 @@ export class GameStartComponent implements OnInit {
           case 'draw':
             this.textTurn = "DRAW PHARSE"
             this.turnChange = true
-            setTimeout(() => { 
+            setTimeout(() => {
             this.currentQueue = 'draw';
             this.drawQueue = new Queue<Object>();
             this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+            if (this.myCharacter.char_name == 'puta') {
+              this.prepareQueue.enqueue({ waiting: false, name: 'foxia' });
+            }
             this.turnChange = false
             this.drawStage();
           }, 2000);
@@ -344,7 +347,7 @@ export class GameStartComponent implements OnInit {
           case 'drop':
             this.textTurn = "DROP PHARSE"
             this.turnChange = true
-            setTimeout(() => { 
+            setTimeout(() => {
             this.currentQueue = 'drop';
             this.dropQueue = new Queue<Object>();
             if (this.handCard.length > this.life4) {
@@ -724,21 +727,26 @@ export class GameStartComponent implements OnInit {
   }
 
   dropSelectedCard() {
-    this.dropFire = true 
-    setTimeout(() => {  
-      this.dropFire = false 
-    this.selectedItems.forEach(item => {
-      this.handCard = this.handCard.filter(hc => hc.id != item)
-    });
-    this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-    this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
-      console.log(data);
-      this.dropCard = data
-    });
-    this.showDropTemplate = false;
-    this.selectedItems = [];
-    this.next_queue();
-  }, 3000);
+    if(this.selectedItems.length != (this.handCard.length-this.life4)){
+      alert('Select '+((this.handCard.length-this.life4) - this.selectedItems.length)+' more card')
+    }else{
+      this.dropFire = true
+      setTimeout(() => {
+        this.dropFire = false
+      this.selectedItems.forEach(item => {
+        this.handCard = this.handCard.filter(hc => hc.id != item)
+      });
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+      this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
+        console.log(data);
+        this.dropCard = data
+      });
+      this.showDropTemplate = false;
+      this.selectedItems = [];
+      this.next_queue();
+    }, 3000);
+    }
+
   }
 
   prepareStage() {
