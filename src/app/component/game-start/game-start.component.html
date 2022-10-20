@@ -249,6 +249,8 @@
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
     </div>
   </div>
+  <!--  -->
+
   <!-- merguin effect -->
   <div class="droptemplate row m-0 p-0" *ngIf="this.merguinSelection">
     <div class="card-canvas d-flex flex-wrap justify-content-center">
@@ -262,6 +264,75 @@
       <button class="confirmdrop" (click)="useMerguinEffect()">Confirm</button>
     </div>
   </div>
+  <!--  -->
+
+  <!-- Give card to others -->
+  <div class="giveCard row m-0 p-0" *ngIf="this.showGiveCard">
+    <div class="card-canvas d-flex flex-wrap justify-content-center">
+      <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
+        <input type="checkbox" class="dropcard-checkbox"value="{{handcard.id}}" id="c{{handcard.id}}"
+          (change)="checkedGive($event)" />
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="player-give-select mx-3" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)">{{ other.username }}</button>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button *ngIf="this.myCharacter.char_name == 'puta'" class="putaFin" (click)="putaFinish()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Done
+      </button>
+    </div>
+  </div>
+  <!--  -->
+
+  <!-- effect use -->
+  <div class="effectTemplate m-0 p-0 d-flex justify-content-center align-items-center" *ngIf="this.confirmEffect">
+    <div>
+      <button class="effectButton useButton d-flex" (click)="this.useBearylEffect()" *ngIf="this.myCharacter.char_name == 'bearyl'">
+        <img class="useEffectImg" src="../assets/picture/book.png" alt="Tyler" width="150px">
+        <div class="useEffectText text-start h-100 d-flex align-items-center">หมัดหมีขาคู่ : ในขั้นตอนการจั่วการ์ด ถ้าเลือกจั่วเพียง 1 ใบ ในรอบนั้นหากคุณใช้การ์ดโจมตี หรือ “ท้าดวล” จะสร้างความเสียหายเพิ่ม 1 หน่วย</div>
+      </button>
+      <button class="effectButton useButton d-flex" (click)="this.useSnaleEffect()" *ngIf="this.myCharacter.char_name == 'snale'">
+        <img class="useEffectImg" src="../assets/picture/book.png" alt="Tyler" width="150px">
+        <div class="useEffectText text-start h-100 d-flex align-items-center">แอบฉกแอบชิม : ในขั้นตอนการจั่วการ์ด สามารถเลือกได้ว่าจะไม่จั่วการ์ดแล้วเลือกหยิบการ์ดบนมือ 1 ใบ จากผู้เล่นอื่นไม่เกิน 2 คน</div>
+      </button>
+      <button class="effectButton noButton d-flex mt-3" (click)="this.cancelEffect">
+        <div class="useEffectText justify-content-end h-100 d-flex align-items-center">ยังไม่ใช้ดีกว่า....</div>
+        <img class="useEffectImg" src="../assets/picture/thinking.png" alt="Tyler" width="150px">
+      </button>
+    </div>
+  </div>
+  <!--  -->
+
+   <!-- steal card -->
+   <div class="effectTemplate m-0 p-0 row justify-content-center align-items-center" *ngIf="this.stealCard">
+    <div class="d-flex justify-content-center m-0">
+      <div class="d-flex  " *ngFor="let other of this.stealablePlayers">
+        <input type="checkbox" class="dropcard-checkbox stealSelect"value="{{ other.uuid }}" id="p{{ other.uuid }}" (change)="checkedSteal($event)" />
+        <label for='p{{ other.uuid }}' class="player-steal-select d-flex justify-content-center align-items-center mx-3" [ngClass]="{stealed:other.stealed}">&nbsp;{{ other.username }}</label>
+      </div>
+    </div>
+
+
+    <div class="stealCardShow d-flex flex-wrap justify-content-center m-0 p-0">
+      <div class="m-0 p-0" *ngFor="let item of [].constructor(this.stealCardShowNum); let i = index">
+        <label (click)="this.stealCardIndex(i)" class="carddrop">&nbsp;{{ i }}</label>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="this.stealCard" class="putaFin snaleFin" (click)="snaleFinish()">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Done
+  </button>
+  <!--  -->
 
   <div id="exist" *ngIf="this.characterCard">
     <div class="showRole">
@@ -423,7 +494,7 @@
     <!-- pass button -->
     <div class="wrapper" *ngIf="this.myPos == this.queue">
       <div class="link_wrapper">
-        <a (click)="pass()">Next Stage</a>
+        <a (click)="showGive()">Next Stage</a>
         <div class="icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
             <path

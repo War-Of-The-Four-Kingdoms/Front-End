@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit {
   inputCode: string = '';
   isVisible = true;
   ngOnInit(): void {
+    window.history.pushState({}, '');
+
     this.socket.emit('list room', {});
     this.socket.listen('room full').subscribe(() => {
       alert("The room is full.");

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
 import { Queue } from 'queue-typescript';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-game-start',
@@ -48,7 +49,6 @@ export class GameStartComponent implements OnInit {
   roomHost: any;
   roomcode: any;
   is_private: boolean = false;
-  is_started: boolean = false;
   role: any = "king";
   describe: any = { king: "Kill Traitor and Betrayer to win This Game", knight: "Protect Your king and Kill Everyone Who betray!!", villager: "Kill this Corruption King to Win the game!!", noble: "Spy and Kill Everyone" };
   extra_hp: any;
@@ -104,6 +104,7 @@ export class GameStartComponent implements OnInit {
   life5: any;
   life6: any;
   inGameChar: any[] = [];
+  players: any;
   prepareQueue: any;
   decideQueue: any;
   drawQueue: any;
@@ -112,6 +113,11 @@ export class GameStartComponent implements OnInit {
   endQueue: any;
   currentQueue: any;
   showDecisionTemplate: boolean = false;
+  showGiveCard: boolean = false;
+  others: any;
+  maxHp: any;
+  confirmEffect: boolean = false;
+  othersHandCard: any[] = [];
   //processing
   attackCount: any
   drawAdjust: any;
@@ -148,6 +154,19 @@ export class GameStartComponent implements OnInit {
   test555: boolean = false;
   dropCard: any[] = [];
 
+  //puta
+  putaGiveCount: any;
+
+  //bearyl
+  bearylDamageAdjust:number = 0;
+
+  //snale
+  stealCard: boolean = false;
+  stealTargetSelected: any = null;
+  stealCardShowNum: number = 0;
+  stealablePlayers:any ;
+
+  stealCardSelected: any[] = [];
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -177,7 +196,9 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('random characters').subscribe((data: any) => {
       this.characterCard = true;
       this.characterPool = data
+
       this.characterPool.forEach((c: any) => {
+
         c.image_name = "../assets/picture/card/" + c.image_name
       });
     });
@@ -201,7 +222,7 @@ export class GameStartComponent implements OnInit {
       this.crown5 = false
       this.crown6 = false
       this.king_pos = data.king.position;
-      this.king_uid = data.king.uid;
+      this.king_uid = data.king.sid;
       this.role = data.me.role;
       switch (this.role) {
         case 'king':
@@ -221,7 +242,6 @@ export class GameStartComponent implements OnInit {
           this.showText = "Kill the King to win this GAME"
           break;
       }
-      console.log(this.role);
       if (this.myPosId == this.king_uid) {
         this.extra_hp = 1
         this.crown4 = true
@@ -245,14 +265,13 @@ export class GameStartComponent implements OnInit {
         }
       }
     });
-    if (this.is_started) {
+    if (this.started) {
       window.addEventListener("beforeunload", function (e) {
         var confirmationMessage = "You will lost the process.";
         e.returnValue = confirmationMessage;
         return confirmationMessage;
       });
     }
-
     this.socket.listen('next turn').subscribe((pos: any) => {
       this.clock = true
       // if (this.myPos == pos) {
@@ -273,8 +292,21 @@ export class GameStartComponent implements OnInit {
       // }, 1000);
       this.queue = pos
     });
+    this.socket.listen('get card from others').subscribe((data: any) => {
+      this.test555 = true;
+      this.showDraw = data.cards;
+      setTimeout(() => {
+        data.cards.forEach((card: any) => {
+          this.test555 = false;
+          this.showDraw = [];
+          this.handCard.push(card);
+        });
+      },4000);
+    });
+
 
     this.socket.listen('change stage').subscribe((data: any) => {
+      this.closeAll();
       clearInterval(this.interval)
       let othericon = this.elementRef.nativeElement.querySelector('.finish')
       if (othericon != null) {
@@ -297,7 +329,6 @@ export class GameStartComponent implements OnInit {
         }
       }, 1000);
       if (data.position == this.myPos) {
-        console.log(data.stage);
         switch (data.stage) {
           case 'prepare':
             this.drawAdjust = 0;
@@ -331,9 +362,18 @@ export class GameStartComponent implements OnInit {
             setTimeout(() => {
             this.currentQueue = 'draw';
             this.drawQueue = new Queue<Object>();
-            this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+            if (this.myCharacter.char_name == 'kraken') {
+              this.drawAdjust++;
+            }
+            if (this.myCharacter.char_name == 'bearyl') {
+              this.drawQueue.enqueue({ waiting: false, name: 'bearyl' });
+            }else if(this.myCharacter.char_name == 'snale'){
+              this.drawQueue.enqueue({ waiting: false, name: 'snale' });
+            }else{
+              this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+            }
             if (this.myCharacter.char_name == 'puta') {
-              this.prepareQueue.enqueue({ waiting: false, name: 'foxia' });
+              this.drawQueue.enqueue({ waiting: false, name: 'puta' });
             }
             this.turnChange = false
             this.drawStage();
@@ -366,11 +406,9 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('trigger special effect').subscribe((target: any) => {
-      console.log(target);
       this.flexAction(this.myCharacter.char_name);
       this.showTrigger = true
       this.waiting = false
-      console.log('effect');
 
     });
     this.socket.listen('next queue').subscribe(() => {
@@ -389,6 +427,11 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('need more player').subscribe(() => {
       this.started = false
       alert('This game require atleast 4 players.')
+    });
+    this.socket.listen('update inhand').subscribe((data: any) => {
+      if(data.position != this.myPos){
+        this.others.find((o: any) => o.position == data.position).in_hand = data.card_num;
+      }
     });
     this.socket.listen('sctc').subscribe((data: any) => {
       let lastchat = this.elementRef.nativeElement.querySelector('.chatline').lastElementChild;
@@ -410,12 +453,11 @@ export class GameStartComponent implements OnInit {
       this.hosting4 = false
       this.hosting5 = false
       this.hosting6 = false
-
       this.elementRef.nativeElement.querySelector('.show_code').textContent = room.code;
       this.lobbyCode = room.code;
       this.roomMAX = room.max;
       sessionStorage.setItem('Max', room.max);
-      this.myPosId = room.uid;
+      this.myPosId = room.sid;
       this.roomHost = room.host
       this.is_private = room.private;
       sessionStorage.setItem('private', room.private);
@@ -425,33 +467,33 @@ export class GameStartComponent implements OnInit {
         room.players.forEach((d: any) => {
           if (this.chair1 == d.position) {
             this.chair1user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting1 = true
             }
           } else if (this.chair2 == d.position) {
             this.chair2user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting2 = true
             }
           } else if (this.chair3 == d.position) {
             this.chair3user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting3 = true
             }
           } else if (this.chair4 == d.position) {
             this.chair4user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting4 = true
             }
           } else if (this.chair5 == d.position) {
             this.chair5user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting5 = true
             }
           }
           else if (this.chair6 == d.position) {
             this.chair6user = true
-            if (d.uid == this.roomHost) {
+            if (d.sid == this.roomHost) {
               this.hosting6 = true
             }
           }
@@ -459,54 +501,62 @@ export class GameStartComponent implements OnInit {
       }
 
     });
-    this.socket.listen('change host').subscribe((uid: any) => {
-      this.roomHost = uid.host
+    this.socket.listen('change host').subscribe((sid: any) => {
+      this.roomHost = sid.host
       this.hosting1 = false
       this.hosting2 = false
       this.hosting3 = false
       this.hosting4 = false
       this.hosting5 = false
       this.hosting6 = false
-      if (this.myPosId == uid.host) {
+      if (this.myPosId == sid.host) {
         this.host = true
         this.hosting4 = true
       } else {
         this.host = false
-        uid.players.forEach((d: any) => {
+        sid.players.forEach((d: any) => {
           if (this.chair1 == d.position) {
             this.chair1user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting1 = true
             }
           } else if (this.chair2 == d.position) {
             this.chair2user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting2 = true
             }
           } else if (this.chair3 == d.position) {
             this.chair3user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting3 = true
             }
           } else if (this.chair4 == d.position) {
             this.chair4user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting4 = true
             }
           } else if (this.chair5 == d.position) {
             this.chair5user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting5 = true
             }
           }
           else if (this.chair6 == d.position) {
             this.chair6user = true
-            if (d.uid == uid.host) {
+            if (d.sid == sid.host) {
               this.hosting6 = true
             }
           }
         });
       }
+    });
+
+    this.socket.listen('card stolen').subscribe((data: any) => {
+      console.log('stolen');
+      console.log(data);
+      data.cards.forEach((card: any) => {
+        this.handCard = this.handCard.filter(hc => hc.id != card.id);
+      });
     });
     this.socket.listen('player leave').subscribe((data: any) => {
       this.quitRage.push(data.position)
@@ -518,16 +568,29 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('ready to start').subscribe((data: any) => {
       this.api.drawCard(this.roomcode, 4).subscribe((res: any) => {
         this.handCard = res;
-        console.log(res);
 
-        this.socket.emit('draw card ', { hand: this.handCard, code: this.roomcode });
+        this.socket.emit('draw card', { hand: this.handCard, code: this.roomcode });
       });
       this.characterCard = false;
 
+      data.forEach((pos: any) => {
+        if(this.others.find((o: any) => o.position == pos)){
+        let other = this.others.find((o: any) => o.position == pos);
+          other.in_hand = 4;
+          other.equiped = 0;
+        }
+      });
+
+
     });
+
+    this.socket.listen('set player info').subscribe((data: any) => {
+      this.players = data.players;
+      this.others = data.players.filter((p: any) => p.id != this.myPosId);
+    });
+
     this.socket.listen('set player character').subscribe((data: any) => {
       this.inGameChar.push(data);
-      console.log(this.inGameChar);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character.image_name
         this.life4 = data.remain_hp
@@ -563,6 +626,20 @@ export class GameStartComponent implements OnInit {
       // }
     });
   }
+
+  closeAll(){
+    this.cardShow = false;
+    this.showGiveCard = false;
+    this.showDecisionTemplate = false;
+    this.confirmEffect = false;
+    this.showDropTemplate = false;
+    this.storeConfirm = false;
+    this.showTrigger = false;
+    this.isFoxiaEffect = false;
+    this.merguinSelection = false;
+    this.stealCard = false;
+  }
+
   next_queue() {
     switch (this.currentQueue) {
       case 'prepare':
@@ -613,17 +690,19 @@ export class GameStartComponent implements OnInit {
         if (q.name == 'draw') {
             this.api.drawCard(this.roomcode, 2 + this.drawAdjust).subscribe((data: any) => {
               //effect
-              console.log(data);
               this.test555 = true
               this.showDraw = data
               setTimeout(() => {
                 data.forEach((card: any) => {
                   this.handCard.push(card);
                   this.test555 = false
+                  this.showDraw = [];
                 });
+                this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+                this.next_queue();
               } , 4000);
             });
-          this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+
         } else {
           this.cardMethod(q.name);
         }
@@ -685,9 +764,17 @@ export class GameStartComponent implements OnInit {
     }
   }
 
+  cancelEffect(){
+    this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+    this.confirmEffect = false;
+    this.next_queue();
+  }
 
   showDrop() {
     this.showDropTemplate = !this.showDropTemplate;
+  }
+  showGive(){
+    this.showGiveCard = !this.showDropTemplate;
   }
   checkedState(event: any) {
     if (event.target.checked === true) {
@@ -699,8 +786,85 @@ export class GameStartComponent implements OnInit {
     } else {
       this.selectedItems = this.selectedItems.filter(dc => dc != event.target.value)
     }
-    console.log(this.selectedItems);
 
+  }
+  checkedGive(event: any) {
+    if (event.target.checked === true) {
+      this.selectedItems.push(event.target.value)
+    } else {
+      this.selectedItems = this.selectedItems.filter(dc => dc != event.target.value)
+    }
+  }
+  checkedSteal(event: any) {
+    if (event.target.checked === true) {
+      if(this.stealCardSelected.find((scs: any) => scs.uuid == event.target.value)){
+        event.target.checked = false;
+      }else if(this.stealTargetSelected != null){
+        let a = this.elementRef.nativeElement.querySelectorAll('input#p'+this.stealTargetSelected+':checked');
+        a.forEach((element: any) => {
+          element.checked = false;
+        });
+        this.stealTargetSelected = event.target.value;
+        this.stealCardShowNum = this.others.find((o: any) => o.uuid == event.target.value).in_hand;
+      }else{
+        this.stealTargetSelected = event.target.value;
+        this.stealCardShowNum = this.others.find((o: any) => o.uuid == event.target.value).in_hand;
+      }
+    } else {
+      this.stealTargetSelected = null;
+      this.stealCardShowNum = 0;
+    }
+  }
+
+  giveCardToPlayer(uuid: any){
+    if(this.selectedItems.length == 0){
+      alert('กรุณาเลือกการ์ดอย่างน้อย 1 ใบ');
+    }else{
+      this.putaGiveCount += this.selectedItems.length;
+      if(this.selectedItems.length == this.handCard.length){
+        this.putaFinish();
+      }
+      this.selectedItems.forEach(card_id => {
+        this.handCard = this.handCard.filter(hc => hc.id != card_id);
+      });
+      this.socket.emit('give card to others',{code: this.roomcode, cards: this.selectedItems, target: uuid});
+      this.selectedItems = [];
+    }
+  }
+
+  putaFinish(){
+    if(this.putaGiveCount >= 2 && this.life4 < this.maxHp){
+      this.life4++;
+    }
+    this.selectedItems = [];
+    this.showGiveCard = false;
+    this.next_queue();
+  }
+  stealCardIndex(index: any){
+    this.stealCardSelected.push({ uuid: this.stealTargetSelected , index: index})
+    let a = this.elementRef.nativeElement.querySelectorAll('input#p'+this.stealTargetSelected+':checked');
+      a.forEach((element: any) => {
+        element.checked = false;
+      });
+    this.stealablePlayers.find((sp: any) => sp.uuid == this.stealTargetSelected).stealed = true;
+    this.stealTargetSelected = null
+    this.stealCardShowNum = 0;
+    if(this.stealCardSelected.length >= 2){
+      this.snaleFinish();
+    }
+  }
+  snaleFinish(){
+    this.stealCard = false;
+    this.stealablePlayers = null;
+    if(this.stealCardSelected.length > 0){
+      this.socket.emit('steal other player card',{code: this.roomcode, selected: this.stealCardSelected});
+      this.stealCardSelected = [];
+      setTimeout(()=>{
+        this.next_queue();
+      },4000);
+    }else{
+      this.next_queue();
+    }
   }
   checkedMerguin(event: any) {
     if (event.target.checked === true) {
@@ -719,7 +883,6 @@ export class GameStartComponent implements OnInit {
     this.handCard = this.handCard.filter(hc => hc.id != this.selectedItems[0]);
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
     this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
-      console.log(data);
     });
     this.selectedItems = [];
     this.socket.emit('special effect end', { code: this.roomcode });
@@ -738,7 +901,6 @@ export class GameStartComponent implements OnInit {
       });
       this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
-        console.log(data);
         this.dropCard = data
       });
       this.showDropTemplate = false;
@@ -752,7 +914,6 @@ export class GameStartComponent implements OnInit {
   prepareStage() {
     if (this.prepareQueue.length > 0) {
       let q = this.prepareQueue.dequeue();
-      console.log(q);
       if (q.waiting) {
         //waitng others
         this.flexAction(q.name);
@@ -828,7 +989,6 @@ export class GameStartComponent implements OnInit {
           if (this.myCharacter.char_name == 'owliver') {
             this.handCard.push(x);
             this.api.updateInUse(this.roomcode, [x.id]).subscribe((data: any) => {
-              console.log(data);
             });
             this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
           }
@@ -931,6 +1091,7 @@ export class GameStartComponent implements OnInit {
   selectCharacter(char: any) {
     this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
     this.myCharacter = char
+    this.maxHp = char.hp + this.extra_hp;
   }
 
   listen_position() {
@@ -947,40 +1108,38 @@ export class GameStartComponent implements OnInit {
       this.hosting4 = false
       this.hosting5 = false
       this.hosting6 = false
-      console.log(data);
       this.testing = []
       data.forEach((d: any) => {
         this.testing.push(d.position)
-        console.log(this.testing);
         if (this.chair1 == d.position) {
           this.chair1user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting1 = true
           }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting2 = true
           }
         } else if (this.chair3 == d.position) {
           this.chair3user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting3 = true
           }
         } else if (this.chair4 == d.position) {
           this.chair4user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting4 = true
           }
         } else if (this.chair5 == d.position) {
           this.chair5user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting5 = true
           }
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
-          if (d.uid == this.roomHost) {
+          if (d.sid == this.roomHost) {
             this.hosting6 = true
           }
         }
@@ -1166,9 +1325,13 @@ export class GameStartComponent implements OnInit {
   cardMethod(name: string) {
     switch (name) {
       //character
-      case 'martin':
-        this.martinEffect();
+      case 'witch':
+        this.witchEffect();
         break;
+      case 'puta':
+        this.putaEffect();
+        break;
+
       case 'foxia':
         this.foxiaEffect();
         break;
@@ -1177,6 +1340,16 @@ export class GameStartComponent implements OnInit {
         break;
       case 'bearyl':
         this.bearylEffect();
+        break;
+      case 'snale':
+        this.snaleEffect();
+        break;
+      case 'merguin':
+        this.merguinEffect();
+        break;
+
+      case 'martin':
+        this.martinEffect();
         break;
 
       //trick
@@ -1220,7 +1393,9 @@ export class GameStartComponent implements OnInit {
     this.specialAttack = ['heart', 'diamond'];
   }
 
-  buta(): void {
+  putaEffect(): void {
+    this.putaGiveCount = 0;
+    this.showGiveCard = true;
     //สมบัตฺิผู้นำ : ระหว่างการจั่วการ์ด สามารถมอบการ์ดในมือให้กับผู้เล่นคนอื่นได้ หากมอบการ์ดตั้งแต่ 2 ใบขึ้นไป ในรอบนี้ฟื้นฟูพลังชีวิต 1 หน่วย
   }
 
@@ -1245,7 +1420,6 @@ export class GameStartComponent implements OnInit {
 
 
   foxiaStore() {
-    console.log(this.decisionResult.id);
     this.handCard.push(this.decisionResult);
     this.foxiaStoredCard.push(this.decisionResult.id);
     this.decisionResult = null;
@@ -1256,7 +1430,6 @@ export class GameStartComponent implements OnInit {
   foxiaCancel() {
     if (this.foxiaStoredCard.length > 0) {
       this.api.updateInUse(this.roomcode, this.foxiaStoredCard).subscribe((data: any) => {
-        console.log(data);
       });
     }
     this.isFoxiaEffect = false;
@@ -1271,11 +1444,30 @@ export class GameStartComponent implements OnInit {
   }
 
   bearylEffect() {
+    this.confirmEffect = true;
     // in draw stage if draw only 1 card, this round 'attack' and 'duel' deal +1 damage
   }
 
+  useBearylEffect(){
+    this.bearylDamageAdjust = 1;
+    this.drawAdjust = -1;
+    this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+    this.confirmEffect = false;
+    this.next_queue();
+  }
+
   snaleEffect() {
+    this.confirmEffect = true;
     // in draw stage if not draw, can steal 1 other player inhand-card [ 1 or 2 player]
+  }
+
+  useSnaleEffect(){
+    this.confirmEffect = false;
+    this.stealablePlayers = this.others;
+    this.stealablePlayers.forEach((sp: any) => {
+      sp.stealed = false;
+    });
+    this.stealCard = true;
   }
 
   porckyEffect() {

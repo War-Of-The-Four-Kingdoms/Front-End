@@ -114,7 +114,7 @@
   font-size: 120px;
   color: white;
   -webkit-text-stroke: 5px rgb(50, 41, 54);
- 
+
 }
 .scene {
   position: absolute;
@@ -2453,3 +2453,189 @@ input[type=checkbox]:checked+label {
 }
 
 // ---- Glowing border button end ----
+
+// ---- give card template start ----
+.giveCard {
+  position: absolute;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.85);
+  width: 1920px;
+  height: 100%;
+  animation: chooseIn 1s;
+}
+.player-give-select{
+  background: rgb(77, 77, 77);
+  border-radius: 50%;
+  height: 8em;
+  object-fit: cover;
+  width: 8em;
+}
+.putaFin{
+    position: relative;
+    display: inline-block;
+    padding: auto;
+    margin: 40px 0;
+    color: #ed92ff;
+    background-color: rgba(0, 0, 0, 0.85);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: xx-large;
+    transition: 0.5s;
+    letter-spacing: 4px;
+    overflow: hidden;
+    margin-right: 50px;
+    width: 200px;
+    height: 80px;
+    border: 0;
+
+}
+.putaFin:hover{
+    background: #ed92ff;
+    color: #050801;
+    box-shadow: 0 0 5px #ed92ff,
+                0 0 25px #ed92ff,
+                0 0 50px #ed92ff,
+                0 0 200px #ed92ff;
+     -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
+}
+.putaFin:nth-child(1){
+    filter: hue-rotate(270deg);
+}
+.putaFin:nth-child(2){
+    filter: hue-rotate(110deg);
+}
+.putaFin span{
+    position: absolute;
+    display: block;
+}
+.putaFin span:nth-child(1){
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,transparent,#ed92ff);
+    animation: animate1 1s linear infinite;
+}
+@keyframes animate1{
+    0%{
+        left: -100%;
+    }
+    50%,100%{
+        left: 100%;
+    }
+}
+.putaFin span:nth-child(2){
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,transparent,#ed92ff);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+@keyframes animate2{
+    0%{
+        top: -100%;
+    }
+    50%,100%{
+        top: 100%;
+    }
+}
+.putaFin span:nth-child(3){
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg,transparent,#ed92ff);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+@keyframes animate3{
+    0%{
+        right: -100%;
+    }
+    50%,100%{
+        right: 100%;
+    }
+}
+
+
+.putaFin span:nth-child(4){
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg,transparent,#ed92ff);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+@keyframes animate4{
+    0%{
+        bottom: -100%;
+    }
+    50%,100%{
+        bottom: 100%;
+    }
+}
+// ---- give card template end ----
+
+// ---- use efffect start ----
+.effectTemplate {
+  position: absolute;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.85);
+  width: 1920px;
+  height: 100%;
+  animation: chooseIn 1s;
+}
+
+.useEffectText{
+  font-size: 30px;
+  font-family: "Oswald", sans-serif;
+  color: whitesmoke;
+  width: 80%;
+  padding: 10px;
+}
+.useEffectImg{
+  width: 20%;
+}
+.effectButton{
+  width: 850px;
+  height: 200px;
+  border-radius: 5px;
+  z-index: 9999;
+}
+.useButton{
+  background-color: rgba(163, 32, 146, 0.699);
+}
+
+.noButton{
+  background-color: rgba(156, 127, 152, 0.699);
+}
+// ---- use effect end ----
+
+.stealCardShow {
+  margin: auto;
+  width: 1690px;
+  height: 650px;
+}
+
+.player-steal-select{
+  background: rgb(172, 172, 172);
+  border-radius: 50%;
+  height: 8em;
+  object-fit: cover;
+  width: 8em;
+}
+
+.stealed{
+  filter: brightness(50%);
+}
+
+.snaleFin{
+  position: absolute !important;
+  background-color: rgba(95, 95, 95, 0.3);
+  z-index: 500;
+  right: 2%;
+  bottom: 5% ;
+}
