@@ -30,6 +30,11 @@ export class ApiService {
     return this.http.put(this.apiUrl + '/dropCard',{ roomcode: code,cards: cards });
   }
 
+  openCard(code: any) {
+    let params = new HttpParams().set('room_code', code);
+    return this.http.get(this.apiUrl + '/openCard',{ params: params });
+  }
+
   updateInUse(code: any,cards: any) {
     return this.http.put(this.apiUrl + '/updateCardInUse',{ roomcode: code,cards: cards });
   }
