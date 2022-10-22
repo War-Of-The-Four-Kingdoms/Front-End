@@ -399,6 +399,7 @@
         <div class="noUse">Maybe I will Use this Ability Next Time...</div>
       </div>
     </div>
+
     <div class="whoNot" *ngIf="this.waiting == true">
       <div class="waitingDes">
         <div>You Got Effected to Your Character <p>{{this.effectDescription}}</p>
@@ -468,10 +469,11 @@
       </div>
       <div class="confirm">
         <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()"
-          *ngIf="this.myPos == this.queue">
+          *ngIf="this.canUse">
         <img src="../assets/picture/cancel.png" style="width: 45px;" (click)="cancelShow()">
       </div>
     </div>
+
     <div class="container">
       <div class="card" *ngFor="let card of this.handCard" (click)="showCard(card)">
         {{card.id}}
@@ -492,9 +494,10 @@
       </div> -->
     </div>
     <!-- pass button -->
+
     <div class="wrapper" *ngIf="this.myPos == this.queue">
       <div class="link_wrapper">
-        <a (click)="showGive()">Next Stage</a>
+        <a (click)="pass()">Next Stage</a>
         <div class="icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
             <path

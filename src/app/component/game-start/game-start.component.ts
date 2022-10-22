@@ -84,6 +84,7 @@ export class GameStartComponent implements OnInit {
   img5: any;
   img6: any;
   cardShow: boolean = false;
+  canUse: boolean = false;
   cardCheck: any;
   panel = { active: true, name: 'This is panel header 1', disabled: false };
   showChat: boolean = true;
@@ -119,7 +120,8 @@ export class GameStartComponent implements OnInit {
   confirmEffect: boolean = false;
   othersHandCard: any[] = [];
   //processing
-  attackCount: any
+  maxAttack: number = 0;
+  attackCount: any;
   drawAdjust: any;
   attackDistance: any;
   trickDistance: any;
@@ -572,7 +574,6 @@ export class GameStartComponent implements OnInit {
         this.socket.emit('draw card', { hand: this.handCard, code: this.roomcode });
       });
       this.characterCard = false;
-
       data.forEach((pos: any) => {
         if(this.others.find((o: any) => o.position == pos)){
         let other = this.others.find((o: any) => o.position == pos);
@@ -724,8 +725,8 @@ export class GameStartComponent implements OnInit {
         this.cardMethod(q.name);
       }
     } else {
-      clearInterval(this.interval);
-      this.socket.emit('end stage', { code: this.lobbyCode });
+      // clearInterval(this.interval);
+      // this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
 
@@ -959,11 +960,31 @@ export class GameStartComponent implements OnInit {
 
 
   showCard(card: any) {
-    this.cardShow = true
+    this.canUse = false;
     this.cardCheck = card
+    if(this.myPos == this.queue && this.currentQueue == 'play'){
+      switch(card.info.type){
+        case 'active':
+          if(card.info.item_name == 'attack' && this.attackCount < this.maxAttack){
+            this.canUse = true;
+          }else if(card.info.item_name == 'heal' && this.life4 < this.maxHp){
+            this.canUse = true;
+          }
+          break;
+        case 'trick':
+            this.canUse = true;
+          break;
+        case 'equipment':
+            this.canUse = true;
+          break;
+      }
+    }
+    this.cardShow = true
   }
 
   cancelShow() {
+    this.cardCheck = null;
+    this.canUse = false;
     this.cardShow = false
   }
 
@@ -1386,7 +1407,7 @@ export class GameStartComponent implements OnInit {
   }
 
   luciferEffect(): void {
-    this.attackCount = 10
+    this.maxAttack = 10
   }
 
   bloodyknightEffect(): void {
