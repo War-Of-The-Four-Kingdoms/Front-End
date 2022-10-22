@@ -89,6 +89,8 @@
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
     </div>
   </div>
+  <!--  -->
+
   <!-- merguin effect -->
   <div class="droptemplate row m-0 p-0" *ngIf="this.merguinSelection">
     <div class="card-canvas d-flex flex-wrap justify-content-center">
@@ -102,6 +104,82 @@
       <button class="confirmdrop" (click)="useMerguinEffect()">Confirm</button>
     </div>
   </div>
+  <!--  -->
+
+  <!-- Give card to others -->
+  <div class="giveCard row m-0 p-0" *ngIf="this.showGiveCard">
+    <div class="card-canvas d-flex flex-wrap justify-content-center">
+      <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
+        <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
+          (change)="checkedGive($event)" />
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="player-give-select mx-3" *ngFor="let other of this.others"
+        (click)="giveCardToPlayer(other.uuid)">{{ other.username }}</button>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button *ngIf="this.myCharacter.char_name == 'puta'" class="putaFin" (click)="putaFinish()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        Done
+      </button>
+    </div>
+  </div>
+  <!--  -->
+
+  <!-- effect use -->
+  <div class="effectTemplate m-0 p-0 d-flex justify-content-center align-items-center" *ngIf="this.confirmEffect">
+    <div>
+      <button class="effectButton useButton d-flex" (click)="this.useBearylEffect()"
+        *ngIf="this.myCharacter.char_name == 'bearyl'">
+        <img class="useEffectImg" src="../assets/picture/book.png" alt="Tyler" width="150px">
+        <div class="useEffectText text-start h-100 d-flex align-items-center">หมัดหมีขาคู่ : ในขั้นตอนการจั่วการ์ด
+          ถ้าเลือกจั่วเพียง 1 ใบ ในรอบนั้นหากคุณใช้การ์ดโจมตี หรือ “ท้าดวล” จะสร้างความเสียหายเพิ่ม 1 หน่วย</div>
+      </button>
+      <button class="effectButton useButton d-flex" (click)="this.useSnaleEffect()"
+        *ngIf="this.myCharacter.char_name == 'snale'">
+        <img class="useEffectImg" src="../assets/picture/book.png" alt="Tyler" width="150px">
+        <div class="useEffectText text-start h-100 d-flex align-items-center">แอบฉกแอบชิม : ในขั้นตอนการจั่วการ์ด
+          สามารถเลือกได้ว่าจะไม่จั่วการ์ดแล้วเลือกหยิบการ์ดบนมือ 1 ใบ จากผู้เล่นอื่นไม่เกิน 2 คน</div>
+      </button>
+      <button class="effectButton noButton d-flex mt-3" (click)="this.cancelEffect">
+        <div class="useEffectText justify-content-end h-100 d-flex align-items-center">ยังไม่ใช้ดีกว่า....</div>
+        <img class="useEffectImg" src="../assets/picture/thinking.png" alt="Tyler" width="150px">
+      </button>
+    </div>
+  </div>
+  <!--  -->
+
+  <!-- steal card -->
+  <div class="effectTemplate m-0 p-0 row justify-content-center align-items-center" *ngIf="this.stealCard">
+    <div class="d-flex justify-content-center m-0">
+      <div class="d-flex  " *ngFor="let other of this.stealablePlayers">
+        <input type="checkbox" class="dropcard-checkbox stealSelect" value="{{ other.uuid }}" id="p{{ other.uuid }}"
+          (change)="checkedSteal($event)" />
+        <label for='p{{ other.uuid }}' class="player-steal-select d-flex justify-content-center align-items-center mx-3"
+          [ngClass]="{stealed:other.stealed}">&nbsp;{{ other.username }}</label>
+      </div>
+    </div>
+
+
+    <div class="stealCardShow d-flex flex-wrap justify-content-center m-0 p-0">
+      <div class="m-0 p-0" *ngFor="let item of [].constructor(this.stealCardShowNum); let i = index">
+        <label (click)="this.stealCardIndex(i)" class="carddrop">&nbsp;{{ i }}</label>
+      </div>
+    </div>
+  </div>
+  <button *ngIf="this.stealCard" class="putaFin snaleFin" (click)="snaleFinish()">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Done
+  </button>
+  <!--  -->
 
   <div id="exist" *ngIf="this.characterCard">
     <div class="showRole">
@@ -168,6 +246,7 @@
         <div class="noUse">Maybe I will Use this Ability Next Time...</div>
       </div>
     </div>
+
     <div class="whoNot" *ngIf="this.waiting == true">
       <div class="waitingDes">
         <div>You Got Effected to Your Character <p>{{this.effectDescription}}</p>
@@ -195,6 +274,15 @@
   </div>
   <!-- แทรกเทินชาวบ้าน -->
   <div class="all">
+    <div class="swordPvP" >
+      <img class="pvp" src="../assets/picture/pvp.png" width="150px" id="main" *ngIf="this.canAttack"/>
+      <img id="chairpvp5" class="none" src="../assets/picture/pvp.png"  width="45px" (click)="cfKill(this.chairPos[5])">
+      <img id="chairpvp3" class="none" src="../assets/picture/pvp.png"  width="45px" (click)="cfKill(this.chairPos[3])">
+      <img id="chairpvp2" class="none" src="../assets/picture/pvp.png" width="45px" (click)="cfKill(this.chairPos[2])">
+      <img id="chairpvp1" class="none" src="../assets/picture/pvp.png"  width="45px" (click)="cfKill(this.chairPos[1])">
+      <img id="chairpvp6" class="none" src="../assets/picture/pvp.png"  width="45px" (click)="cfKill(this.chairPos[6])">
+
+    </div>
     <div class="changeTurn" *ngIf="this.turnChange">
       <div class="fontTurn">{{this.textTurn}}</div>
     </div>
@@ -236,14 +324,14 @@
         {{this.cardCheck.id}}
       </div>
       <div class="confirm">
-        <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()"
-          *ngIf="this.myPos == this.queue">
+        <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()" *ngIf="this.canUse">
         <img src="../assets/picture/cancel.png" style="width: 45px;" (click)="cancelShow()">
       </div>
     </div>
+
     <div class="container">
       <div class="card" *ngFor="let card of this.handCard" (click)="showCard(card)">
-        {{card.id}}
+        {{card.info.name}}
       </div>
       <!-- <div class="card">
 
@@ -261,6 +349,7 @@
       </div> -->
     </div>
     <!-- pass button -->
+
     <div class="wrapper" *ngIf="this.myPos == this.queue">
       <div class="link_wrapper">
         <a (click)="pass()">Next Stage</a>
@@ -296,21 +385,7 @@
         <div class="chat-content">
           <div class="chatline w-full">
 
-            <!-- <div class="w-100 p-2">
-              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD; margin-left: auto;">
-                <span style="overflow-wrap: break-word;">sfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsa</span>
-              </div>
-            </div>
-            <div class="w-100 p-2">
-              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#9A20DD;max-width: fit-content; margin-left: auto; ">
-                <span style="overflow-wrap: break-word;">sfasfafssffsa</span>
-              </div>
-            </div>
-            <div class="w-100 p-2">
-              <div class="py-2 px-3" style="font-size:15px;border-radius: 20px;color: white;background-color:#616161;">
-                <span style="overflow-wrap: break-word;">sfasfasfafssfasfafsafssssssssssssssfasfsssssssssssssssssssssssssssssssssssssssssssssfasfafsafasfassfasfasff</span>
-              </div>
-            </div> -->
+
           </div>
           <div class="chat-input  " id="chatInput" (keypress)="typingChat($event)" contenteditable="">
           </div>
@@ -323,22 +398,7 @@
     <div class="copy-noti hidden" aria-readonly="true">
       CODE was copied to clipboard.
     </div>
-    <!-- <div class="fancy-border">
-      <div class="row">
-        <div class="chat-content">
-          <div class="chatline w-full">
-            <p class="chitty">LOBBY [<span class="show_code"></span>]</p>
-          </div>
-        </div>
-        <div class="chat-section">
-          <div class="chat-box">
-            <div class="chat-input bg-white border" id="chatInput" (keypress)="typingChat($event)" contenteditable="">
-            </div>
-          </div>
 
-        </div>
-      </div>
-    </div> -->
     <div
       [ngClass]="{timer: this.chair4 == this.queue,timer1:this.chair1 == this.queue,timer2:this.chair2 == this.queue,timer3:this.chair3 == this.queue,timer5:this.chair5 == this.queue,timer6:this.chair6 == this.queue}">
       <img src="../assets/picture/stopwatch.png" style="width: 95px;" *ngIf="this.clock">
@@ -358,6 +418,13 @@
     </nz-modal>
 
     <div class="user1" id="chair1">
+
+      <div class="otherCard1">
+        <div class="textOther">{{this.handing[1]}}</div>
+        <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
+      </div>
+
+
       <div class="circles" *ngIf="!this.chair1user">
         <p class="circle-content" (click)="select_position(this.chair1)">
           {{this.chair1}}
@@ -386,6 +453,10 @@
 
 
     <div class="user6" id="chair6">
+      <div class="otherCard2">
+        <div class="textOther">{{this.handing[6]}}</div>
+        <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
+      </div>
       <div class="circles" *ngIf="!this.chair6user">
         <p class="circle-content" (click)="select_position(this.chair6)">
           {{this.chair6}}
@@ -413,6 +484,11 @@
 
     </div>
     <div class="user2" id="chair2">
+      <div class="otherCard1">
+        <div class="textOther">{{this.handing[2]}}</div>
+        <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
+      </div>
+
       <div class="circles" *ngIf="!this.chair2user">
         <p class="circle-content" (click)="select_position(this.chair2)">
           {{this.chair2}}
@@ -441,6 +517,10 @@
     </div>
 
     <div class="user5" id="chair5">
+      <div class="otherCard2">
+        <div class="textOther">{{this.handing[5]}}</div>
+        <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
+      </div>
       <div class="circles" *ngIf="!this.chair5user">
         <p class="circle-content" (click)="select_position(this.chair5)">
           {{this.chair5}}
@@ -468,6 +548,10 @@
       <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
     </div>
     <div class="user3" id="chair3">
+      <div class="otherCard1">
+        <div class="textOther">{{this.handing[3]}}</div>
+        <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
+      </div>
       <div class="circles" *ngIf="!this.chair3user">
         <p class="circle-content" (click)="select_position(this.chair3)">
           {{this.chair3}}
