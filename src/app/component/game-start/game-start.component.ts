@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
 import { Queue } from 'queue-typescript';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-game-start',
@@ -131,7 +130,13 @@ export class GameStartComponent implements OnInit {
   specialStage: any;
   decisionResult: any = null;
   dc_condition: any = null;
-
+  myEquipment = { weapon: null, armor:null , mount1: null, mount2: null};
+  otherEquipmentImage = { chair1: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
+    chair2: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
+    chair3: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
+    chair5: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
+    chair6: { position: 0, weapon: null, armor:null , mount1: null, mount2: null}}
+ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
   //dropcard
   selectedItems: any[] = [];
   showDropTemplate: boolean = false;
@@ -566,8 +571,33 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('waiting other select character').subscribe((data: any) => {
       this.characterCard = false;
     });
+    this.socket.listen('increase enemy distance').subscribe((data: any) => {
+      console.log(data);
+    });
+    this.socket.listen('change equipment image').subscribe((data: any) => {
+      console.log(data);
+      if (this.otherEquipmentImage.chair1.position == data.position) {
+        this.setImage(data.type,data.image,this.otherEquipmentImage.chair1);
+      } else if (this.otherEquipmentImage.chair2.position == data.position) {
+        this.setImage(data.type,data.image,this.otherEquipmentImage.chair2);
+      } else if (this.otherEquipmentImage.chair3.position == data.position) {
+        this.setImage(data.type,data.image,this.otherEquipmentImage.chair3);
+      }
+      else if (this.otherEquipmentImage.chair5.position == data.position) {
+        this.setImage(data.type,data.image,this.otherEquipmentImage.chair5);
+      }
+      else if (this.otherEquipmentImage.chair6.position == data.position) {
+        this.setImage(data.type,data.image,this.otherEquipmentImage.chair6);
+      }
+    });
+
 
     this.socket.listen('ready to start').subscribe((data: any) => {
+      this.otherEquipmentImage.chair1.position = this.chair1;
+      this.otherEquipmentImage.chair2.position = this.chair2;
+      this.otherEquipmentImage.chair3.position = this.chair3;
+      this.otherEquipmentImage.chair5.position = this.chair5;
+      this.otherEquipmentImage.chair6.position = this.chair6;
       this.api.drawCard(this.roomcode, 4).subscribe((res: any) => {
         this.handCard = res;
 
@@ -626,6 +656,23 @@ export class GameStartComponent implements OnInit {
       //   icon.classList.add("finish")
       // }
     });
+  }
+
+  setImage(type: any,image: any, object: any){
+    switch(type){
+      case 'weapon':
+        object.weapon = image;
+        break;
+      case 'armor':
+        object.armor = image;
+        break;
+      case 'mount1':
+        object.mount1 = image;
+        break;
+      case 'mount2':
+        object.mount2 = image;
+        break;
+    }
   }
 
   closeAll(){
@@ -1095,17 +1142,75 @@ export class GameStartComponent implements OnInit {
 
   }
   useCard() {
+    let cardInfo = this.cardCheck.info;
+    console.log(cardInfo);
+    let change = false;
+    let oldEquipment: any = null;
+    if(cardInfo.type == 'equipment'){
+      switch(cardInfo.equipment_type){
+        case 'weapon':
+          if(this.myEquipment.weapon == null){
+            this.myEquipment.weapon = this.cardCheck;
+            this.myEquipmentImage.weapon = cardInfo.image;
+            //attackDistance +
+          }else{
+            change = true;
+            oldEquipment = this.myEquipment.weapon;
+            this.myEquipment.weapon = this.cardCheck;
+            this.myEquipmentImage.weapon = cardInfo.image;
+          }
+          break;
+        case 'armor':
+          if(this.myEquipment.armor == null){
+            this.myEquipment.armor = this.cardCheck;
+            this.myEquipmentImage.armor = cardInfo.image;
+          }else{
+            change = true;
+            oldEquipment = this.myEquipment.armor;
+            this.myEquipment.armor = this.cardCheck;
+            this.myEquipmentImage.armor = cardInfo.image;
+          }
+          break;
+        case 'mount':
+          if(cardInfo.distance == 1){
+            if(this.myEquipment.mount1 == null){
+              this.myEquipment.mount1 = this.cardCheck;
+              this.myEquipmentImage.mount1 = cardInfo.image;
+            }else{
+              change = true;
+              oldEquipment = this.myEquipment.mount1;
+              this.myEquipment.mount1 = this.cardCheck;
+              this.myEquipmentImage.mount1 = cardInfo.image;
+            }
+
+          }else{
+            if(this.myEquipment.mount2 == null){
+              this.myEquipment.mount2 = this.cardCheck;
+              this.myEquipmentImage.mount2 = cardInfo.image;
+            }else{
+              change = true;
+              oldEquipment = this.myEquipment.mount2;
+              this.myEquipment.mount2 = this.cardCheck;
+              this.myEquipmentImage.mount2 = cardInfo.image;
+              //attackDistance +
+            }
+          }
+          break;
+      }
+        if(oldEquipment != null){
+          this.api.dropCard(this.roomcode, [oldEquipment.id]).subscribe((data: any) => {
+            this.dropCard = data
+          });
+        }
+        this.socket.emit('change equipment',{code: this.roomcode, card: this.cardCheck});
+    }
     // this.handCard.forEach(element => {
 
     // });
     // const index = this.handCard.indexOf(this.cardCheck.id);
     // this.handCard.splice(index);
     // this.cardShow = false
-    for (let i = this.handCard.length - 1; i >= 0; i--) {
-      if (this.handCard[i].id === this.cardCheck.id) {
-        this.handCard.splice(i, 1);
-      }
-    }
+
   }
 
 
