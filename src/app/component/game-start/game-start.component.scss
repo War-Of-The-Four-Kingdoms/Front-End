@@ -9,6 +9,15 @@
   left:50%;
   margin-left: -100px;
   top: 100px;
+  animation: fade 2s;
+}
+@keyframes fade {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 100;
+  }
 }
 .mo-fire svg {
   width: 100%;
@@ -1012,7 +1021,7 @@ body {
   left: 42.3%;
   top: 2%;
   text-align: center;
-  animation: choosePic 10s;
+  animation: choosePic 5s;
 }
 
 .party {
@@ -1046,7 +1055,7 @@ body {
   top: 25%;
   text-align: center;
   font-size: 32px;
-  animation: chooseText 10s;
+  animation: chooseText 5s;
 }
 
 @keyframes chooseText {
@@ -1737,7 +1746,7 @@ a:hover+.icon {
 }
 
 .droped {
-  width: 30%;
+  width: 19%;
   height: 100%;
   object-fit: cover;
   -webkit-box-reflect: below 2px linear-gradient(transparent, transparent, #0004);
@@ -1764,29 +1773,39 @@ a:hover+.icon {
 .card-drop {
   width: 350px;
   height: 560px;
-  // opacity: 0.5;
+  opacity: 0;
   filter: brightness(100%);
-  // animation: cardpic 12s;
+  animation: test 3s;
+}
+
+@keyframes test {
+  0%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
 }
 
 .overlay {
-  content: '';
-  width: 355px;
+  width: 350px;
   height: 560px;
   position: absolute;
   z-index: 9999;
   top: 0;
-  left: 50px;
   animation: burnbaby 1.5s;
-  background-color: rgb(41, 16, 1);
+  background-color: rgb(49, 19, 1);
+  border: 3px solid rgba(121, 2, 2, 0.918);
 }
 
 @keyframes burnbaby {
   0%{
     background-color: rgba(41, 16, 1, 0);
+    border: 3px solid rgba(36, 13, 116, 0.918);
   }
   100%{
-    background-color: rgb(41, 16, 1);
+    background-color: rgb(49, 19, 1);
+    border: 3px solid rgba(121, 2, 2, 0.918);
     cursor: pointer;
     -webkit-transition: background-color 0.5s ease-out;
     transition: background-color 0.5s ease-out;
@@ -1830,8 +1849,30 @@ a:hover+.icon {
   align-items: center;
   gap: 20px;
   z-index: 51;
-  padding-top: 10%;
-  padding-left: 10px;
+  padding-top: 60%;
+  padding-left: 30px;
+  animation: trash 4s;
+}
+
+@keyframes trash {
+  0%{
+    padding-top: 10%;
+    padding-right: 2000px;
+  }
+  50%{
+    padding-top: 10%;
+    padding-left: 30px;
+  }
+  80%{
+    padding-top: 10%;
+    padding-left: 30px;
+  }
+  100%{
+    padding-top: 50%;
+    padding-left: 30px;
+  }
+
+
 }
 
 .drop {

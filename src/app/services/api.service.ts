@@ -39,6 +39,17 @@ export class ApiService {
     return this.http.put(this.apiUrl + '/updateCardInUse',{ roomcode: code,cards: cards });
   }
 
+  getTopCards(code: any,num: any) {
+    let params = new HttpParams().set('room_code', code).set('num',num);
+    return this.http.get(this.apiUrl + '/getTop',{ params: params });
+  }
+
+  //neworder: [155,125,140] , drop: [177,156] , card_num: 5 , room_code: 'asfasf'
+  setNewOrder(code: any,neworder: any,drop: any,num: any) {
+    return this.http.put(this.apiUrl + '/setNewOrder',{ roomcode: code, card_num: num, neworder: neworder, drop: drop });
+  }
+
+
 
 
 
