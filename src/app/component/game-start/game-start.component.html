@@ -334,10 +334,10 @@
         </div>
       </div> -->
     </div>
-    <div class="heart myheart" *ngIf="this.life4 != null|| this.life4 != undefined ">
+    <div class="heart myheart" *ngIf="this.hp4 != null|| this.hp4 != undefined ">
       <img src="../assets/picture/myHeart.png" width="55px">
       <div class="myboxHeart">
-        <div class="mybox" *ngFor="let i of [].constructor(this.life4)"></div>
+        <div class="mybox" *ngFor="let i of this.hp4"></div>
       </div>
     </div>
     <!-- <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)=""> -->
@@ -452,10 +452,10 @@
           {{this.chair1}}
         </p>
       </div>
-      <div class="heart heart1" *ngIf="this.life1 != null|| this.life1 != undefined ">
+      <div class="heart heart1" *ngIf="this.hp1 != null|| this.hp1 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
         <div class="boxHeart">
-          <div class="box" *ngFor="let i of [].constructor(life1)"></div>
+          <div class="box" *ngFor="let i of hp1"></div>
         </div>
       </div>
       <div class="stage stage1">
@@ -484,10 +484,10 @@
           {{this.chair6}}
         </p>
       </div>
-      <div class="heart heart1" *ngIf="this.life6 != null|| this.life6 != undefined ">
+      <div class="heart heart1" *ngIf="this.hp6 != null|| this.hp6 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
         <div class="boxHeart">
-          <div class="box" *ngFor="let i of [].constructor(life6)"></div>
+          <div class="box" *ngFor="let i of hp6"></div>
         </div>
       </div>
       <div class="stage stage1">
@@ -516,10 +516,10 @@
           {{this.chair2}}
         </p>
       </div>
-      <div class="heart heart1" *ngIf="this.life2 != null|| this.life2 != undefined ">
+      <div class="heart heart1" *ngIf="this.hp2 != null|| this.hp2 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
         <div class="boxHeart">
-          <div class="box" *ngFor="let i of [].constructor(life2)"></div>
+          <div class="box" *ngFor="let i of hp2"></div>
         </div>
       </div>
       <div class="stage stage1">
@@ -548,10 +548,10 @@
           {{this.chair5}}
         </p>
       </div>
-      <div class="heart heart2" *ngIf="this.life5 != null|| this.life5 != undefined ">
+      <div class="heart heart2" *ngIf="this.hp5 != null|| this.hp5 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
         <div class="boxHeart">
-          <div class="box" *ngFor="let i of [].constructor(life5)"></div>
+          <div class="box" *ngFor="let i of hp5"></div>
         </div>
       </div>
       <div class="stage stage2">
@@ -579,10 +579,10 @@
           {{this.chair3}}
         </p>
       </div>
-      <div class="heart heart2" *ngIf="this.life3 != null|| this.life3 != undefined ">
+      <div class="heart heart2" *ngIf="this.hp3 != null|| this.hp3 != undefined ">
         <img src="../assets/picture/myHeart.png" width="23px">
         <div class="boxHeart">
-          <div class="box" *ngFor="let i of [].constructor(life3)"></div>
+          <div class="box" *ngFor="let i of hp3"></div>
         </div>
       </div>
       <div class="stage stage3">
