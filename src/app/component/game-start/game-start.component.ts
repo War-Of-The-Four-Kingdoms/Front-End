@@ -647,10 +647,16 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
 
     });
     this.socket.listen('attack success').subscribe((data: any) => {
+      console.log(data);
+
       if(data.legion){
+        console.log('life4 '+this.life4);
+        console.log(this.maxHp);
+
         if(this.life4 < this.maxHp){
           this.life4 += 1;
           this.updateHp(this.hp4,1);
+          this.socket.emit('update hp',{code: this.roomcode,hp: this.life4});
         }else{
           this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
             this.test555 = true
@@ -1540,7 +1546,7 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
   selectCharacter(char: any) {
     this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
     this.myCharacter = char
-    this.maxHp = char.hp + this.extra_hp;
+    this.maxHp = char.hp + (this.extra_hp != undefined ? this.extra_hp : 0);
   }
 
   listen_position() {
