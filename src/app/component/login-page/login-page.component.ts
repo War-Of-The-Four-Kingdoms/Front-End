@@ -92,7 +92,6 @@ export class LoginPageComponent implements OnInit {
     this.errors = false;
     this.authService.login(this.controls['email'].value, this.controls['password'].value)
       .subscribe((res: any) => {
-        console.log(res);
         let expireDate = new Date()
         let timestamp = Math.floor(expireDate.getTime() / 1000) + res.expires_in;
         localStorage.setItem('access_token', res.access_token);
