@@ -1,84 +1,244 @@
-*{
+* {
   font-family: 'Oswald', sans-serif;
 }
 
-.mo-fire {
-  height: auto;
+.pvp {
   position: absolute;
-  left:20%;
-  bottom: -60px;
-  z-index: 4;
+  top: 44%;
+  left: 47%;
+  z-index: 9001;
+  transform: rotateZ(0deg);
+  animation: toom 1s;
 }
 
-#svg-view {
-	width: 700px;
-	height: 125px;
-	left: 0px;
+.otherCard1 {
+  position: absolute;
+  color: rgb(0, 255, 13);
+  -webkit-text-stroke: 1px rgb(50, 41, 54);
+  top: 40%;
+  left: -20%;
+  z-index: 9001;
+}
+
+.otherCard2 {
+  position: absolute;
+  color: rgb(0, 255, 13);
+  -webkit-text-stroke: 1px rgb(50, 41, 54);
+  top: 40%;
+  right: -15%;
+  z-index: 9001;
+}
+
+.textOther{
+  position: absolute;
+  left: 45%;
+  font-size: 27px;
+
+}
+
+@keyframes scale {
+  50% {
+    transform: scaleX(1.25) scaleY(1.25);
+  }
+
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+@keyframes toom {
+  0% {
+    transform: rotateZ(180deg);
+    top: 10%;
+    left: 30%;
+    width: 700px;
+  }
+
+  100% {
+    top: 44%;
+    left: 47%;
+  }
+}
+
+.pvp5 {
+  position: absolute;
+  top: 72%;
+  left: 25.5%;
+  z-index: 9001;
+  animation: swordMove 2.2s, scale 4s infinite linear;
+}
+
+@keyframes swordMove {
+  0% {
+    top: 44%;
+    left: 47%;
+    box-shadow: 0 0 rgba(#a51e06, 1);
+  }
+
+  80% {
+    box-shadow: 0 0 rgba(#fc2121, 1);
+  }
+
+  100% {
+    box-shadow: 0 0 50px 50px transparent;
+    border-width: 10px;
+  }
+
+}
+
+@keyframes swordMove2 {
+  0% {
+    top: 44%;
+    right: 47%;
+    box-shadow: 0 0 rgba(#a51e06, 1);
+  }
+
+  80% {
+    box-shadow: 0 0 rgba(#fc2121, 1);
+  }
+
+  100% {
+    box-shadow: 0 0 50px 50px transparent;
+    border-width: 10px;
+  }
+}
+
+.pvp3 {
+  position: absolute;
+  top: 72%;
+  right: 23.9%;
+  z-index: 9001;
+  animation: swordMove2 2.3s, scale 4s infinite linear;
+  ;
+}
+
+.pvp2 {
+  position: absolute;
+  top: 37%;
+  right: 23.9%;
+  z-index: 9001;
+  animation: swordMove2 2.7s, scale 4s infinite linear;
+  ;
+}
+
+.pvp6 {
+  position: absolute;
+  top: 37%;
+  left: 24.8%;
+  z-index: 9001;
+  animation: swordMove 2.4s, scale 4s infinite linear;
+  ;
+}
+
+.pvp1 {
+  position: absolute;
+  top: 16%;
+  left: 48.9%;
+  z-index: 9001;
+  animation: swordMove 2.5s, scale 4s infinite linear;
+  ;
+}
+
+
+
+
+
+.mo-fire {
+  width: 200px;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  top: 100px;
+  animation: fade 2s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100;
+  }
 }
 
 .mo-fire svg {
+  width: 100%;
   height: auto;
-  position:relative;
-  right:610px;
+  position: ABSOLUTE;
+  left: -20px;
+  top: -35px;
 }
+
 .flame {
-  animation-name: flameDisappear;
+  animation-name: flamefly;
   animation-duration: 2s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  opacity: 0.5;
-  transform-origin: 45% 45% 0;
+  opacity: 0;
+  transform-origin: 50% 50% 0;
 }
+
 .flame.one {
   animation-delay: 1s;
   animation-duration: 3s;
 }
-.flame.two{
+
+.flame3.two {
   animation-duration: 5s;
   animation-delay: 1s;
 }
 
-
 .flame-main {
-  animation-name: flameMovement;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
+  animation-name: flameWobble;
+  animation-duration: 3s;
+  animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
+
 .flame-main.one {
-  animation-duration: 2.2s;
+  animation-duration: 4s;
   animation-delay: 1s;
 }
+
 .flame-main.two {
-  animation-duration: 2s;
-  animation-delay: 1s;
+  animation-duration: 3s;
+  animation-delay: 2s;
 }
+
 .flame-main.three {
   animation-duration: 2.1s;
   animation-delay: 3s;
 }
+
 .flame-main.four {
   animation-duration: 3.2s;
   animation-delay: 4s;
 }
+
 .flame-main.five {
   animation-duration: 2.5s;
   animation-delay: 5s;
 }
-@keyframes flameMovement {
+
+@keyframes flameWobble {
   50% {
-    transform: scale(0.98,1.0) translate(0, 2px) rotate(-1deg);
+    transform: scale(1, 1.2) translate(0, -30px) rotate(-2deg);
   }
 }
-@keyframes flameDisappear {
-  0%{
+
+@keyframes flamefly {
+  0% {
     transform: translate(0) rotate(180deg);
   }
+
   50% {
-     opacity: 1;
+    opacity: 1;
   }
+
   100% {
-    transform: translate(-10px, -40px) rotate(180deg);
+    transform: translate(-20px, -100px) rotate(180deg);
     opacity: 0;
   }
 }
@@ -97,25 +257,26 @@
 }
 
 @keyframes phraseChange {
-  0%{
+  0% {
     left: 100%;
   }
 
-  50%{
+  50% {
     left: -10%;
   }
 
-  100%{
+  100% {
     left: -150%;
   }
 }
 
-.fontTurn{
+.fontTurn {
   font-size: 120px;
   color: white;
   -webkit-text-stroke: 5px rgb(50, 41, 54);
 
 }
+
 .scene {
   position: absolute;
   width: 1000px;
@@ -1023,7 +1184,7 @@ body {
   left: 42.3%;
   top: 2%;
   text-align: center;
-  animation: choosePic 10s;
+  animation: choosePic 5s;
 }
 
 .party {
@@ -1057,7 +1218,7 @@ body {
   top: 25%;
   text-align: center;
   font-size: 32px;
-  animation: chooseText 10s;
+  animation: chooseText 5s;
 }
 
 @keyframes chooseText {
@@ -1747,6 +1908,17 @@ a:hover+.icon {
   text-align: center;
 }
 
+.droped {
+  width: 19%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-box-reflect: below 2px linear-gradient(transparent, transparent, #0004);
+  transform-origin: center;
+  transform: perspective(800px) rotateY(0deg);
+  color: white;
+  text-align: center;
+}
+
 .cardSelect {
   display: flex;
   gap: 10px;
@@ -1760,6 +1932,51 @@ a:hover+.icon {
   filter: brightness(50%);
   animation: cardpic 12s;
 }
+
+.card-drop {
+  width: 350px;
+  height: 560px;
+  opacity: 0;
+  filter: brightness(100%);
+  animation: test 3s;
+}
+
+@keyframes test {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.overlay {
+  width: 350px;
+  height: 560px;
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  animation: burnbaby 1.5s;
+  background-color: rgb(49, 19, 1);
+  border: 3px solid rgba(121, 2, 2, 0.918);
+}
+
+@keyframes burnbaby {
+  0% {
+    background-color: rgba(41, 16, 1, 0);
+    border: 3px solid rgba(36, 13, 116, 0.918);
+  }
+
+  100% {
+    background-color: rgb(49, 19, 1);
+    border: 3px solid rgba(121, 2, 2, 0.918);
+    cursor: pointer;
+    -webkit-transition: background-color 0.5s ease-out;
+    transition: background-color 0.5s ease-out;
+  }
+}
+
 
 @keyframes cardpic {
   0% {
@@ -1788,11 +2005,46 @@ a:hover+.icon {
   align-items: center;
   gap: 20px;
   z-index: 51;
+}
+
+.dropTest {
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 51;
+  padding-top: 60%;
+  padding-left: 30px;
+  animation: trash 4s;
+}
+
+@keyframes trash {
+  0% {
+    padding-top: 10%;
+    padding-right: 2000px;
+  }
+
+  50% {
+    padding-top: 10%;
+    padding-left: 30px;
+  }
+
+  80% {
+    padding-top: 10%;
+    padding-left: 30px;
+  }
+
+  100% {
+    padding-top: 50%;
+    padding-left: 30px;
+  }
+
 
 }
 
-.drop{
-  width: 100%;
+.drop {
+  width: 1900px;
   height: 100%;
 }
 
@@ -2216,7 +2468,7 @@ a:hover+.icon {
   position: absolute;
   z-index: 20;
   background-color: rgba(0, 0, 0, 0.85);
-  width: 100%;
+  width: 1920px;
   height: 100%;
   animation: chooseIn 1s;
 }
@@ -2470,120 +2722,142 @@ input[type=checkbox]:checked+label {
   height: 100%;
   animation: chooseIn 1s;
 }
-.player-give-select{
+
+.player-give-select {
   background: rgb(77, 77, 77);
   border-radius: 50%;
   height: 8em;
   object-fit: cover;
   width: 8em;
 }
-.putaFin{
-    position: relative;
-    display: inline-block;
-    padding: auto;
-    margin: 40px 0;
-    color: #ed92ff;
-    background-color: rgba(0, 0, 0, 0.85);
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: xx-large;
-    transition: 0.5s;
-    letter-spacing: 4px;
-    overflow: hidden;
-    margin-right: 50px;
-    width: 200px;
-    height: 80px;
-    border: 0;
+
+.putaFin {
+  position: relative;
+  display: inline-block;
+  padding: auto;
+  margin: 40px 0;
+  color: #ed92ff;
+  background-color: rgba(0, 0, 0, 0.85);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: xx-large;
+  transition: 0.5s;
+  letter-spacing: 4px;
+  overflow: hidden;
+  margin-right: 50px;
+  width: 200px;
+  height: 80px;
+  border: 0;
 
 }
-.putaFin:hover{
-    background: #ed92ff;
-    color: #050801;
-    box-shadow: 0 0 5px #ed92ff,
-                0 0 25px #ed92ff,
-                0 0 50px #ed92ff,
-                0 0 200px #ed92ff;
-     -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
+
+.putaFin:hover {
+  background: #ed92ff;
+  color: #050801;
+  box-shadow: 0 0 5px #ed92ff,
+    0 0 25px #ed92ff,
+    0 0 50px #ed92ff,
+    0 0 200px #ed92ff;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
-.putaFin:nth-child(1){
-    filter: hue-rotate(270deg);
+
+.putaFin:nth-child(1) {
+  filter: hue-rotate(270deg);
 }
-.putaFin:nth-child(2){
-    filter: hue-rotate(110deg);
+
+.putaFin:nth-child(2) {
+  filter: hue-rotate(110deg);
 }
-.putaFin span{
-    position: absolute;
-    display: block;
+
+.putaFin span {
+  position: absolute;
+  display: block;
 }
-.putaFin span:nth-child(1){
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg,transparent,#ed92ff);
-    animation: animate1 1s linear infinite;
+
+.putaFin span:nth-child(1) {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ed92ff);
+  animation: animate1 1s linear infinite;
 }
-@keyframes animate1{
-    0%{
-        left: -100%;
-    }
-    50%,100%{
-        left: 100%;
-    }
+
+@keyframes animate1 {
+  0% {
+    left: -100%;
+  }
+
+  50%,
+  100% {
+    left: 100%;
+  }
 }
-.putaFin span:nth-child(2){
+
+.putaFin span:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #ed92ff);
+  animation: animate2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+  0% {
     top: -100%;
-    right: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg,transparent,#ed92ff);
-    animation: animate2 1s linear infinite;
-    animation-delay: 0.25s;
+  }
+
+  50%,
+  100% {
+    top: 100%;
+  }
 }
-@keyframes animate2{
-    0%{
-        top: -100%;
-    }
-    50%,100%{
-        top: 100%;
-    }
+
+.putaFin span:nth-child(3) {
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #ed92ff);
+  animation: animate3 1s linear infinite;
+  animation-delay: 0.50s;
 }
-.putaFin span:nth-child(3){
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(270deg,transparent,#ed92ff);
-    animation: animate3 1s linear infinite;
-    animation-delay: 0.50s;
-}
-@keyframes animate3{
-    0%{
-        right: -100%;
-    }
-    50%,100%{
-        right: 100%;
-    }
+
+@keyframes animate3 {
+  0% {
+    right: -100%;
+  }
+
+  50%,
+  100% {
+    right: 100%;
+  }
 }
 
 
-.putaFin span:nth-child(4){
+.putaFin span:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #ed92ff);
+  animation: animate4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+  0% {
     bottom: -100%;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(360deg,transparent,#ed92ff);
-    animation: animate4 1s linear infinite;
-    animation-delay: 0.75s;
+  }
+
+  50%,
+  100% {
+    bottom: 100%;
+  }
 }
-@keyframes animate4{
-    0%{
-        bottom: -100%;
-    }
-    50%,100%{
-        bottom: 100%;
-    }
-}
+
 // ---- give card template end ----
 
 // ---- use efffect start ----
@@ -2596,29 +2870,33 @@ input[type=checkbox]:checked+label {
   animation: chooseIn 1s;
 }
 
-.useEffectText{
+.useEffectText {
   font-size: 30px;
   font-family: "Oswald", sans-serif;
   color: whitesmoke;
   width: 80%;
   padding: 10px;
 }
-.useEffectImg{
+
+.useEffectImg {
   width: 20%;
 }
-.effectButton{
+
+.effectButton {
   width: 850px;
   height: 200px;
   border-radius: 5px;
   z-index: 9999;
 }
-.useButton{
+
+.useButton {
   background-color: rgba(163, 32, 146, 0.699);
 }
 
-.noButton{
+.noButton {
   background-color: rgba(156, 127, 152, 0.699);
 }
+
 // ---- use effect end ----
 
 .stealCardShow {
@@ -2627,7 +2905,7 @@ input[type=checkbox]:checked+label {
   height: 650px;
 }
 
-.player-steal-select{
+.player-steal-select {
   background: rgb(172, 172, 172);
   border-radius: 50%;
   height: 8em;
@@ -2635,14 +2913,14 @@ input[type=checkbox]:checked+label {
   width: 8em;
 }
 
-.stealed{
+.stealed {
   filter: brightness(50%);
 }
 
-.snaleFin{
+.snaleFin {
   position: absolute !important;
   background-color: rgba(95, 95, 95, 0.3);
   z-index: 500;
   right: 2%;
-  bottom: 5% ;
+  bottom: 5%;
 }

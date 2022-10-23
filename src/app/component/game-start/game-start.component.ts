@@ -11,9 +11,9 @@ import { Queue } from 'queue-typescript';
   styleUrls: ['./game-start.component.scss']
 })
 export class GameStartComponent implements OnInit {
-  dropFire:boolean = false;
-  turnChange:boolean = false;
-  textTurn:any = "";
+  dropFire: boolean = false;
+  turnChange: boolean = false;
+  textTurn: any = "";
   characterCard: boolean = false;
   visible = false;
   lobbyCode: string = '';
@@ -119,12 +119,12 @@ export class GameStartComponent implements OnInit {
   confirmEffect: boolean = false;
   othersHandCard: any[] = [];
   //processing
-  maxAttack: number = 0;
-  attackCount: any;
+  maxAttack: number = 2;
+  attackCount: any = 1;
   drawAdjust: any;
-  attackDistance: any;
+  attackDistance: any = 1;
   trickDistance: any;
-  targetedDistance: any;
+  enemyDistance: any[] = [];
   specialDefense: any;
   specialAttack: any;
   specialStage: any;
@@ -165,15 +165,17 @@ export class GameStartComponent implements OnInit {
   putaGiveCount: any;
 
   //bearyl
-  bearylDamageAdjust:number = 0;
+  bearylDamageAdjust: number = 0;
 
   //snale
   stealCard: boolean = false;
   stealTargetSelected: any = null;
   stealCardShowNum: number = 0;
-  stealablePlayers:any ;
+  stealablePlayers: any;
 
   stealCardSelected: any[] = [];
+  canAttack: boolean = false;
+  handing: any[] = [];
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -190,6 +192,8 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
+
+    console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + 1));
     // window.addEventListener("beforeunload", function (e) {
     //   return e.returnValue = "Your message here";
     // });
@@ -214,6 +218,8 @@ export class GameStartComponent implements OnInit {
         if (this.testing.includes(this.chairPos[i])) {
         } else {
           let icon = this.elementRef.nativeElement.querySelector("#chair" + i)
+          console.log(icon);
+
           let icons = this.elementRef.nativeElement.querySelector("#card" + i)
           icon.classList.remove("user" + i)
           icons.classList.remove("player" + i)
@@ -308,7 +314,7 @@ export class GameStartComponent implements OnInit {
           this.showDraw = [];
           this.handCard.push(card);
         });
-      },4000);
+      }, 4000);
     });
 
 
@@ -367,42 +373,47 @@ export class GameStartComponent implements OnInit {
             this.textTurn = "DRAW PHARSE"
             this.turnChange = true
             setTimeout(() => {
-            this.currentQueue = 'draw';
-            this.drawQueue = new Queue<Object>();
-            if (this.myCharacter.char_name == 'kraken') {
-              this.drawAdjust++;
-            }
-            if (this.myCharacter.char_name == 'bearyl') {
-              this.drawQueue.enqueue({ waiting: false, name: 'bearyl' });
-            }else if(this.myCharacter.char_name == 'snale'){
-              this.drawQueue.enqueue({ waiting: false, name: 'snale' });
-            }else{
-              this.drawQueue.enqueue({ waiting: false, name: 'draw' });
-            }
-            if (this.myCharacter.char_name == 'puta') {
-              this.drawQueue.enqueue({ waiting: false, name: 'puta' });
-            }
-            this.turnChange = false
-            this.drawStage();
-          }, 2000);
+              this.currentQueue = 'draw';
+              this.drawQueue = new Queue<Object>();
+              if (this.myCharacter.char_name == 'kraken') {
+                this.drawAdjust++;
+              }
+              if (this.myCharacter.char_name == 'bearyl') {
+                this.drawQueue.enqueue({ waiting: false, name: 'bearyl' });
+              } else if (this.myCharacter.char_name == 'snale') {
+                this.drawQueue.enqueue({ waiting: false, name: 'snale' });
+              } else {
+                this.drawQueue.enqueue({ waiting: false, name: 'draw' });
+              }
+              if (this.myCharacter.char_name == 'puta') {
+                this.drawQueue.enqueue({ waiting: false, name: 'puta' });
+              }
+              this.turnChange = false
+              this.drawStage();
+            }, 2000);
             break;
           case 'play':
-            this.currentQueue = 'play';
-            this.playQueue = new Queue<Object>();
-            this.playStage();
+            this.textTurn = "ACTION PHARSE"
+            this.turnChange = true
+            setTimeout(() => {
+              this.currentQueue = 'play';
+              this.playQueue = new Queue<Object>();
+              this.turnChange = false
+              this.playStage();
+            }, 2000);
             break;
           case 'drop':
             this.textTurn = "DROP PHARSE"
             this.turnChange = true
             setTimeout(() => {
-            this.currentQueue = 'drop';
-            this.dropQueue = new Queue<Object>();
-            if (this.handCard.length > this.life4) {
-              this.dropQueue.enqueue({ waiting: false, name: 'drop' });
-            }
-            this.turnChange = false
-            this.dropStage();
-          }, 2000);
+              this.currentQueue = 'drop';
+              this.dropQueue = new Queue<Object>();
+              if (this.handCard.length > this.life4) {
+                this.dropQueue.enqueue({ waiting: false, name: 'drop' });
+              }
+              this.turnChange = false
+              this.dropStage();
+            }, 2000);
             break;
           case 'end':
             this.currentQueue = 'end';
@@ -436,8 +447,17 @@ export class GameStartComponent implements OnInit {
       alert('This game require atleast 4 players.')
     });
     this.socket.listen('update inhand').subscribe((data: any) => {
-      if(data.position != this.myPos){
+      console.log(data);
+      if (data.position != this.myPos) {
+        this.chairPos.forEach((element, i) => {
+          if (this.chairPos[i] == data.position) {
+            this.handing[i] = data.card_num
+          }
+        });
+        console.log(console.log(this.others.find((o: any) => o.position == data.position).in_hand));
         this.others.find((o: any) => o.position == data.position).in_hand = data.card_num;
+
+
       }
     });
     this.socket.listen('sctc').subscribe((data: any) => {
@@ -572,7 +592,9 @@ export class GameStartComponent implements OnInit {
       this.characterCard = false;
     });
     this.socket.listen('increase enemy distance').subscribe((data: any) => {
-      console.log(data);
+      this.enemyDistance.find(e => e.position == data.position).distance += data.distance
+      console.log(this.enemyDistance);
+
     });
     this.socket.listen('change equipment image').subscribe((data: any) => {
       console.log(data);
@@ -605,10 +627,15 @@ export class GameStartComponent implements OnInit {
       });
       this.characterCard = false;
       data.forEach((pos: any) => {
-        if(this.others.find((o: any) => o.position == pos)){
-        let other = this.others.find((o: any) => o.position == pos);
+        console.log(data);
+
+        if (this.others.find((o: any) => o.position == pos)) {
+          let other = this.others.find((o: any) => o.position == pos);
           other.in_hand = 4;
           other.equiped = 0;
+          for (var i = 1; i < 7; i++) {
+            this.handing[i] = 4
+          }
         }
       });
 
@@ -736,20 +763,20 @@ export class GameStartComponent implements OnInit {
       } else {
         this.showDraw = []
         if (q.name == 'draw') {
-            this.api.drawCard(this.roomcode, 2 + this.drawAdjust).subscribe((data: any) => {
-              //effect
-              this.test555 = true
-              this.showDraw = data
-              setTimeout(() => {
-                data.forEach((card: any) => {
-                  this.handCard.push(card);
-                  this.test555 = false
-                  this.showDraw = [];
-                });
-                this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-                this.next_queue();
-              } , 4000);
-            });
+          this.api.drawCard(this.roomcode, 2 + this.drawAdjust).subscribe((data: any) => {
+            //effect
+            this.test555 = true
+            this.showDraw = data
+            setTimeout(() => {
+              data.forEach((card: any) => {
+                this.handCard.push(card);
+                this.test555 = false
+                this.showDraw = [];
+              });
+              this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+              this.next_queue();
+            }, 4000);
+          });
 
         } else {
           this.cardMethod(q.name);
@@ -812,7 +839,7 @@ export class GameStartComponent implements OnInit {
     }
   }
 
-  cancelEffect(){
+  cancelEffect() {
     this.drawQueue.enqueue({ waiting: false, name: 'draw' });
     this.confirmEffect = false;
     this.next_queue();
@@ -821,7 +848,7 @@ export class GameStartComponent implements OnInit {
   showDrop() {
     this.showDropTemplate = !this.showDropTemplate;
   }
-  showGive(){
+  showGive() {
     this.showGiveCard = !this.showDropTemplate;
   }
   checkedState(event: any) {
@@ -834,6 +861,8 @@ export class GameStartComponent implements OnInit {
     } else {
       this.selectedItems = this.selectedItems.filter(dc => dc != event.target.value)
     }
+    console.log(this.selectedItems);
+    this.dropCard = this.selectedItems
 
   }
   checkedGive(event: any) {
@@ -845,16 +874,16 @@ export class GameStartComponent implements OnInit {
   }
   checkedSteal(event: any) {
     if (event.target.checked === true) {
-      if(this.stealCardSelected.find((scs: any) => scs.uuid == event.target.value)){
+      if (this.stealCardSelected.find((scs: any) => scs.uuid == event.target.value)) {
         event.target.checked = false;
-      }else if(this.stealTargetSelected != null){
-        let a = this.elementRef.nativeElement.querySelectorAll('input#p'+this.stealTargetSelected+':checked');
+      } else if (this.stealTargetSelected != null) {
+        let a = this.elementRef.nativeElement.querySelectorAll('input#p' + this.stealTargetSelected + ':checked');
         a.forEach((element: any) => {
           element.checked = false;
         });
         this.stealTargetSelected = event.target.value;
         this.stealCardShowNum = this.others.find((o: any) => o.uuid == event.target.value).in_hand;
-      }else{
+      } else {
         this.stealTargetSelected = event.target.value;
         this.stealCardShowNum = this.others.find((o: any) => o.uuid == event.target.value).in_hand;
       }
@@ -864,53 +893,53 @@ export class GameStartComponent implements OnInit {
     }
   }
 
-  giveCardToPlayer(uuid: any){
-    if(this.selectedItems.length == 0){
+  giveCardToPlayer(uuid: any) {
+    if (this.selectedItems.length == 0) {
       alert('กรุณาเลือกการ์ดอย่างน้อย 1 ใบ');
-    }else{
+    } else {
       this.putaGiveCount += this.selectedItems.length;
-      if(this.selectedItems.length == this.handCard.length){
+      if (this.selectedItems.length == this.handCard.length) {
         this.putaFinish();
       }
       this.selectedItems.forEach(card_id => {
         this.handCard = this.handCard.filter(hc => hc.id != card_id);
       });
-      this.socket.emit('give card to others',{code: this.roomcode, cards: this.selectedItems, target: uuid});
+      this.socket.emit('give card to others', { code: this.roomcode, cards: this.selectedItems, target: uuid });
       this.selectedItems = [];
     }
   }
 
-  putaFinish(){
-    if(this.putaGiveCount >= 2 && this.life4 < this.maxHp){
+  putaFinish() {
+    if (this.putaGiveCount >= 2 && this.life4 < this.maxHp) {
       this.life4++;
     }
     this.selectedItems = [];
     this.showGiveCard = false;
     this.next_queue();
   }
-  stealCardIndex(index: any){
-    this.stealCardSelected.push({ uuid: this.stealTargetSelected , index: index})
-    let a = this.elementRef.nativeElement.querySelectorAll('input#p'+this.stealTargetSelected+':checked');
-      a.forEach((element: any) => {
-        element.checked = false;
-      });
+  stealCardIndex(index: any) {
+    this.stealCardSelected.push({ uuid: this.stealTargetSelected, index: index })
+    let a = this.elementRef.nativeElement.querySelectorAll('input#p' + this.stealTargetSelected + ':checked');
+    a.forEach((element: any) => {
+      element.checked = false;
+    });
     this.stealablePlayers.find((sp: any) => sp.uuid == this.stealTargetSelected).stealed = true;
     this.stealTargetSelected = null
     this.stealCardShowNum = 0;
-    if(this.stealCardSelected.length >= 2){
+    if (this.stealCardSelected.length >= 2) {
       this.snaleFinish();
     }
   }
-  snaleFinish(){
+  snaleFinish() {
     this.stealCard = false;
     this.stealablePlayers = null;
-    if(this.stealCardSelected.length > 0){
-      this.socket.emit('steal other player card',{code: this.roomcode, selected: this.stealCardSelected});
+    if (this.stealCardSelected.length > 0) {
+      this.socket.emit('steal other player card', { code: this.roomcode, selected: this.stealCardSelected });
       this.stealCardSelected = [];
-      setTimeout(()=>{
+      setTimeout(() => {
         this.next_queue();
-      },4000);
-    }else{
+      }, 4000);
+    } else {
       this.next_queue();
     }
   }
@@ -938,23 +967,23 @@ export class GameStartComponent implements OnInit {
   }
 
   dropSelectedCard() {
-    if(this.selectedItems.length != (this.handCard.length-this.life4)){
-      alert('Select '+((this.handCard.length-this.life4) - this.selectedItems.length)+' more card')
-    }else{
+    if (this.selectedItems.length != (this.handCard.length - this.life4)) {
+      alert('Select ' + ((this.handCard.length - this.life4) - this.selectedItems.length) + ' more card')
+    } else {
       this.dropFire = true
       setTimeout(() => {
         this.dropFire = false
-      this.selectedItems.forEach(item => {
-        this.handCard = this.handCard.filter(hc => hc.id != item)
-      });
-      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-      this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
-        this.dropCard = data
-      });
-      this.showDropTemplate = false;
-      this.selectedItems = [];
-      this.next_queue();
-    }, 3000);
+        this.selectedItems.forEach(item => {
+          this.handCard = this.handCard.filter(hc => hc.id != item)
+        });
+        this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+        this.api.dropCard(this.roomcode, this.selectedItems).subscribe((data: any) => {
+          this.dropCard = data
+        });
+        this.showDropTemplate = false;
+        this.selectedItems = [];
+        this.next_queue();
+      }, 4600);
     }
 
   }
@@ -978,9 +1007,25 @@ export class GameStartComponent implements OnInit {
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
+  cancelSpecialEffect(){
+    this.socket.emit('special effect end', { code: this.roomcode });
+    this.showTrigger = false
+  }
   specialEffect() {
     if (this.myCharacter.char_name == 'martin') {
-      //this.drawCard();
+      this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
+        //effect
+        this.test555 = true
+        this.showDraw = data
+        setTimeout(() => {
+          data.forEach((card: any) => {
+            this.handCard.push(card);
+            this.test555 = false
+            this.showDraw = [];
+          });
+          this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+        }, 4000);
+      });
       this.socket.emit('martin effect', { code: this.roomcode });
       this.socket.emit('special effect end', { code: this.roomcode });
     } else if (this.myCharacter.char_name == 'merguin') {
@@ -1007,26 +1052,27 @@ export class GameStartComponent implements OnInit {
 
 
   showCard(card: any) {
+    console.log(card);
     this.canUse = false;
     this.cardCheck = card
-    if(this.myPos == this.queue && this.currentQueue == 'play'){
-      switch(card.info.type){
+    if (this.myPos == this.queue && this.currentQueue == 'play') {
+      switch (card.info.type) {
         case 'active':
-          if(card.info.item_name == 'attack' && this.attackCount < this.maxAttack){
+          if (card.info.item_name == 'attack' && this.attackCount < this.maxAttack) {
             this.canUse = true;
-          }else if(card.info.item_name == 'heal' && this.life4 < this.maxHp){
+          } else if (card.info.item_name == 'heal' && this.life4 < this.maxHp) {
             this.canUse = true;
           }
           break;
         case 'trick':
-            this.canUse = true;
+          this.canUse = true;
           break;
         case 'equipment':
-            this.canUse = true;
+          this.canUse = true;
           break;
       }
     }
-    this.cardShow = true
+    this.cardShow = true;
   }
 
   cancelShow() {
@@ -1043,7 +1089,7 @@ export class GameStartComponent implements OnInit {
           let symbols = ['club', 'spade'];
           let s_check = false;
           symbols.forEach((sb: any) => {
-            if (x.symbol == sb) {
+            if (x.info.symbol == sb) {
               s_check = true;
             }
           });
@@ -1141,9 +1187,29 @@ export class GameStartComponent implements OnInit {
     setTimeout(() => { a.classList.remove('visible'); a.classList.add('hidden'); }, 1000);
 
   }
+
+    // this.handCard.forEach(element => {
+
+    // });
+    // const index = this.handCard.indexOf(this.cardCheck.id);
+    // this.handCard.splice(index);
+    // this.cardShow = false
+
+
+  cfKill(data: any) {
+    console.log('attacked');
+
+    this.canAttack = false
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+    }
+  }
+
   useCard() {
     let cardInfo = this.cardCheck.info;
-    console.log(cardInfo);
     let change = false;
     let oldEquipment: any = null;
     if(cardInfo.type == 'equipment'){
@@ -1203,14 +1269,72 @@ export class GameStartComponent implements OnInit {
           });
         }
         this.socket.emit('change equipment',{code: this.roomcode, card: this.cardCheck});
+        this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.cardShow = false
     }
-    // this.handCard.forEach(element => {
+    else if(cardInfo.item_name == "attack") {
+      this.canAttack = true
+      let martin = false;
+      console.log('attack');
 
-    // });
-    // const index = this.handCard.indexOf(this.cardCheck.id);
-    // this.handCard.splice(index);
-    // this.cardShow = false
-
+      if(this.inGameChar.find(c => c.character.char_name == 'martin') && this.myCharacter.char_name != 'martin'){
+        console.log('have martin');
+        let martin_pos = this.inGameChar.find(c => c.character.char_name == 'martin').position;
+        console.log('martin pos = '+martin_pos);
+        console.log(this.enemyDistance);
+        if(this.enemyDistance.find(e => e.position == martin_pos).distance <= this.attackDistance){
+          for (var b = 1; b < 7; b++) {
+            if (this.chairPos[b] == martin_pos) {
+              console.log('chairpos '+this.chairPos[b]);
+              let hp = 0;
+              switch(b){
+                case 1:
+                  hp = this.life1;
+                  break;
+                case 2:
+                  hp = this.life2;
+                  break;
+                case 3:
+                  hp = this.life3;
+                  break;
+                case 4:
+                  hp = this.life4;
+                  break;
+                case 5:
+                  hp = this.life5;
+                  break;
+                case 6:
+                  hp = this.life6;
+                  break;
+              }
+              console.log('hp '+hp);
+              console.log(this.others);
+              if(this.others.find((o: any) => o.position == martin_pos).in_hand > hp){
+                let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+                console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + String(b)));
+                console.log(icon);
+                icon.classList.remove("none")
+                icon.classList.add("pvp" + b)
+                martin = true;
+              }
+            }
+          }
+        }
+      }
+      if(!martin){
+        for (var b = 1; b < 7; b++) {
+          if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+            let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+            console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + String(b)));
+            console.log(icon);
+            if(this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance){
+              icon.classList.remove("none")
+              icon.classList.add("pvp" + b)
+            }
+          }
+        }
+      }
+    }
   }
 
 
@@ -1219,6 +1343,8 @@ export class GameStartComponent implements OnInit {
     this.myCharacter = char
     this.maxHp = char.hp + this.extra_hp;
   }
+
+
 
   listen_position() {
     this.socket.listen('assign position').subscribe((data: any) => {
@@ -1235,20 +1361,42 @@ export class GameStartComponent implements OnInit {
       this.hosting5 = false
       this.hosting6 = false
       this.testing = []
+      this.enemyDistance = []
+
       data.forEach((d: any) => {
         this.testing.push(d.position)
         if (this.chair1 == d.position) {
           this.chair1user = true
+          if(data.length == 4){
+            if(data.filter((dt:any) => dt.position == this.chair6 || dt.position == this.chair5).length == 2 || data.filter((dt:any) => dt.position == this.chair2 || dt.position == this.chair3).length == 2){
+              this.enemyDistance.push({ position: d.position, distance: 1})
+            }else{
+              this.enemyDistance.push({ position: d.position, distance: 2})
+            }
+          }
+          else if(data.length == 5){
+            this.enemyDistance.push({ position: d.position, distance: 2})
+          }
+          else if(data.length == 6){
+            this.enemyDistance.push({ position: d.position, distance: 3})
+          }
           if (d.sid == this.roomHost) {
             this.hosting1 = true
           }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
+          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair3)){
+            this.enemyDistance.push({ position: d.position, distance: 2})
+          }
+          else if(data.length == 5 || data.length == 4){
+            this.enemyDistance.push({ position: d.position, distance: 1})
+          }
           if (d.sid == this.roomHost) {
             this.hosting2 = true
           }
         } else if (this.chair3 == d.position) {
           this.chair3user = true
+          this.enemyDistance.push({ position: d.position, distance: 1})
           if (d.sid == this.roomHost) {
             this.hosting3 = true
           }
@@ -1259,18 +1407,26 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair5 == d.position) {
           this.chair5user = true
+          this.enemyDistance.push({ position: d.position, distance: 1})
           if (d.sid == this.roomHost) {
             this.hosting5 = true
           }
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
+          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair5)){
+            this.enemyDistance.push({ position: d.position, distance: 2})
+          }
+          else if(data.length == 5 || data.length == 4){
+            this.enemyDistance.push({ position: d.position, distance: 1})
+          }
           if (d.sid == this.roomHost) {
             this.hosting6 = true
           }
         }
       });
     });
+
 
     this.loopChair()
   }
@@ -1506,7 +1662,7 @@ export class GameStartComponent implements OnInit {
 
   witchEffect(): void {
     if (this.handCard.length == 0) {
-      this.targetedDistance = 9999;
+      // this.targetedDistance = 9999;
     }
     //หยั่งรู้ : ก่อนจั่วการ์ด สามารถเปิดดูการ์ดบนสุดของกองการ์ดได้ x ใบ (x เท่ากับจำนวนผู้เล่นทั้งหมดในเกมนั้น แต่ไม่เกิน 5 ใบ) แล้วจัดเรียงการ์ดเหล่านั้นใหม่ โดยนำการ์ดที่ต้องการ (กี่ใบก็ได้) ไว้ด้านบนสุดของกองการ์ด ที่เหลือไว้ใต้กอง
   }
@@ -1574,7 +1730,7 @@ export class GameStartComponent implements OnInit {
     // in draw stage if draw only 1 card, this round 'attack' and 'duel' deal +1 damage
   }
 
-  useBearylEffect(){
+  useBearylEffect() {
     this.bearylDamageAdjust = 1;
     this.drawAdjust = -1;
     this.drawQueue.enqueue({ waiting: false, name: 'draw' });
@@ -1587,7 +1743,7 @@ export class GameStartComponent implements OnInit {
     // in draw stage if not draw, can steal 1 other player inhand-card [ 1 or 2 player]
   }
 
-  useSnaleEffect(){
+  useSnaleEffect() {
     this.confirmEffect = false;
     this.stealablePlayers = this.others;
     this.stealablePlayers.forEach((sp: any) => {
