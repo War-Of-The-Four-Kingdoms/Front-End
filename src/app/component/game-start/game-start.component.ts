@@ -130,13 +130,15 @@ export class GameStartComponent implements OnInit {
   specialStage: any;
   decisionResult: any = null;
   dc_condition: any = null;
-  myEquipment = { weapon: null, armor:null , mount1: null, mount2: null};
-  otherEquipmentImage = { chair1: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
-    chair2: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
-    chair3: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
-    chair5: { position: 0, weapon: null, armor:null , mount1: null, mount2: null},
-    chair6: { position: 0, weapon: null, armor:null , mount1: null, mount2: null}}
- myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
+  myEquipment = { weapon: null, armor: null, mount1: null, mount2: null };
+  otherEquipmentImage = {
+    chair1: { position: 0, weapon: null, armor: null, mount1: null, mount2: null },
+    chair2: { position: 0, weapon: null, armor: null, mount1: null, mount2: null },
+    chair3: { position: 0, weapon: null, armor: null, mount1: null, mount2: null },
+    chair5: { position: 0, weapon: null, armor: null, mount1: null, mount2: null },
+    chair6: { position: 0, weapon: null, armor: null, mount1: null, mount2: null }
+  }
+  myEquipmentImage = { weapon: null, armor: null, mount1: null, mount2: null };
   //dropcard
   selectedItems: any[] = [];
   showDropTemplate: boolean = false;
@@ -176,6 +178,8 @@ export class GameStartComponent implements OnInit {
   stealCardSelected: any[] = [];
   canAttack: boolean = false;
   handing: any[] = [];
+  activingCard: boolean = false;
+  showingCard: any;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -192,25 +196,18 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
-
-    console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + 1));
-    // window.addEventListener("beforeunload", function (e) {
-    //   return e.returnValue = "Your message here";
-    // });
-
-    // window.onbeforeunload = function () {
-    //   return "Leaving this page will reset the wizard";
-    // }
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
     });
     this.socket.listen('random characters').subscribe((data: any) => {
       this.characterCard = true;
       this.characterPool = data
-
-      this.characterPool.forEach((c: any) => {
-
-        c.image_name = "../assets/picture/card/" + c.image_name
+      this.characterPool.forEach((c: any) => {       
+        if (c.image_name.startsWith("../assets/picture/card/")) {
+          c.image_name = c.image_name
+        } else {
+          c.image_name = "../assets/picture/card/" + c.image_name
+        }
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
@@ -599,17 +596,17 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('change equipment image').subscribe((data: any) => {
       console.log(data);
       if (this.otherEquipmentImage.chair1.position == data.position) {
-        this.setImage(data.type,data.image,this.otherEquipmentImage.chair1);
+        this.setImage(data.type, data.image, this.otherEquipmentImage.chair1);
       } else if (this.otherEquipmentImage.chair2.position == data.position) {
-        this.setImage(data.type,data.image,this.otherEquipmentImage.chair2);
+        this.setImage(data.type, data.image, this.otherEquipmentImage.chair2);
       } else if (this.otherEquipmentImage.chair3.position == data.position) {
-        this.setImage(data.type,data.image,this.otherEquipmentImage.chair3);
+        this.setImage(data.type, data.image, this.otherEquipmentImage.chair3);
       }
       else if (this.otherEquipmentImage.chair5.position == data.position) {
-        this.setImage(data.type,data.image,this.otherEquipmentImage.chair5);
+        this.setImage(data.type, data.image, this.otherEquipmentImage.chair5);
       }
       else if (this.otherEquipmentImage.chair6.position == data.position) {
-        this.setImage(data.type,data.image,this.otherEquipmentImage.chair6);
+        this.setImage(data.type, data.image, this.otherEquipmentImage.chair6);
       }
     });
 
@@ -685,8 +682,8 @@ export class GameStartComponent implements OnInit {
     });
   }
 
-  setImage(type: any,image: any, object: any){
-    switch(type){
+  setImage(type: any, image: any, object: any) {
+    switch (type) {
       case 'weapon':
         object.weapon = image;
         break;
@@ -702,7 +699,7 @@ export class GameStartComponent implements OnInit {
     }
   }
 
-  closeAll(){
+  closeAll() {
     this.cardShow = false;
     this.showGiveCard = false;
     this.showDecisionTemplate = false;
@@ -1007,7 +1004,7 @@ export class GameStartComponent implements OnInit {
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
-  cancelSpecialEffect(){
+  cancelSpecialEffect() {
     this.socket.emit('special effect end', { code: this.roomcode });
     this.showTrigger = false
   }
@@ -1188,12 +1185,12 @@ export class GameStartComponent implements OnInit {
 
   }
 
-    // this.handCard.forEach(element => {
+  // this.handCard.forEach(element => {
 
-    // });
-    // const index = this.handCard.indexOf(this.cardCheck.id);
-    // this.handCard.splice(index);
-    // this.cardShow = false
+  // });
+  // const index = this.handCard.indexOf(this.cardCheck.id);
+  // this.handCard.splice(index);
+  // this.cardShow = false
 
 
   cfKill(data: any) {
@@ -1208,18 +1205,26 @@ export class GameStartComponent implements OnInit {
     }
   }
 
+  activateMoon(data: any) {
+    this.activingCard = !this.activingCard;
+
+    this.showingCard = data
+    console.log(this.activingCard);
+
+  }
+
   useCard() {
     let cardInfo = this.cardCheck.info;
     let change = false;
     let oldEquipment: any = null;
-    if(cardInfo.type == 'equipment'){
-      switch(cardInfo.equipment_type){
+    if (cardInfo.type == 'equipment') {
+      switch (cardInfo.equipment_type) {
         case 'weapon':
-          if(this.myEquipment.weapon == null){
+          if (this.myEquipment.weapon == null) {
             this.myEquipment.weapon = this.cardCheck;
             this.myEquipmentImage.weapon = cardInfo.image;
             //attackDistance +
-          }else{
+          } else {
             change = true;
             oldEquipment = this.myEquipment.weapon;
             this.myEquipment.weapon = this.cardCheck;
@@ -1227,10 +1232,10 @@ export class GameStartComponent implements OnInit {
           }
           break;
         case 'armor':
-          if(this.myEquipment.armor == null){
+          if (this.myEquipment.armor == null) {
             this.myEquipment.armor = this.cardCheck;
             this.myEquipmentImage.armor = cardInfo.image;
-          }else{
+          } else {
             change = true;
             oldEquipment = this.myEquipment.armor;
             this.myEquipment.armor = this.cardCheck;
@@ -1238,22 +1243,22 @@ export class GameStartComponent implements OnInit {
           }
           break;
         case 'mount':
-          if(cardInfo.distance == 1){
-            if(this.myEquipment.mount1 == null){
+          if (cardInfo.distance == 1) {
+            if (this.myEquipment.mount1 == null) {
               this.myEquipment.mount1 = this.cardCheck;
               this.myEquipmentImage.mount1 = cardInfo.image;
-            }else{
+            } else {
               change = true;
               oldEquipment = this.myEquipment.mount1;
               this.myEquipment.mount1 = this.cardCheck;
               this.myEquipmentImage.mount1 = cardInfo.image;
             }
 
-          }else{
-            if(this.myEquipment.mount2 == null){
+          } else {
+            if (this.myEquipment.mount2 == null) {
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = cardInfo.image;
-            }else{
+            } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
               this.myEquipment.mount2 = this.cardCheck;
@@ -1263,31 +1268,31 @@ export class GameStartComponent implements OnInit {
           }
           break;
       }
-        if(oldEquipment != null){
-          this.api.dropCard(this.roomcode, [oldEquipment.id]).subscribe((data: any) => {
-            this.dropCard = data
-          });
-        }
-        this.socket.emit('change equipment',{code: this.roomcode, card: this.cardCheck});
-        this.handCard.filter(hc => hc.id != this.cardCheck.id);
-        this.cardShow = false
+      if (oldEquipment != null) {
+        this.api.dropCard(this.roomcode, [oldEquipment.id]).subscribe((data: any) => {
+          this.dropCard = data
+        });
+      }
+      this.socket.emit('change equipment', { code: this.roomcode, card: this.cardCheck });
+      this.handCard.filter(hc => hc.id != this.cardCheck.id);
+      this.cardShow = false
     }
-    else if(cardInfo.item_name == "attack") {
+    else if (cardInfo.item_name == "attack") {
       this.canAttack = true
       let martin = false;
       console.log('attack');
 
-      if(this.inGameChar.find(c => c.character.char_name == 'martin') && this.myCharacter.char_name != 'martin'){
+      if (this.inGameChar.find(c => c.character.char_name == 'martin') && this.myCharacter.char_name != 'martin') {
         console.log('have martin');
         let martin_pos = this.inGameChar.find(c => c.character.char_name == 'martin').position;
-        console.log('martin pos = '+martin_pos);
+        console.log('martin pos = ' + martin_pos);
         console.log(this.enemyDistance);
-        if(this.enemyDistance.find(e => e.position == martin_pos).distance <= this.attackDistance){
+        if (this.enemyDistance.find(e => e.position == martin_pos).distance <= this.attackDistance) {
           for (var b = 1; b < 7; b++) {
             if (this.chairPos[b] == martin_pos) {
-              console.log('chairpos '+this.chairPos[b]);
+              console.log('chairpos ' + this.chairPos[b]);
               let hp = 0;
-              switch(b){
+              switch (b) {
                 case 1:
                   hp = this.life1;
                   break;
@@ -1307,9 +1312,9 @@ export class GameStartComponent implements OnInit {
                   hp = this.life6;
                   break;
               }
-              console.log('hp '+hp);
+              console.log('hp ' + hp);
               console.log(this.others);
-              if(this.others.find((o: any) => o.position == martin_pos).in_hand > hp){
+              if (this.others.find((o: any) => o.position == martin_pos).in_hand > hp) {
                 let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
                 console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + String(b)));
                 console.log(icon);
@@ -1321,13 +1326,13 @@ export class GameStartComponent implements OnInit {
           }
         }
       }
-      if(!martin){
+      if (!martin) {
         for (var b = 1; b < 7; b++) {
           if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
             let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
             console.log(this.elementRef.nativeElement.querySelector("#chairpvp" + String(b)));
             console.log(icon);
-            if(this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance){
+            if (this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
               icon.classList.remove("none")
               icon.classList.add("pvp" + b)
             }
@@ -1367,36 +1372,36 @@ export class GameStartComponent implements OnInit {
         this.testing.push(d.position)
         if (this.chair1 == d.position) {
           this.chair1user = true
-          if(data.length == 4){
-            if(data.filter((dt:any) => dt.position == this.chair6 || dt.position == this.chair5).length == 2 || data.filter((dt:any) => dt.position == this.chair2 || dt.position == this.chair3).length == 2){
-              this.enemyDistance.push({ position: d.position, distance: 1})
-            }else{
-              this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 4) {
+            if (data.filter((dt: any) => dt.position == this.chair6 || dt.position == this.chair5).length == 2 || data.filter((dt: any) => dt.position == this.chair2 || dt.position == this.chair3).length == 2) {
+              this.enemyDistance.push({ position: d.position, distance: 1 })
+            } else {
+              this.enemyDistance.push({ position: d.position, distance: 2 })
             }
           }
-          else if(data.length == 5){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          else if (data.length == 5) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 6){
-            this.enemyDistance.push({ position: d.position, distance: 3})
+          else if (data.length == 6) {
+            this.enemyDistance.push({ position: d.position, distance: 3 })
           }
           if (d.sid == this.roomHost) {
             this.hosting1 = true
           }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
-          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair3)){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 6 || data.find((dt: any) => dt.position == this.chair3)) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 5 || data.length == 4){
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else if (data.length == 5 || data.length == 4) {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting2 = true
           }
         } else if (this.chair3 == d.position) {
           this.chair3user = true
-          this.enemyDistance.push({ position: d.position, distance: 1})
+          this.enemyDistance.push({ position: d.position, distance: 1 })
           if (d.sid == this.roomHost) {
             this.hosting3 = true
           }
@@ -1407,18 +1412,18 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair5 == d.position) {
           this.chair5user = true
-          this.enemyDistance.push({ position: d.position, distance: 1})
+          this.enemyDistance.push({ position: d.position, distance: 1 })
           if (d.sid == this.roomHost) {
             this.hosting5 = true
           }
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
-          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair5)){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 6 || data.find((dt: any) => dt.position == this.chair5)) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 5 || data.length == 4){
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else if (data.length == 5 || data.length == 4) {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting6 = true
