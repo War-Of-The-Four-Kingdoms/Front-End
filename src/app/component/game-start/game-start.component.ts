@@ -103,6 +103,12 @@ export class GameStartComponent implements OnInit {
   life4: any;
   life5: any;
   life6: any;
+  hp1: any;
+  hp2: any;
+  hp3: any;
+  hp4: any;
+  hp5: any;
+  hp6: any;
   inGameChar: any[] = [];
   players: any;
   prepareQueue: any;
@@ -437,6 +443,50 @@ export class GameStartComponent implements OnInit {
     });
 
     this.listen_position();
+    this.socket.listen('attacked').subscribe((data: any) => {
+      if(this.myCharacter.char_name == 'foxia'){
+        this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.symbol == 'spade' || hc.info.symbol == 'club');
+      }else if(this.myCharacter.char_name == 'ninjakappa'){
+        this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.item_name == 'attack');
+      }else{
+        this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense');
+      }
+
+      if(data.extra_def){
+        this.defUse = 2;
+      }
+      if(data.ignore_armor){
+        this.armorDef = false;
+      }
+      this.incomingDamage = data.damage;
+      this.showSelectDef = true;
+    });
+    this.socket.listen('damaged').subscribe((data: any) => {
+      for(let i=0; i<data.damage;i++){
+        this.hp4.splice(-1)
+      }
+      this.life4 -= data.damage;
+      this.socket.emit('update hp',{code: this.roomcode,hp: this.life4});
+    });
+    this.socket.listen('update remain hp').subscribe((data: any) => {
+
+        if (this.chair1 == data.position) {
+          this.updateHp(this.hp1,data.hp-this.life1);
+          this.life1 = data.hp
+        }else if (this.chair2 == data.position) {
+          this.updateHp(this.hp2,data.hp-this.life2);
+          this.life2 = data.hp
+        }else if (this.chair3 == data.position) {
+          this.updateHp(this.hp3,data.hp-this.life3);
+          this.life3 = data.hp
+        }else if (this.chair5 == data.position) {
+          this.updateHp(this.hp5,data.hp-this.life5);
+          this.life5 = data.hp
+        }else if (this.chair6 == data.position) {
+          this.updateHp(this.hp6,data.hp-this.life6);
+          this.life6 = data.hp
+        }
+    });
 
     this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     this.socket.listen('need more player').subscribe(() => {
@@ -451,7 +501,6 @@ export class GameStartComponent implements OnInit {
             this.handing[i] = data.card_num
           }
         });
-        console.log(console.log(this.others.find((o: any) => o.position == data.position).in_hand));
         this.others.find((o: any) => o.position == data.position).in_hand = data.card_num;
 
 
@@ -593,6 +642,31 @@ export class GameStartComponent implements OnInit {
       console.log(this.enemyDistance);
 
     });
+    this.socket.listen('attack success').subscribe((data: any) => {
+      if(data.legion){
+        if(this.life4 < this.maxHp){
+          this.life4 += 1;
+          this.updateHp(this.hp4,1);
+        }else{
+          this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
+            this.test555 = true
+            this.showDraw = data
+            setTimeout(() => {
+              data.forEach((card: any) => {
+                this.handCard.push(card);
+              });
+              this.test555 = false
+              this.showDraw = [];
+              this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+            }, 4000);
+          });
+        }
+      }
+      this.waitingDef = false;
+    });
+    this.socket.listen('attack fail').subscribe((data: any) => {
+      this.waitingDef = false;
+    });
     this.socket.listen('change equipment image').subscribe((data: any) => {
       console.log(data);
       if (this.otherEquipmentImage.chair1.position == data.position) {
@@ -649,29 +723,37 @@ export class GameStartComponent implements OnInit {
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character.image_name
         this.life4 = data.remain_hp
+        this.hp4 = Array.from(Array(this.life4).keys())
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character.image_name
           this.life1 = data.remain_hp
+          this.hp1 = Array.from(Array(this.life1).keys())
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character.image_name
           this.life2 = data.remain_hp
+          this.hp2 = Array.from(Array(this.life2).keys())
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character.image_name
           this.life3 = data.remain_hp
+          this.hp3 = Array.from(Array(this.life3).keys())
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character.image_name
           this.life4 = data.remain_hp
+          this.hp4 = Array.from(Array(this.life4).keys())
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character.image_name
           this.life5 = data.remain_hp
+          this.hp5 = Array.from(Array(this.life5).keys())
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character.image_name
           this.life6 = data.remain_hp
+          this.hp6 = Array.from(Array(this.life6).keys())
         }
       }
+
       // if (data.position != this.myPos) {
       //   let chairIndex = this.chairPos.indexOf(data.position)
       //   let stageIndex = this.stage_list.indexOf(data.stage)
@@ -681,9 +763,21 @@ export class GameStartComponent implements OnInit {
       // }
     });
   }
+  updateHp(arr: any[],hp: any){
 
-  setImage(type: any, image: any, object: any) {
-    switch (type) {
+    if(hp < 0){
+      for(let i=0; i<Math.abs(hp);i++){
+        arr.splice(-1)
+      }
+    }else{
+      for(let i=0; i< hp;i++){
+        arr.push(0);
+      }
+    }
+
+  }
+  setItem(type: any,card: any, object: any){
+    switch(type){
       case 'weapon':
         object.weapon = image;
         break;
@@ -908,7 +1002,8 @@ export class GameStartComponent implements OnInit {
 
   putaFinish() {
     if (this.putaGiveCount >= 2 && this.life4 < this.maxHp) {
-      this.life4++;
+      this.life4 += 1;
+      this.updateHp(this.hp4,1);
     }
     this.selectedItems = [];
     this.showGiveCard = false;
@@ -1207,7 +1302,6 @@ export class GameStartComponent implements OnInit {
 
   activateMoon(data: any) {
     this.activingCard = !this.activingCard;
-
     this.showingCard = data
     console.log(this.activingCard);
 

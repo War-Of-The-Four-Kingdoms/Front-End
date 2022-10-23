@@ -1291,7 +1291,7 @@ body {
   left: 42.3%;
   top: 2%;
   text-align: center;
-  animation: choosePic 5s;
+  animation: choosePic 3s;
 }
 
 .party {
@@ -1325,7 +1325,7 @@ body {
   top: 25%;
   text-align: center;
   font-size: 32px;
-  animation: chooseText 5s;
+  animation: chooseText 3s;
 }
 
 @keyframes chooseText {
@@ -2037,7 +2037,7 @@ a:hover+.icon {
   border: 1px solid salmon;
   // opacity: 0.5;
   filter: brightness(50%);
-  animation: cardpic 8s;
+  animation: cardpic 4s;
 }
 
 .card-drop {
