@@ -3031,3 +3031,32 @@ input[type=checkbox]:checked+label {
   right: 2%;
   bottom: 5%;
 }
+
+// select def
+.deftemplate{
+  position: absolute;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.85);
+  width: 1920px;
+  height: 100%;
+  animation: chooseIn 1s;
+}
+.defButton{
+  margin: 0px 50px;
+  border-radius: 100px;
+  width: 200px;
+  height: 200px;
+}
+.waitingdef{
+  position: absolute;
+  z-index: 30;
+  width: 1920px;
+  height: 100%;
+}
+.waitingtext{
+  color: #7e1717;
+  font-size: 60px;
+  background-color: rgba(192, 192, 192, 0.699);
+  width: 100%;
+  height: 150px;
+}

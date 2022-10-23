@@ -202,7 +202,7 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('random characters').subscribe((data: any) => {
       this.characterCard = true;
       this.characterPool = data
-      this.characterPool.forEach((c: any) => {       
+      this.characterPool.forEach((c: any) => {
         if (c.image_name.startsWith("../assets/picture/card/")) {
           c.image_name = c.image_name
         } else {
