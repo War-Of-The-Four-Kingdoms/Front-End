@@ -1011,8 +1011,9 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
   useDef(){
     if(this.defSelected.length == this.defUse){
       this.defSelected.forEach(ds => {
-        this.handCard = this.handCard.filter(hc => hc.id != ds.id)
+        this.handCard = this.handCard.filter(hc => hc.id != ds)
       });
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       this.api.dropCard(this.roomcode, this.defSelected).subscribe((data: any) => {
       });
       this.socket.emit('use defense',{code: this.roomcode, canDef: true, damage: this.incomingDamage});
