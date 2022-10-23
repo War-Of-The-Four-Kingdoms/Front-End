@@ -17,7 +17,7 @@
   -webkit-text-stroke: 1px rgb(50, 41, 54);
   top: 40%;
   left: -20%;
-  z-index: 9001;
+  z-index: 5000;
 }
 
 .otherCard2 {
@@ -26,7 +26,7 @@
   -webkit-text-stroke: 1px rgb(50, 41, 54);
   top: 40%;
   right: -15%;
-  z-index: 9001;
+  z-index: 5000;
 }
 
 .textOther{
@@ -1923,7 +1923,7 @@ a:hover+.icon {
   border: 1px solid salmon;
   // opacity: 0.5;
   filter: brightness(50%);
-  animation: cardpic 12s;
+  animation: cardpic 8s;
 }
 
 .card-drop {

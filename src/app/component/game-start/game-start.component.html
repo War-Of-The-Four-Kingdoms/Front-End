@@ -187,7 +187,7 @@
       <img class="rolepic" src="../assets/picture/crowns.png">
     </div>
     <div class="testing">
-      <div class="bend" *ngFor="let char of this.characterPool">{{char.name}}<img class="card-pic"
+      <div class="bend" *ngFor="let char of this.characterPool"><img class="card-pic"
           src={{char.image_name}} (click)="selectCharacter(char)"></div>
     </div>
     <!-- <div class="role">Your Role: {{this.role}}<p>{{this.describe[this.role]}}</p>
