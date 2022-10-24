@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
 import { Queue } from 'queue-typescript';
+import { query } from '@angular/animations';
 
 @Component({
   selector: 'app-game-start',
@@ -125,7 +126,7 @@ export class GameStartComponent implements OnInit {
   maxHp: any;
   confirmEffect: boolean = false;
   othersHandCard: any[] = [];
- //processing
+  //processing
   incomingDamage: any;
   waitingDef: boolean = false;
   defUse: number = 1;
@@ -143,19 +144,21 @@ export class GameStartComponent implements OnInit {
   specialStage: any;
   decisionResult: any = null;
   dc_condition: any = null;
-  myEquipment = { weapon: null, armor:null , mount1: null, mount2: null};
-  otherEquipment = { chair1: { position: 0, weapon: {card: null , image: null}, armor:{card: null , image: null} , mount1: {card: null , image: null}, mount2: {card: null , image: null}},
-    chair2: { position: 0, weapon: {card: null , image: null}, armor:{card: null , image: null} , mount1: {card: null , image: null}, mount2: {card: null , image: null}},
-    chair3: { position: 0, weapon: {card: null , image: null}, armor:{card: null , image: null} , mount1: {card: null , image: null}, mount2: {card: null , image: null}},
-    chair5: { position: 0, weapon: {card: null , image: null}, armor:{card: null , image: null} , mount1: {card: null , image: null}, mount2: {card: null , image: null}},
-    chair6: { position: 0, weapon: {card: null , image: null}, armor:{card: null , image: null} , mount1: {card: null , image: null}, mount2: {card: null , image: null}}}
-myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
+  myEquipment = { weapon: null, armor: null, mount1: null, mount2: null };
+  otherEquipment = {
+    chair1: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
+    chair2: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
+    chair3: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
+    chair5: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
+    chair6: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } }
+  }
+  myEquipmentImage = { weapon: null, armor: null, mount1: null, mount2: null };
   //dropcard
   selectedItems: any[] = [];
   showDropTemplate: boolean = false;
 
-   //luckyghost
-   luckyghostTarget: any = null;
+  //luckyghost
+  luckyghostTarget: any = null;
 
   //foxia
   storeConfirm: boolean = false;
@@ -210,6 +213,11 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
+    let icon = this.elementRef.nativeElement.querySelector("#myh")
+    // icon.classList.add("length5")
+    console.log(icon);
+    console.log('test');
+    
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
     });
@@ -250,19 +258,19 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
       switch (this.role) {
         case 'king':
           this.showRole = "../assets/picture/crowns.png"
-          this.showText = "Kill all Betrayer and Villager"
+          this.showText = "จงหาชาวบ้านและผู้ทรยศในหมู่พวกเราและสังหาร"
           break;
         case 'knight':
           this.showRole = "../assets/picture/plus.png"
-          this.showText = "Protect Your King to win this Game"
+          this.showText = "ร่วมมือกับราชาและสังหารผู้ปองร้าย"
           break;
         case 'betrayer':
           this.showRole = "../assets/picture/plus.png"
-          this.showText = "Be the last one to win this Game"
+          this.showText = "จงสังหารผู้คนทั้งหมด"
           break;
         case 'villager':
           this.showRole = "../assets/picture/plus.png"
-          this.showText = "Kill the King to win this GAME"
+          this.showText = "จงสังหารราชา"
           break;
       }
       if (this.myPosId == this.king_uid) {
@@ -452,48 +460,48 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
 
     this.listen_position();
     this.socket.listen('attacked').subscribe((data: any) => {
-      if(this.myCharacter.char_name == 'foxia'){
+      if (this.myCharacter.char_name == 'foxia') {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.symbol == 'spade' || hc.info.symbol == 'club');
-      }else if(this.myCharacter.char_name == 'ninjakappa'){
+      } else if (this.myCharacter.char_name == 'ninjakappa') {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.item_name == 'attack');
-      }else{
+      } else {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense');
       }
 
-      if(data.extra_def){
+      if (data.extra_def) {
         this.defUse = 2;
       }
-      if(data.ignore_armor){
+      if (data.ignore_armor) {
         this.armorDef = false;
       }
       this.incomingDamage = data.damage;
       this.showSelectDef = true;
     });
     this.socket.listen('damaged').subscribe((data: any) => {
-      for(let i=0; i<data.damage;i++){
+      for (let i = 0; i < data.damage; i++) {
         this.hp4.splice(-1)
       }
       this.life4 -= data.damage;
-      this.socket.emit('update hp',{code: this.roomcode,hp: this.life4});
+      this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
 
-        if (this.chair1 == data.position) {
-          this.updateHp(this.hp1,data.hp-this.life1);
-          this.life1 = data.hp
-        }else if (this.chair2 == data.position) {
-          this.updateHp(this.hp2,data.hp-this.life2);
-          this.life2 = data.hp
-        }else if (this.chair3 == data.position) {
-          this.updateHp(this.hp3,data.hp-this.life3);
-          this.life3 = data.hp
-        }else if (this.chair5 == data.position) {
-          this.updateHp(this.hp5,data.hp-this.life5);
-          this.life5 = data.hp
-        }else if (this.chair6 == data.position) {
-          this.updateHp(this.hp6,data.hp-this.life6);
-          this.life6 = data.hp
-        }
+      if (this.chair1 == data.position) {
+        this.updateHp(this.hp1, data.hp - this.life1);
+        this.life1 = data.hp
+      } else if (this.chair2 == data.position) {
+        this.updateHp(this.hp2, data.hp - this.life2);
+        this.life2 = data.hp
+      } else if (this.chair3 == data.position) {
+        this.updateHp(this.hp3, data.hp - this.life3);
+        this.life3 = data.hp
+      } else if (this.chair5 == data.position) {
+        this.updateHp(this.hp5, data.hp - this.life5);
+        this.life5 = data.hp
+      } else if (this.chair6 == data.position) {
+        this.updateHp(this.hp6, data.hp - this.life6);
+        this.life6 = data.hp
+      }
     });
 
     this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
@@ -647,11 +655,11 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
 
     });
     this.socket.listen('attack success').subscribe((data: any) => {
-      if(data.legion){
-        if(this.life4 < this.maxHp){
+      if (data.legion) {
+        if (this.life4 < this.maxHp) {
           this.life4 += 1;
-          this.updateHp(this.hp4,1);
-        }else{
+          this.updateHp(this.hp4, 1);
+        } else {
           this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
             this.test555 = true
             this.showDraw = data
@@ -673,17 +681,17 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
     });
     this.socket.listen('change equipment image').subscribe((data: any) => {
       if (this.otherEquipment.chair1.position == data.position) {
-        this.setItem(data.type,data.card,this.otherEquipment.chair1);
+        this.setItem(data.type, data.card, this.otherEquipment.chair1);
       } else if (this.otherEquipment.chair2.position == data.position) {
-        this.setItem(data.type,data.card,this.otherEquipment.chair2);
+        this.setItem(data.type, data.card, this.otherEquipment.chair2);
       } else if (this.otherEquipment.chair3.position == data.position) {
-        this.setItem(data.type,data.card,this.otherEquipment.chair3);
+        this.setItem(data.type, data.card, this.otherEquipment.chair3);
       }
       else if (this.otherEquipment.chair5.position == data.position) {
-        this.setItem(data.type,data.card,this.otherEquipment.chair5);
+        this.setItem(data.type, data.card, this.otherEquipment.chair5);
       }
       else if (this.otherEquipment.chair6.position == data.position) {
-        this.setItem(data.type,data.card,this.otherEquipment.chair6);
+        this.setItem(data.type, data.card, this.otherEquipment.chair6);
       }
     });
 
@@ -731,33 +739,48 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
         this.test = "../assets/picture/card/" + data.character.image_name
         this.life4 = data.remain_hp
         this.hp4 = Array.from(Array(this.life4).keys())
+        let icon = this.elementRef.nativeElement.querySelector("#myh")
+        icon.classList.add("length"+data.remain_hp)
+        console.log(icon);
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character.image_name
           this.life1 = data.remain_hp
           this.hp1 = Array.from(Array(this.life1).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh1")
+          icon.classList.add("lengths"+data.remain_hp)
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character.image_name
           this.life2 = data.remain_hp
           this.hp2 = Array.from(Array(this.life2).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh2")
+          icon.classList.add("lengths"+data.remain_hp)
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character.image_name
           this.life3 = data.remain_hp
           this.hp3 = Array.from(Array(this.life3).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh3")
+          icon.classList.add("lengths"+data.remain_hp)
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character.image_name
           this.life4 = data.remain_hp
           this.hp4 = Array.from(Array(this.life4).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh4")
+          icon.classList.add("lengths"+data.remain_hp)
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character.image_name
           this.life5 = data.remain_hp
           this.hp5 = Array.from(Array(this.life5).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh5")
+          icon.classList.add("lengths"+data.remain_hp)
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character.image_name
           this.life6 = data.remain_hp
           this.hp6 = Array.from(Array(this.life6).keys())
+          let icon = this.elementRef.nativeElement.querySelector("#myh6")
+          icon.classList.add("lengths"+data.remain_hp)
         }
       }
 
@@ -770,21 +793,21 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
       // }
     });
   }
-  updateHp(arr: any[],hp: any){
+  updateHp(arr: any[], hp: any) {
 
-    if(hp < 0){
-      for(let i=0; i<Math.abs(hp);i++){
+    if (hp < 0) {
+      for (let i = 0; i < Math.abs(hp); i++) {
         arr.splice(-1)
       }
-    }else{
-      for(let i=0; i< hp;i++){
+    } else {
+      for (let i = 0; i < hp; i++) {
         arr.push(0);
       }
     }
 
   }
-  setItem(type: any,card: any, object: any){
-    switch(type){
+  setItem(type: any, card: any, object: any) {
+    switch (type) {
       case 'weapon':
         object.weapon.card = card;
         object.weapon.image = card.image;
@@ -896,9 +919,9 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
       if (q.waiting) {
         this.cardMethod(q.name);
       } else {
-        if(q.name == 'attack'){
+        if (q.name == 'attack') {
           this.openDecisionCard(false);
-        }else{
+        } else {
           this.cardMethod(q.name);
         }
       }
@@ -1008,30 +1031,31 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
       this.defSelected = this.defSelected.filter(ds => ds != event.target.value)
     }
   }
-  useDef(){
-    if(this.defSelected.length == this.defUse){
+  useDef() {
+    if (this.defSelected.length == this.defUse) {
       this.defSelected.forEach(ds => {
-        this.handCard = this.handCard.filter(hc => hc.id != ds.id)
+        this.handCard = this.handCard.filter(hc => hc.id != ds)
       });
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       this.api.dropCard(this.roomcode, this.defSelected).subscribe((data: any) => {
       });
-      this.socket.emit('use defense',{code: this.roomcode, canDef: true, damage: this.incomingDamage});
+      this.socket.emit('use defense', { code: this.roomcode, canDef: true, damage: this.incomingDamage });
       this.defSelected = [];
       this.incomingDamage = 0;
       this.showSelectDef = false;
-    }else{
-      alert('กรุณาเลือกการ์ดป้องกันจำนวน '+this.defUse+' ใบ');
+    } else {
+      alert('กรุณาเลือกการ์ดป้องกันจำนวน ' + this.defUse + ' ใบ');
     }
   }
-  noDef(){
-    this.socket.emit('use defense',{code: this.roomcode, canDef: false, damage: this.incomingDamage});
+  noDef() {
+    this.socket.emit('use defense', { code: this.roomcode, canDef: false, damage: this.incomingDamage });
     this.incomingDamage = 0;
     this.showSelectDef = false;
   }
-  useCharDef(){
+  useCharDef() {
 
   }
-  useArmorDef(){
+  useArmorDef() {
 
   }
   giveCardToPlayer(uuid: any) {
@@ -1053,7 +1077,7 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
   putaFinish() {
     if (this.putaGiveCount >= 2 && this.life4 < this.maxHp) {
       this.life4 += 1;
-      this.updateHp(this.hp4,1);
+      this.updateHp(this.hp4, 1);
     }
     this.selectedItems = [];
     this.showGiveCard = false;
@@ -1190,7 +1214,21 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
     this.chairPos[6] = this.chair6
   }
 
-
+  cardEffect(card: any) {
+    if (this.myPos == this.queue && this.currentQueue == 'play') {
+      if (card.info.item_name == 'attack' && this.attackCount < this.maxAttack) {
+        return true;
+      } else if (card.info.item_name == 'heal' && this.life4 < this.maxHp) {
+        return true;
+      } else if (card.info.type == "trick" || card.info.type == "equipment") {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false
+    }
+  }
 
 
   showCard(card: any) {
@@ -1271,10 +1309,10 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
         });
         if (s_check) {
-          this.socket.emit('force attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('force attack', { code: this.roomcode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck });
         } else {
           this.waitingDef = true;
-          this.socket.emit('use attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('use attack', { code: this.roomcode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck });
         }
         this.luckyghostTarget = null;
         break;
@@ -1364,26 +1402,26 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
         icon.className = 'none';
       }
     }
-    if(this.myCharacter.char_name == 'luckyghost'){
+    if (this.myCharacter.char_name == 'luckyghost') {
       this.luckyghostTarget = data;
-      if( this.inGameChar.find(c => c.character.char_name == 'merguin')){
+      if (this.inGameChar.find(c => c.character.char_name == 'merguin')) {
         this.flexAction('merguin');
         this.waiting = true
         this.showTrigger = true
         this.cardMethod('merguin');
         this.playQueue.push({ waiting: false, name: 'attack' })
-      }else{
+      } else {
         this.showDecisionTemplate = true
       }
-    }else{
+    } else {
       this.waitingDef = true;
-      this.socket.emit('use attack',{code: this.roomcode,target: data,damage: this.damage(), card: this.cardCheck});
+      this.socket.emit('use attack', { code: this.roomcode, target: data, damage: this.damage(), card: this.cardCheck });
     }
 
   }
 
-  damage(){
-    return 1+this.bearylDamageAdjust;
+  damage() {
+    return 1 + this.bearylDamageAdjust;
   }
 
   activateMoon(data: any) {
@@ -1397,14 +1435,14 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
     let cardInfo = this.cardCheck.info;
     let change = false;
     let oldEquipment: any = null;
-    if(cardInfo.type == 'equipment'){
-      switch(cardInfo.equipment_type){
+    if (cardInfo.type == 'equipment') {
+      switch (cardInfo.equipment_type) {
         case 'weapon':
-          if(this.myEquipment.weapon == null){
+          if (this.myEquipment.weapon == null) {
             this.myEquipment.weapon = this.cardCheck;
             this.myEquipmentImage.weapon = cardInfo.image;
             //attackDistance +
-          }else{
+          } else {
             change = true;
             oldEquipment = this.myEquipment.weapon;
             this.myEquipment.weapon = this.cardCheck;
@@ -1412,10 +1450,10 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
           break;
         case 'armor':
-          if(this.myEquipment.armor == null){
+          if (this.myEquipment.armor == null) {
             this.myEquipment.armor = this.cardCheck;
             this.myEquipmentImage.armor = cardInfo.image;
-          }else{
+          } else {
             change = true;
             oldEquipment = this.myEquipment.armor;
             this.myEquipment.armor = this.cardCheck;
@@ -1423,22 +1461,22 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
           break;
         case 'mount':
-          if(cardInfo.distance == 1){
-            if(this.myEquipment.mount1 == null){
+          if (cardInfo.distance == 1) {
+            if (this.myEquipment.mount1 == null) {
               this.myEquipment.mount1 = this.cardCheck;
               this.myEquipmentImage.mount1 = cardInfo.image;
-            }else{
+            } else {
               change = true;
               oldEquipment = this.myEquipment.mount1;
               this.myEquipment.mount1 = this.cardCheck;
               this.myEquipmentImage.mount1 = cardInfo.image;
             }
 
-          }else{
-            if(this.myEquipment.mount2 == null){
+          } else {
+            if (this.myEquipment.mount2 == null) {
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = cardInfo.image;
-            }else{
+            } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
               this.myEquipment.mount2 = this.cardCheck;
@@ -1448,27 +1486,27 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
           break;
       }
-      if(oldEquipment != null){
+      if (oldEquipment != null) {
         this.api.dropCard(this.roomcode, [oldEquipment.id]).subscribe((data: any) => {
           this.dropCard = data
         });
       }
-      this.socket.emit('change equipment',{code: this.roomcode, card: this.cardCheck});
+      this.socket.emit('change equipment', { code: this.roomcode, card: this.cardCheck });
       this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
       this.cardShow = false
     }
-    else if(cardInfo.item_name == "attack") {
+    else if (cardInfo.item_name == "attack") {
       this.canAttack = true
       let martin = false;
 
-      if(this.inGameChar.find(c => c.character.char_name == 'martin') && this.myCharacter.char_name != 'martin'){
+      if (this.inGameChar.find(c => c.character.char_name == 'martin') && this.myCharacter.char_name != 'martin') {
         let martin_pos = this.inGameChar.find(c => c.character.char_name == 'martin').position;
-        if(this.enemyDistance.find(e => e.position == martin_pos).distance <= this.attackDistance){
+        if (this.enemyDistance.find(e => e.position == martin_pos).distance <= this.attackDistance) {
           for (var b = 1; b < 7; b++) {
             if (this.chairPos[b] == martin_pos) {
               let hp = 0;
               let armor: any = null;
-              switch(b){
+              switch (b) {
                 case 1:
                   hp = this.life1;
                   armor = this.otherEquipment.chair1.armor.card;
@@ -1490,8 +1528,8 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
                   armor = this.otherEquipment.chair6.armor.card;
                   break;
               }
-              if(this.others.find((o: any) => o.position == martin_pos).in_hand > hp){
-                if((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')){
+              if (this.others.find((o: any) => o.position == martin_pos).in_hand > hp) {
+                if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
                   let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
                   icon.classList.remove("none")
                   icon.classList.add("pvp" + b)
@@ -1502,30 +1540,30 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
         }
       }
-      if(!martin){
+      if (!martin) {
         for (var b = 1; b < 7; b++) {
           let armor: any = null;
-              switch(b){
-                case 1:
-                  armor = this.otherEquipment.chair1.armor.card;
-                  break;
-                case 2:
-                  armor = this.otherEquipment.chair2.armor.card;
-                  break;
-                case 3:
-                  armor = this.otherEquipment.chair3.armor.card;
-                  break;
-                case 5:
-                  armor = this.otherEquipment.chair5.armor.card;
-                  break;
-                case 6:
-                  armor = this.otherEquipment.chair6.armor.card;
-                  break;
-              }
+          switch (b) {
+            case 1:
+              armor = this.otherEquipment.chair1.armor.card;
+              break;
+            case 2:
+              armor = this.otherEquipment.chair2.armor.card;
+              break;
+            case 3:
+              armor = this.otherEquipment.chair3.armor.card;
+              break;
+            case 5:
+              armor = this.otherEquipment.chair5.armor.card;
+              break;
+            case 6:
+              armor = this.otherEquipment.chair6.armor.card;
+              break;
+          }
           if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-            if((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')){
+            if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
               let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
-              if(this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance){
+              if (this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
                 icon.classList.remove("none")
                 icon.classList.add("pvp" + b)
               }
@@ -1563,41 +1601,41 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
         this.testing.push(d.position)
         if (this.chair1 == d.position) {
           this.chair1user = true
-          if(data.length == 4){
-            if(data.filter((dt:any) => dt.position == this.chair6 || dt.position == this.chair5).length == 2 || data.filter((dt:any) => dt.position == this.chair2 || dt.position == this.chair3).length == 2){
-              this.enemyDistance.push({ position: d.position, distance: 1})
-            }else{
-              this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 4) {
+            if (data.filter((dt: any) => dt.position == this.chair6 || dt.position == this.chair5).length == 2 || data.filter((dt: any) => dt.position == this.chair2 || dt.position == this.chair3).length == 2) {
+              this.enemyDistance.push({ position: d.position, distance: 1 })
+            } else {
+              this.enemyDistance.push({ position: d.position, distance: 2 })
             }
           }
-          else if(data.length == 5){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          else if (data.length == 5) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 6){
-            this.enemyDistance.push({ position: d.position, distance: 3})
-          }else{
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else if (data.length == 6) {
+            this.enemyDistance.push({ position: d.position, distance: 3 })
+          } else {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting1 = true
           }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
-          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair3)){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 6 || data.find((dt: any) => dt.position == this.chair3)) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 5 || data.length == 4){
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else if (data.length == 5 || data.length == 4) {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
-          else{
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting2 = true
           }
         } else if (this.chair3 == d.position) {
           this.chair3user = true
-          this.enemyDistance.push({ position: d.position, distance: 1})
+          this.enemyDistance.push({ position: d.position, distance: 1 })
           if (d.sid == this.roomHost) {
             this.hosting3 = true
           }
@@ -1608,20 +1646,20 @@ myEquipmentImage = { weapon: null, armor:null , mount1: null, mount2: null};
           }
         } else if (this.chair5 == d.position) {
           this.chair5user = true
-          this.enemyDistance.push({ position: d.position, distance: 1})
+          this.enemyDistance.push({ position: d.position, distance: 1 })
           if (d.sid == this.roomHost) {
             this.hosting5 = true
           }
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
-          if(data.length == 6 || data.find((dt:any) => dt.position == this.chair5)){
-            this.enemyDistance.push({ position: d.position, distance: 2})
+          if (data.length == 6 || data.find((dt: any) => dt.position == this.chair5)) {
+            this.enemyDistance.push({ position: d.position, distance: 2 })
           }
-          else if(data.length == 5 || data.length == 4){
-            this.enemyDistance.push({ position: d.position, distance: 1})
-          }else{
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          else if (data.length == 5 || data.length == 4) {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
+          } else {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting6 = true
