@@ -332,7 +332,7 @@ export class GameStartComponent implements OnInit {
           this.showDraw = [];
           this.handCard.push(card);
         });
-      }, 4000);
+      }, 2500);
     });
 
 
@@ -676,7 +676,7 @@ export class GameStartComponent implements OnInit {
               this.test555 = false
               this.showDraw = [];
               this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-            }, 4000);
+            }, 2500);
           });
         }
       }
@@ -716,7 +716,7 @@ export class GameStartComponent implements OnInit {
           this.test555 = false
           this.showDraw = [];
           this.socket.emit('draw card', { hand: this.handCard, code: this.roomcode });
-        }, 4000);
+        }, 2500);
       });
       this.characterCard = false;
       data.forEach((pos: any) => {
@@ -906,7 +906,7 @@ export class GameStartComponent implements OnInit {
               });
               this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
               this.next_queue();
-            }, 4000);
+            }, 2500);
           });
 
         } else {
@@ -1155,7 +1155,7 @@ export class GameStartComponent implements OnInit {
         this.showDropTemplate = false;
         this.selectedItems = [];
         this.next_queue();
-      }, 4600);
+      }, 2000);
     }
 
   }
@@ -1196,7 +1196,7 @@ export class GameStartComponent implements OnInit {
             this.showDraw = [];
           });
           this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-        }, 4000);
+        }, 2500);
       });
       this.socket.emit('martin effect', { code: this.roomcode });
       this.socket.emit('special effect end', { code: this.roomcode });

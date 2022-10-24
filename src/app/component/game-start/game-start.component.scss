@@ -387,7 +387,7 @@
   z-index: 9999;
   top: 150%;
   left: 25%;
-  animation: decrease 5s;
+  animation: decrease 3.5s;
 
   .card {
     position: relative;
@@ -397,7 +397,7 @@
     cursor: pointer;
     transition: 0.5s ease-in-out;
     transform-style: preserve-3d;
-    animation: flipcard 5s;
+    animation: flipcard 3.5s;
 
 
     .card__face {
@@ -465,15 +465,13 @@
     left: 30%;
   }
 
-
-
-  70% {
+  60% {
     width: 1000px;
     top: 20%;
     left: 25%;
   }
 
-  80% {
+  70% {
     width: 400px;
     top: 100%;
     left: 70%;
@@ -2253,7 +2251,7 @@ a:hover+.icon {
   z-index: 51;
   padding-top: 60%;
   padding-left: 30px;
-  animation: trash 4s;
+  animation: trash 2s;
 }
 
 @keyframes trash {
