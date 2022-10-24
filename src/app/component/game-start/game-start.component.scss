@@ -685,9 +685,6 @@
   gap: 5px;
 }
 
-.closeChating {
-  display: none;
-}
 
 .openChating {}
 
@@ -2252,6 +2249,7 @@ a:hover+.icon {
   background: rgba(49, 49, 49, .5);
   border-radius: 0 20px 20px 0;
   position: absolute;
+  z-index: 9999;
   animation: fadeIn 1s;
 }
 
@@ -2388,6 +2386,7 @@ a:hover+.icon {
   border-radius: 0 20px 20px 0;
   background: rgba(49, 49, 49, 0.5);
   position: absolute;
+  z-index: 9999;
   opacity: 0;
   animation: fadeOut 1s;
 }
@@ -2612,7 +2611,7 @@ input[type=checkbox]+label {
 }
 
 input[type=checkbox]:checked+label {
-  border: 5px solid rgb(255, 196, 0);
+  border: 5px solid rgb(197, 152, 3);
 }
 
 .cardInfo {
@@ -2637,7 +2636,7 @@ input[type=checkbox]:checked+label {
 .buttonField {
   position: absolute;
   z-index: 50;
-  width: 100%;
+  width: 1920px;
   bottom: 10%;
 }
 
@@ -3060,3 +3059,185 @@ input[type=checkbox]:checked+label {
   width: 100%;
   height: 150px;
 }
+
+.comaBack{
+  position: absolute;
+  z-index: 30;
+  width: 1920px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.87);
+}
+.coma{
+  color: #ff0404;
+  font-size: 120px;
+
+  width: 100%;
+  height: 150px;
+}
+.winlose{
+  position: absolute;
+  z-index: 9000;
+  width: 1920px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.87);
+}
+.loser{
+  color: #ff0404;
+  font-size: 120px;
+
+  width: 100%;
+  height: 150px;
+}
+.winner{
+  color: #9cfd00;
+  font-size: 120px;
+
+  width: 100%;
+  height: 150px;
+}
+
+.comaDescribe{
+  font-size: 30px;
+}
+.rescueBack{
+  position: absolute;
+  z-index: 30;
+  width: 1920px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.829);
+}
+.rescue{
+  margin: 0px 10px 10px 0px;
+  height: 240px;
+  width: 180px;
+  background-color: #7d6f99;
+  border-radius: 10px;
+  position: relative;
+  font-size: 28px;
+  transition: transform .2s;
+}
+.rescue:hover {
+  z-index: 100;
+  transform: scale(1.2);
+}
+.player-coma{
+  background: rgb(172, 172, 172);
+  border-radius: 50%;
+  height: 300px;
+  width: 300px;
+  object-fit: cover;
+}
+
+.rescueButton {
+  align-items: center;
+  appearance: none;
+  background-clip: padding-box;
+  background-color: initial;
+  background-image: none;
+  border-style: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-family: Eina01,sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  justify-content: center;
+  line-height: 24px;
+  margin: 0;
+  min-height: 64px;
+  outline: none;
+  overflow: visible;
+  padding: 19px 26px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: auto;
+  word-break: keep-all;
+  z-index: 0;
+  width: 200px;
+  height: 80px;
+}
+
+@media (min-width: 768px) {
+  .rescueButton {
+    padding: 19px 32px;
+  }
+}
+
+.rescueButton:before,
+.rescueButton:after {
+  border-radius: 80px;
+}
+
+.rescueButton:before {
+  background-image: linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -2;
+}
+
+.rescueButton:after {
+  background-color: initial;
+  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  bottom: 4px;
+  content: "";
+  display: block;
+  left: 4px;
+  overflow: hidden;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  transition: all 100ms ease-out;
+  z-index: -1;
+}
+
+.rescueButton:hover:not(:disabled):before {
+  background: linear-gradient(92.83deg, rgb(255, 116, 38) 0%, rgb(249, 58, 19) 100%);
+}
+
+.rescueButton:hover:not(:disabled):after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition-timing-function: ease-in;
+  opacity: 0;
+}
+
+.rescueButton:active:not(:disabled) {
+  color: #ccc;
+}
+
+.rescueButton:active:not(:disabled):before {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+}
+
+.rescueButton:active:not(:disabled):after {
+  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  top: 4px;
+}
+
+.rescueButton:disabled {
+  cursor: default;
+  opacity: .24;
+}
+
+

@@ -6,6 +6,56 @@
 
 <body>
 
+   <!-- lose -->
+   <div *ngIf="this.youLose" class="winlose d-flex align-items-center">
+    <div class="loser d-flex justify-content-center align-items-center">
+      <div class="row w-50 mx-auto d-flex justify-content-center">
+        คุณแพ้
+      </div>
+    </div>
+  </div>
+  <!--  -->
+
+   <!-- died -->
+   <div *ngIf="this.youWin" class="winlose d-flex align-items-center">
+    <div class="winner d-flex justify-content-center align-items-center">
+      <div class="row w-50 mx-auto d-flex justify-content-center">
+        คุณชนะ
+      </div>
+    </div>
+  </div>
+  <!--  -->
+
+  <!-- coma -->
+  <div *ngIf="this.coma" class="comaBack d-flex align-items-center">
+    <div class="coma d-flex justify-content-center align-items-center">
+      <div class="row w-50 mx-auto d-flex justify-content-center">
+        สถานะโคม่า <span class="comaDescribe w-100 d-flex justify-content-center">(ขอความช่วยเหลือจากผู้เล่นคนอื่น)</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="this.rescue" class="rescueBack d-flex align-items-center">
+    <div class="row w-100 m-0 p-0 rescueboard">
+      <div class="d-flex justify-content-center m-0 w-100 py-5">
+        <input type="checkbox" class="dropcard-checkbox stealSelect" value="1" id="p1"
+          (change)="checkedSteal($event)" />
+        <label for='p1' class="player-coma d-flex justify-content-center align-items-center mx-3">&nbsp;safs</label>
+      </div>
+      <div class="card-canvas d-flex flex-wrap justify-content-center">
+        <div class="m-0 p-0" *ngFor="let healcard of this.healCard">
+          <input type="checkbox" class="dropcard-checkbox" value="{{healcard.id}}" id="c{{healcard.id}}"
+            (change)="checkedHeal($event)" />
+          <label for='c{{healcard.id}}' class="rescue">&nbsp;{{ healcard.info.name }}</label>
+        </div>
+      </div>
+      <div class="m-0 p-0 w-100 d-flex justify-content-center my-5">
+        <button class="rescueButton mx-5" (click)="confirmRescue()">ใช้</button>
+        <button class="rescueButton mx-5" (click)="ignoreRescue()">ไม่ใช้</button>
+      </div>
+    </div>
+  </div>
+  <!--  -->
+
   <!-- def -->
   <div *ngIf="this.waitingDef" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
@@ -101,16 +151,17 @@
         </div>
       </div>
       <div class="h-100 w-25 d-flex justify-content-center align-items-center">
-        <button class="storeConfirm" *ngIf="this.storeConfirm" (click)="this.foxiaStore()">เก็บ</button>
+
       </div>
     </div>
     <div class="buttonField d-flex justify-content-center">
-      <button *ngIf="this.isFoxiaEffect" class="openDecisionButton cancel-button mx-3"
+      <button *ngIf="this.isFoxiaEffect && this.decisionResult == null" class="openDecisionButton cancel-button mx-3"
         (click)="this.foxiaCancel()"><span class="text">ยกเลิก</span></button>
-      <button *ngIf="this.isFoxiaEffect" class="openDecisionButton open-button mx-3"
+      <button *ngIf="this.isFoxiaEffect && this.decisionResult == null" class="openDecisionButton open-button mx-3"
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
-      <button *ngIf="!this.isFoxiaEffect" class="openDecisionButton open-button mx-3"
+      <button *ngIf="!this.isFoxiaEffect && this.decisionResult == null" class="openDecisionButton open-button mx-3"
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
+      <button class="storeConfirm" *ngIf="this.storeConfirm && this.decisionResult != null" (click)="this.foxiaStore()">เก็บ</button>
     </div>
   </div>
   <!--  -->
@@ -180,7 +231,7 @@
         <div class="useEffectText text-start h-100 d-flex align-items-center">แอบฉกแอบชิม : ในขั้นตอนการจั่วการ์ด
           สามารถเลือกได้ว่าจะไม่จั่วการ์ดแล้วเลือกหยิบการ์ดบนมือ 1 ใบ จากผู้เล่นอื่นไม่เกิน 2 คน</div>
       </button>
-      <button class="effectButton noButton d-flex mt-3" (click)="this.cancelEffect">
+      <button class="effectButton noButton d-flex mt-3" (click)="this.cancelEffect()">
         <div class="useEffectText justify-content-end h-100 d-flex align-items-center">ยังไม่ใช้ดีกว่า....</div>
         <img class="useEffectImg" src="../assets/picture/thinking.png" alt="Tyler" width="150px">
       </button>
@@ -385,7 +436,6 @@
     <div class="btn accept-btn" (click)="start()" *ngIf="this.host == true &&this.started != true">Start</div>
     <div class="show-chat" (click)="openChat()" *ngIf="!this.showChat"><img src="../assets/picture/greater.png"
         height="40px"></div>
-    <div class="hideChat">
       <div [ngClass]="{chatsidebar:this.showChat == true,closeChating:this.showChat == false}">
         <div class="chat-content">
           <div class="chatline w-full">
@@ -399,7 +449,6 @@
           <img src="../assets/picture/less.png" height="40px">
         </div>
       </div>
-    </div>
     <div class="copy-noti hidden" aria-readonly="true">
       CODE was copied to clipboard.
     </div>
