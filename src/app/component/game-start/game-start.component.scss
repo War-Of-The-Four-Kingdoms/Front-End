@@ -22,11 +22,11 @@
 }
 
 @keyframes slidefromright {
-  0%{
+  0% {
     right: -150%;
   }
 
-  100%{
+  100% {
     right: 10%;
   }
 
@@ -387,7 +387,7 @@
   z-index: 9999;
   top: 150%;
   left: 25%;
-  animation: decrease 5s;
+  animation: decrease 3.5s;
 
   .card {
     position: relative;
@@ -397,7 +397,7 @@
     cursor: pointer;
     transition: 0.5s ease-in-out;
     transform-style: preserve-3d;
-    animation: flipcard 5s;
+    animation: flipcard 3.5s;
 
 
     .card__face {
@@ -465,15 +465,13 @@
     left: 30%;
   }
 
-
-
-  70% {
+  60% {
     width: 1000px;
     top: 20%;
     left: 25%;
   }
 
-  80% {
+  70% {
     width: 400px;
     top: 100%;
     left: 70%;
@@ -1285,7 +1283,7 @@ body {
   z-index: 9999;
   position: absolute;
   width: 300px;
-  left: 42.3%;
+  left: 25.3%;
   top: 2%;
   text-align: center;
   animation: choosePic 3s;
@@ -1317,38 +1315,27 @@ body {
 .textrole {
   color: white;
   z-index: 9999;
-  position: absolute;
-  left: 40%;
-  top: 25%;
   text-align: center;
   font-size: 32px;
-  animation: chooseText 3s;
+  animation: chooseText 3.5s;
+  width: 100%;
+  margin-top: 50px;
+  margin-left: 200px;
+
 }
 
 @keyframes chooseText {
   0% {
-    top: 53%;
     opacity: 0;
   }
 
-  15% {
-    top: 53%;
+  70% {
     opacity: 0;
-  }
-
-  30% {
-    top: 53%;
-    opacity: 0.8;
-  }
-
-  60% {
-    top: 53%;
-    opacity: 0.8;
+    margin-left: 150px;
   }
 
   100% {
-    top: 25%;
-    opacity: 0.8;
+    opacity: 1;
   }
 }
 
@@ -1357,25 +1344,36 @@ body {
   0% {
     top: 30%;
     opacity: 0;
+    left: 42.3%;
   }
 
   15% {
+    left: 42.3%;
     top: 30%;
     opacity: 0;
   }
 
 
   30% {
+    left: 42.3%;
     top: 30%;
     opacity: 0.8;
   }
 
   60% {
+    left: 42.3%;
     top: 30%;
     opacity: 0.8;
   }
 
+  80% {
+    left: 42.3%;
+    top: 2%;
+    opacity: 0.8;
+  }
+
   100% {
+    left: 25.3%;
     top: 2%;
     opacity: 0.8;
   }
@@ -1479,13 +1477,53 @@ body {
 }
 
 .myboxHeart {
-  width: auto;
   border: 1px solid rgb(255, 255, 255);
   display: flex;
   gap: 4px;
   border-radius: 5px;
   transform: skewX(-20deg);
 }
+
+.length3 {
+  width: 131px;
+}
+
+.length4 {
+  width: 175px;
+}
+
+.length5 {
+  width: 219px;
+}
+
+.length6 {
+  width: 263px;
+}
+
+.length7 {
+  width: 307px;
+}
+
+.lengths3 {
+  width: 66px;
+}
+
+.lengths4 {
+  width: 89px;
+}
+
+.lengths5 {
+  width: 112px;
+}
+
+.lengths6 {
+  width: 135px;
+}
+
+.lengths7 {
+  width: 158px;
+}
+
 
 .circle {
   background: rgba(15, 28, 63, 0.125);
@@ -2034,7 +2072,6 @@ a:hover+.icon {
   border: 1px solid salmon;
   // opacity: 0.5;
   filter: brightness(50%);
-  animation: cardpic 4s;
 }
 
 .card-drop {
@@ -2082,16 +2119,105 @@ a:hover+.icon {
 }
 
 
+
+@keyframes showhand {
+  0% {
+    bottom: -90%;
+    left: 20%;
+  }
+
+  40% {
+    bottom: -90%;
+    left: 20%;
+  }
+
+  65% {
+    bottom: -10%;
+    left: 20%;
+  }
+  100% {
+    left: -50%;
+  }
+}
+
+.handleft {
+  position: absolute;
+  z-index: 5000;
+  bottom: -10%;
+  left: -50%;
+  animation: showhand 4.5s;
+}
+
+.handright {
+  position: absolute;
+  z-index: 5000;
+  bottom: -10%;
+  right: -50%;
+  animation: showhands 4.5s;
+  transform: scaleX(-1);
+}
+
+@keyframes showhands {
+  0% {
+    bottom: -90%;
+    right: 20%;
+  }
+
+  40% {
+    bottom: -90%;
+    right: 20%;
+  }
+
+  65% {
+    bottom: -10%;
+    right: 20%;
+  }
+  100% {
+    right: -50%;
+  }
+}
+
+// @keyframes handleft {
+//   0%{
+//     opacity: 0;
+//   }
+//   40%{
+//     opacity: 0;
+//   }
+//   80%{
+//     opacity: 1;
+//     left: 20%;
+//   }
+//   100%{
+//     left: -50%;
+//   }
+// }
+
+
+
 @keyframes cardpic {
   0% {
+    width: 700px;
     opacity: 0;
   }
 
-  70% {
+  50% {
+    width: 700px;
     opacity: 0;
+  }
+
+  60% {
+    width: 700px;
+    opacity: 1;
+  }
+
+  75% {
+    width: 700px;
+    opacity: 1;
   }
 
   100% {
+    width: 100%;
     opacity: 1;
   }
 }
@@ -2102,6 +2228,7 @@ a:hover+.icon {
 }
 
 .testing {
+  width: 100%;
   padding: 20px;
   height: 600px;
   display: flex;
@@ -2109,6 +2236,7 @@ a:hover+.icon {
   align-items: center;
   gap: 20px;
   z-index: 51;
+  animation: cardpic 4s;
 }
 
 .dropTest {
@@ -2120,7 +2248,7 @@ a:hover+.icon {
   z-index: 51;
   padding-top: 60%;
   padding-left: 30px;
-  animation: trash 4s;
+  animation: trash 2s;
 }
 
 @keyframes trash {
@@ -2534,6 +2662,48 @@ a:hover+.icon {
   font-size: 28px;
 }
 
+.cardic {
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: #f70000;
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #000;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+  font-size: 28px;
+  border-width: 10px;
+  animation: anim-glows 2s ease infinite;
+}
+
+@keyframes anim-glows {
+  0% {
+    box-shadow: 0 0 rgba(#a308e0e8, 1);
+  }
+
+  100% {
+    box-shadow: 0 0 20px 20px transparent;
+    border-width: 10px;
+  }
+}
+
+
+
+.newCard {
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: #996f6f;
+  border-radius: 10px;
+  box-shadow: -1rem 0 3rem #000;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+  font-size: 28px;
+}
+
+
 .tab-show {
   position: absolute;
   top: 19%;
@@ -2559,8 +2729,23 @@ a:hover+.icon {
   margin-left: -50px;
 }
 
+.cardic:not(:first-child) {
+  margin-left: -50px;
+}
+
 .card:hover {
   transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.cardic:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.cardic:hover~.card {
+  position: relative;
+  left: 50px;
   transition: 0.4s ease-out;
 }
 
@@ -3032,7 +3217,7 @@ input[type=checkbox]:checked+label {
 }
 
 // select def
-.deftemplate{
+.deftemplate {
   position: absolute;
   z-index: 20;
   background-color: rgba(0, 0, 0, 0.85);
@@ -3040,19 +3225,22 @@ input[type=checkbox]:checked+label {
   height: 100%;
   animation: chooseIn 1s;
 }
-.defButton{
+
+.defButton {
   margin: 0px 50px;
   border-radius: 100px;
   width: 200px;
   height: 200px;
 }
-.waitingdef{
+
+.waitingdef {
   position: absolute;
   z-index: 30;
   width: 1920px;
   height: 100%;
 }
-.waitingtext{
+
+.waitingtext {
   color: #7e1717;
   font-size: 60px;
   background-color: rgba(192, 192, 192, 0.699);
