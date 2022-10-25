@@ -6,6 +6,12 @@
 
 <body>
 
+  <div *ngIf="this.waitingKingSelect" class="waitingdef d-flex align-items-center">
+    <div class="waitingtext d-flex justify-content-center align-items-center">
+      รอราชาเลือกตัวละคร
+    </div>
+  </div>
+
    <!-- lose -->
    <div *ngIf="this.youLose" class="winlose d-flex align-items-center">
     <div class="loser d-flex justify-content-center align-items-center">
@@ -57,6 +63,11 @@
   <!--  -->
 
   <!-- def -->
+  <div *ngIf="this.waitingLegionDrop" class="waitingdef d-flex align-items-center">
+    <div class="waitingtext d-flex justify-content-center align-items-center">
+      รอเป้าหมายทิ้งการ์ดในมือ
+    </div>
+  </div>
   <div *ngIf="this.waitingDef" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
       รอเป้าหมายตอบโต้การโจมตี
@@ -267,7 +278,7 @@
   </button>
   <!--  -->
 
-  <div id="exist" *ngIf="this.characterCard"> 
+  <div id="exist" *ngIf="this.characterCard">
     <img class="hand handleft" src="../assets/picture/hand.png" width="900px">
     <img class="hand handright" src="../assets/picture/hand.png" width="900px">
     <div class="showRole">
@@ -389,7 +400,7 @@
       <div class="myboxHeart" id="myh" >
         <div class="mybox" *ngFor="let i of this.hp4"></div>
       </div>
-    </div>
+    </div>showCard
     <!-- <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)=""> -->
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">

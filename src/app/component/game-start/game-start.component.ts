@@ -126,6 +126,7 @@ export class GameStartComponent implements OnInit {
   maxHp: any;
   confirmEffect: boolean = false;
   othersHandCard: any[] = [];
+  legionTemp: boolean = false;
  //processing
   youLose: boolean = false;
   youWin: boolean = false;
@@ -142,6 +143,8 @@ export class GameStartComponent implements OnInit {
   showSelectDef: boolean = false;
   maxAttack: number = 1;
   attackCount: any = 0;
+  legionDrop: boolean = false;
+  waitingLegionDrop: boolean = false;
   drawAdjust: any;
   attackDistance: any = 1;
   trickDistance: any;
@@ -204,6 +207,7 @@ export class GameStartComponent implements OnInit {
   handing: any[] = [];
   activingCard: boolean = false;
   showingCard: any;
+  waitingKingSelect: boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -229,6 +233,7 @@ export class GameStartComponent implements OnInit {
       this.decisionResult = data.card;
     });
     this.socket.listen('random characters').subscribe((data: any) => {
+      this.waitingKingSelect = false;
       this.characterCard = true;
       this.characterPool = data
       this.characterPool.forEach((c: any) => {
@@ -567,6 +572,13 @@ export class GameStartComponent implements OnInit {
         window.location.href = '/';
       },5000);
     })
+    this.socket.listen('legion dropped').subscribe((data: any) => {
+      this.waitingLegionDrop = false;
+    })
+    this.socket.listen('waiting king select').subscribe((data: any) => {
+      this.waitingKingSelect = true;
+    })
+
     this.socket.listen('attacked').subscribe((data: any) => {
       if (this.myCharacter.char_name == 'foxia') {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.symbol == 'spade' || hc.info.symbol == 'club');
@@ -591,6 +603,10 @@ export class GameStartComponent implements OnInit {
       }
       this.life4 -= data.damage;
       this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+      if(data.legion){
+        this.legionDrop = true;
+        this.showDropTemplate = true;
+      }
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
 
@@ -812,6 +828,9 @@ export class GameStartComponent implements OnInit {
         }
       }
       this.waitingDef = false;
+      if(this.myCharacter.char_name == 'legioncommander'){
+        this.waitingLegionDrop = true;
+      }
     });
     this.socket.listen('attack fail').subscribe((data: any) => {
       this.waitingDef = false;
@@ -966,6 +985,12 @@ export class GameStartComponent implements OnInit {
   }
 
   closeAll() {
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.cardShow = false;
     this.showGiveCard = false;
     this.showDecisionTemplate = false;
@@ -1116,11 +1141,13 @@ export class GameStartComponent implements OnInit {
     this.showDropTemplate = !this.showDropTemplate;
   }
   showGive() {
-    this.showGiveCard = !this.showDropTemplate;
+    this.showGiveCard = !this.showGiveCard;
   }
   checkedState(event: any) {
+    let dropnum: any = 0;
+    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.life4; ;
     if (event.target.checked === true) {
-      if (this.selectedItems.length < (this.handCard.length - this.life4)) {
+      if (this.selectedItems.length < dropnum) {
         this.selectedItems.push(event.target.value)
       } else {
         event.target.checked = false;
@@ -1304,8 +1331,10 @@ export class GameStartComponent implements OnInit {
   }
 
   dropSelectedCard() {
-    if (this.selectedItems.length != (this.handCard.length - this.life4)) {
-      alert('Select ' + ((this.handCard.length - this.life4) - this.selectedItems.length) + ' more card')
+    let dropnum: any = 0;
+    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.life4
+    if (this.selectedItems.length != dropnum) {
+      alert('เลือกการ์ดอีก ' + ((this.handCard.length - this.life4) - this.selectedItems.length) + ' ใบ')
     } else {
       this.dropFire = true
       setTimeout(() => {
@@ -1319,7 +1348,12 @@ export class GameStartComponent implements OnInit {
         });
         this.showDropTemplate = false;
         this.selectedItems = [];
-        this.next_queue();
+        if(this.legionDrop){
+          this.socket.emit("legion drop done", { code: this.roomcode});
+          this.legionDrop = false;
+        }else{
+          this.next_queue();
+        }
       }, 2000);
     }
 
@@ -1403,6 +1437,12 @@ export class GameStartComponent implements OnInit {
 
 
   showCard(card: any) {
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.canUse = false;
     this.cardCheck = card
     if (this.myPos == this.queue && this.currentQueue == 'play') {
@@ -1426,6 +1466,12 @@ export class GameStartComponent implements OnInit {
   }
 
   cancelShow() {
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.cardCheck = null;
     this.canUse = false;
     this.cardShow = false
@@ -1484,12 +1530,12 @@ export class GameStartComponent implements OnInit {
         if (s_check) {
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
           });
-          this.socket.emit('force attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('force attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck , legion: false});
         } else {
           this.waitingDef = true;
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
           });
-          this.socket.emit('use attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('use attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck , legion: false});
         }
         this.luckyghostTarget = null;
         break;
@@ -1596,7 +1642,11 @@ export class GameStartComponent implements OnInit {
       this.waitingDef = true;
       this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
       });
-      this.socket.emit('use attack',{code: this.roomcode,target: data,damage: this.damage(), card: this.cardCheck});
+      if(this.myCharacter.char_name == 'legioncommander'){
+        this.socket.emit('use attack',{code: this.roomcode,target: data,damage: this.damage(), card: this.cardCheck , legion: true});
+      }else{
+        this.socket.emit('use attack',{code: this.roomcode,target: data,damage: this.damage(), card: this.cardCheck , legion: false});
+      }
     }
 
   }
@@ -1761,11 +1811,26 @@ export class GameStartComponent implements OnInit {
           }
         }
       }
+    }else if (cardInfo.item_name == "heal") {
+      if(this.life4 < this.maxHp){
+        this.life4 += 1;
+        this.hp4.push(0);
+        this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+        this.cardShow = false
+      }else{
+        alert('เลือดคุณเต็มแล้ว')
+      }
     }
   }
 
   selectCharacter(char: any) {
-    this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
+    if(this.role == 'king'){
+      this.socket.emit('king selected', { cid: char.id, code: this.roomcode });
+    }else{
+      this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
+    }
     this.myCharacter = char
     this.maxHp = char.hp + (this.extra_hp != undefined ? this.extra_hp : 0);
   }
