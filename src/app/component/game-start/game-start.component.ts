@@ -12,6 +12,7 @@ import { query } from '@angular/animations';
   styleUrls: ['./game-start.component.scss']
 })
 export class GameStartComponent implements OnInit {
+  urls:any = "../assets/picture/card/"
   dropFire: boolean = false;
   turnChange: boolean = false;
   textTurn: any = "";
@@ -49,7 +50,7 @@ export class GameStartComponent implements OnInit {
   roomHost: any;
   roomcode: any;
   is_private: boolean = false;
-  role: any = "king";
+  role: any = "";
   describe: any = { king: "Kill Traitor and Betrayer to win This Game", knight: "Protect Your king and Kill Everyone Who betray!!", villager: "Kill this Corruption King to Win the game!!", noble: "Spy and Kill Everyone" };
   extra_hp: any;
   crown1: boolean = false;
@@ -205,6 +206,7 @@ export class GameStartComponent implements OnInit {
   activingCard: boolean = false;
   showingCard: any;
   kingImage: any;
+  foxiaLuck: any;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -270,15 +272,15 @@ export class GameStartComponent implements OnInit {
           this.showText = "จงหาชาวบ้านและผู้ทรยศในหมู่พวกเราและสังหาร"
           break;
         case 'knight':
-          this.showRole = "../assets/picture/plus.png"
+          this.showRole = "../assets/picture/knight.png"
           this.showText = "ร่วมมือกับราชาและสังหารผู้ปองร้าย"
           break;
-        case 'betrayer':
-          this.showRole = "../assets/picture/plus.png"
+        case 'noble':
+          this.showRole = "../assets/picture/noble.png"
           this.showText = "จงสังหารผู้คนทั้งหมด"
           break;
         case 'villager':
-          this.showRole = "../assets/picture/plus.png"
+          this.showRole = "../assets/picture/villager.png"
           this.showText = "จงสังหารราชา"
           break;
       }
@@ -1049,6 +1051,11 @@ export class GameStartComponent implements OnInit {
     }
   }
 
+  showCarding(data:any){
+    console.log(data);
+    return "../assets/picture/cover.png"
+  }
+
   drawStage() {
     if (this.drawQueue.length > 0) {
       let q = this.drawQueue.dequeue();
@@ -1063,6 +1070,7 @@ export class GameStartComponent implements OnInit {
             this.showDraw = data
             setTimeout(() => {
               data.forEach((card: any) => {
+                console.log(card);
                 this.handCard.push(card);
                 this.test555 = false
                 this.showDraw = [];
@@ -1465,6 +1473,7 @@ export class GameStartComponent implements OnInit {
   openDecisionCard(is_draw: boolean) {
     if (is_draw) {
       this.api.openCard(this.roomcode).subscribe((card: any) => {
+        this.foxiaLuck = card
         let x = card;
         if (this.myCharacter.char_name == 'foxia') {
           let symbols = ['club', 'spade'];

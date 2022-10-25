@@ -65,14 +65,15 @@
   <div class="deftemplate row m-0 p-0" *ngIf="this.showSelectDef">
     <div class="card-canvas d-flex flex-wrap justify-content-center" >
       <div class="m-0 p-0" *ngFor="let defCard of this.defCard" >
+        <div class="cantUse" *ngIf="this.defCard.lenght == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
         <input type="checkbox" class="dropcard-checkbox" value="{{defCard.id}}" id="c{{defCard.id}}"
           (change)="checkedDef($event)" />
-        <label for='c{{defCard.id}}' class="carddrop">&nbsp;{{ defCard.info.name }}</label>
+        <label *ngIf="this.defCard.lenght != 0" for='c{{defCard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+defCard.info.image}}></label>
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
-      <button class="defButton" (click)="useDef()">ใช้</button>
-      <button class="defButton" (click)="noDef()">ไม่ใช้</button>
+      <button class="defButton greendef" (click)="useDef()">ใช้</button>
+      <button class="defButton reddef" (click)="noDef()">ไม่ใช้</button>
       <button *ngIf="this.myCharacter.char_name == 'puta'" class="defButton" (click)="useCharDef()">ใช้ความสามารถตัวละคร</button>
       <button *ngIf="this.myEquipment.armor != null && this.myEquipment.armor['item_name'] == 'knight_chainmail'" class="defButton" (click)="useArmorDef()">ใช้ความสามารถเกราะป้องกัน</button>
     </div>
@@ -84,8 +85,8 @@
     <div class="card-canvas d-flex flex-wrap justify-content-center" *ngIf="!this.dropFire">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
-          (change)="checkedState($event)" />
-        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+          (change)="checkedState($event)" />      
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+handcard.info.image}}></label>
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center" *ngIf="!this.dropFire">
@@ -94,7 +95,7 @@
     <div class="drop" *ngIf="this.dropFire">
       <div class="dropTest">
         <div class="droped" *ngFor="let handcard of this.dropCard">
-          <div class="overlay"><img class="card-drop" src="../assets/picture/card/bearfighter.png">
+          <div class="overlay"><img class="card-drop" src={{this.urls+handcard.info.image}}>
             <div class="mo-fire">
               <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="125px" height="189.864px"
@@ -139,7 +140,7 @@
         <div class="flip-card">
           <div class="flip-card-inner" *ngIf="this.decisionResult != null">
             <div class="flip-card-front">
-              <img src="../assets/picture/card/bearfighter.png" alt="Avatar" width="400px" height="560px">
+              <img src={{this.urls+this.foxiaLuck.info.image}} alt="Avatar" width="400px" height="560px">
             </div>
             <div class="flip-card-back bg-secondary">
               <img  src="../assets/picture/cover.png" alt="Avatar" width="400px" height="560px">
@@ -272,7 +273,7 @@
     <img class="hand handright" src="../assets/picture/hand.png" width="900px">
     <div class="showRole">
       <div class="textrole"><div>คุณคือ <label>{{this.role}}</label></div><p>{{this.showText}}</p></div>
-      <img class="rolepic" src="../assets/picture/crowns.png">
+      <img class="rolepic" src={{this.showRole}}>
     </div>
     <div class="testing">
       <div class="bend" *ngFor="let char of this.characterPool"><img class="card-pic" src={{char.image_name}}
@@ -379,7 +380,7 @@
           <img src="../assets/picture/cover.png"/>
         </div>
         <div class="card__face card__face--back">
-          <img src="../assets/picture/card/catdice.png" />
+          <img  src={{this.urls+data.info.image}} />
         </div>
       </div>
     </div>
@@ -392,7 +393,7 @@
     <!-- <img src="../assets/picture/plus.png" class="plus" style="width: 45px;" (click)=""> -->
     <div class="tab-show" *ngIf="this.cardShow">
       <div class="card-show">
-        {{this.cardCheck.id}}
+        <img class="popupCard" src={{this.urls+this.cardCheck.info.image}} />
       </div>
       <div class="confirm">
         <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()" *ngIf="this.canUse">
@@ -403,6 +404,7 @@
     <div class="container">
       <div [ngClass]="{card:!cardEffect(card),cardic:cardEffect(card)}" *ngFor="let card of this.handCard" (click)="showCard(card)">
         {{card.info.name}}
+        <img class="popupCards" src={{this.urls+card.info.image}}>
       </div>
     </div>
     <!-- pass button -->
@@ -431,6 +433,13 @@
         <button class="copy-btn" (click)="copyCodeToClipboard()">
           <img src="../assets/picture/copy.png" width="27px" height="35px">
         </button>
+      </div>
+    </div>
+
+    <div class="lobbycodes align-items-center" *ngIf="this.started == true">
+      ROLE:
+      <div class="h-100 d-flex align-items-center">
+        <span class="show_code display-5">{{this.role}}</span>
       </div>
     </div>
     <div class="btn join-btn" (click)="leave()" *ngIf="this.started != true">LEAVE LOBBY</div>
@@ -653,16 +662,16 @@
         <div class="equipments mb-4">
           <!-- <div class="block-empty"></div> -->
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.weapon != null" class="equipmentCard" src={{this.myEquipmentImage.weapon}} (click)="this.myEquipmentImage.weapon">
+            <img *ngIf="this.myEquipmentImage.weapon != null" class="equipmentCard" src={{this.myEquipmentImage.weapon}} (click)="activateMoon(this.myEquipmentImage.weapon)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.armor != null" class="equipmentCard" src={{this.myEquipmentImage.armor}} (click)="this.myEquipmentImage.armor">
+            <img *ngIf="this.myEquipmentImage.armor != null" class="equipmentCard" src={{this.myEquipmentImage.armor}} (click)="activateMoon(this.myEquipmentImage.armor)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.mount1 != null" class="equipmentCard" src={{this.myEquipmentImage.mount1}} (click)="this.myEquipmentImage.mount1">
+            <img *ngIf="this.myEquipmentImage.mount1 != null" class="equipmentCard" src={{this.myEquipmentImage.mount1}} (click)="activateMoon(this.myEquipmentImage.mount1)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.mount2 != null" class="equipmentCard" src={{this.myEquipmentImage.mount2}} (click)="this.myEquipmentImage.mount2">
+            <img *ngIf="this.myEquipmentImage.mount2 != null" class="equipmentCard" src={{this.myEquipmentImage.mount2}} (click)="activateMoon(this.myEquipmentImage.mount2)">
           </div>
         </div>
         <div class="myCharacter-card">

@@ -103,6 +103,15 @@
   border-radius: 10px;
 }
 
+.popupCards {
+  width: 100%;
+  width: px;
+  height: 100%;
+  border-radius: 10px;
+  position: absolute;
+  left: 0%;
+}
+
 .pvp {
   position: absolute;
   top: 44%;
@@ -701,7 +710,7 @@
   right: -49px;
 }
 
-.martins{
+.martins {
   margin-top: -30px;
 }
 
@@ -825,7 +834,7 @@ body {
   background-image: url("/assets/picture/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-size: 100% 100% ;
+  background-size: 100% 100%;
 }
 
 .block-empty {
@@ -846,7 +855,7 @@ body {
   background-image: url("/assets/picture/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-size: 100% 100% ;
+  background-size: 100% 100%;
   transform: rotateZ(180deg);
 }
 
@@ -862,7 +871,7 @@ body {
   background-image: url("/assets/picture/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-size: 100% 100% ;
+  background-size: 100% 100%;
 }
 
 .blocks-s {
@@ -875,7 +884,7 @@ body {
   background-image: url("/assets/picture/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-size: 100% 100% ;
+  background-size: 100% 100%;
 }
 
 .blocks-ss {
@@ -888,7 +897,7 @@ body {
   background-image: url("/assets/picture/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-size: 100% 100% ;
+  background-size: 100% 100%;
 }
 
 .myCharacter {
@@ -1010,7 +1019,7 @@ body {
 
 .equipments {
   display: flex;
-  
+
   transform: rotateZ(180deg);
 }
 
@@ -1322,9 +1331,10 @@ body {
   opacity: 0.8;
   z-index: 9999;
   position: absolute;
-  width: 300px;
+  width: 350px;
+  height: 250px;
   left: 25.3%;
-  top: 2%;
+  top: 0%;
   text-align: center;
   animation: choosePic 3s;
 }
@@ -1382,6 +1392,8 @@ body {
 
 @keyframes choosePic {
   0% {
+    width: 500px;
+    height: 400px;
     top: 30%;
     opacity: 0;
     left: 42.3%;
@@ -1408,13 +1420,13 @@ body {
 
   80% {
     left: 42.3%;
-    top: 2%;
+    top: 0%;
     opacity: 0.8;
   }
 
   100% {
     left: 25.3%;
-    top: 2%;
+    top: 0%;
     opacity: 0.8;
   }
 }
@@ -1894,6 +1906,13 @@ body {
   transform: rotate(60deg) translate(660px, 0);
 }
 
+.roletest {
+  position: absolute;
+  bottom: 0%;
+  font-size: 20px;
+  left: 0;
+  color: white;
+}
 
 .join-btn {
   border: 1px solid rgb(107, 0, 0);
@@ -2062,20 +2081,20 @@ a:hover+.icon {
 }
 
 @keyframes brightless {
-  0%{
+  0% {
     filter: brightness(100%);
   }
 
-  50%{
+  50% {
     filter: brightness(20%);
   }
 
-  100%{
+  100% {
     filter: brightness(100%);
   }
 
 
-  
+
 }
 
 .lightningper {
@@ -2196,6 +2215,7 @@ a:hover+.icon {
     bottom: -10%;
     left: 20%;
   }
+
   100% {
     left: -50%;
   }
@@ -2233,6 +2253,7 @@ a:hover+.icon {
     bottom: -10%;
     right: 20%;
   }
+
   100% {
     right: -50%;
   }
@@ -2625,6 +2646,18 @@ a:hover+.icon {
   font-size: 20px;
 }
 
+.lobbycodes {
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+  color: white;
+  margin: auto;
+  width: 19%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
 .lobbycode img {
   filter: invert(100%);
 }
@@ -2735,16 +2768,28 @@ a:hover+.icon {
   left: 0px;
   font-size: 28px;
   border-width: 10px;
+  box-shadow: 0 0 5px 5px rgba(#a308e0e8, 1);
+  ;
+  border-width: 10px;
   animation: anim-glows 2s ease infinite;
 }
 
 @keyframes anim-glows {
   0% {
-    box-shadow: 0 0 rgba(#a308e0e8, 1);
+    box-shadow: 0 0 5px 5px rgba(#a308e0e8, 1);
+    ;
+    border-width: 10px;
+  }
+
+  50% {
+    box-shadow: 0 0 10px 10px rgba(#a308e0e8, 1);
+    ;
+    border-width: 10px;
   }
 
   100% {
-    box-shadow: 0 0 20px 20px transparent;
+    box-shadow: 0 0 5px 5px rgba(#a308e0e8, 1);
+    ;
     border-width: 10px;
   }
 }
@@ -3292,6 +3337,24 @@ input[type=checkbox]:checked+label {
   border-radius: 100px;
   width: 200px;
   height: 200px;
+  font-size: 42px;
+}
+
+.greendef {
+  background-color: #09ff00;
+}
+
+.reddef {
+  background-color: #970803;
+}
+
+.cantUse {
+  font-size: 56px;
+  color: white;
+  width: 900px;
+  background-color: red;
+  text-align: center;
+
 }
 
 .waitingdef {
@@ -3307,37 +3370,42 @@ input[type=checkbox]:checked+label {
   background-color: rgba(192, 192, 192, 0.699);
   width: 100%;
   height: 150px;
+  animation: color-change 3s infinite;
 }
 
-.comaBack{
+.comaBack {
   position: absolute;
   z-index: 30;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.87);
 }
-.coma{
+
+.coma {
   color: #ff0404;
   font-size: 120px;
 
   width: 100%;
   height: 150px;
 }
-.winlose{
+
+.winlose {
   position: absolute;
   z-index: 9000;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.87);
 }
-.loser{
+
+.loser {
   color: #ff0404;
   font-size: 120px;
 
   width: 100%;
   height: 150px;
 }
-.winner{
+
+.winner {
   color: #9cfd00;
   font-size: 120px;
 
@@ -3345,17 +3413,19 @@ input[type=checkbox]:checked+label {
   height: 150px;
 }
 
-.comaDescribe{
+.comaDescribe {
   font-size: 30px;
 }
-.rescueBack{
+
+.rescueBack {
   position: absolute;
   z-index: 30;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.829);
 }
-.rescue{
+
+.rescue {
   margin: 0px 10px 10px 0px;
   height: 240px;
   width: 180px;
@@ -3365,11 +3435,13 @@ input[type=checkbox]:checked+label {
   font-size: 28px;
   transition: transform .2s;
 }
+
 .rescue:hover {
   z-index: 100;
   transform: scale(1.2);
 }
-.player-coma{
+
+.player-coma {
   background: rgb(172, 172, 172);
   border-radius: 50%;
   height: 300px;
@@ -3390,7 +3462,7 @@ input[type=checkbox]:checked+label {
   display: inline-block;
   flex-direction: row;
   flex-shrink: 0;
-  font-family: Eina01,sans-serif;
+  font-family: Eina01, sans-serif;
   font-size: 16px;
   font-weight: 800;
   justify-content: center;
@@ -3488,5 +3560,3 @@ input[type=checkbox]:checked+label {
   cursor: default;
   opacity: .24;
 }
-
-
