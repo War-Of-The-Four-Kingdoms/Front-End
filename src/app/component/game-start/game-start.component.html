@@ -314,7 +314,6 @@
     <div class="bigbang"></div>
     <div class="decorateEffect">
       <img class="lightning" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
-      <img class="lightningper" src="../assets/picture/lightning.png" alt="Tyler" width="150px">
       <img class="lightning2" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
       <img class="lightning3" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
       <img class="lightning4" src="../assets/picture/lightning3.png" alt="Tyler" width="150px">
@@ -332,9 +331,9 @@
 
     <div class="whoNot" *ngIf="this.waiting == true">
       <div class="waitingDes">
-        <div>You Got Effected to Your Character <p>{{this.effectDescription}}</p>
-          <img class="spells" src="../assets/picture/book.png" alt="Tyler" width="150px">
+        <div class="martins">You Got Effected to Your Character <p>{{this.effectDescription}}</p>
         </div>
+        <img class="spells" src="../assets/picture/book.png" alt="Tyler" width="150px">
       </div>
     </div>
     <div class="beforeOn" *ngIf="this.showTrigger == true">
@@ -342,12 +341,12 @@
       <img class="effect-pattern effectuser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
         alt="Tyler">
       <div class="playerEffect cardEffect">
-
+        <img class="popupCard" src="../assets/picture/card/martin.png" alt="Tyler">
       </div>
       <img class="effect-pattern effecteduser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
         alt="Tyler">
       <div class="playerEffect cardEffected">
-
+        <img class="popupCard" src={{this.kingImage}} alt="Tyler">
       </div>
     </div>
     <!-- เอฟเฟคตัวละคร -->
@@ -651,27 +650,26 @@
     <div class="hexagon">
 
       <div class='player4' id="card4">
-        <div class="equipment mb-4">
+        <div class="equipments mb-4">
           <!-- <div class="block-empty"></div> -->
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.mount2 != null" class="equipmentCard" src={{this.myEquipmentImage.mount2}} (click)="this.myEquipmentImage.mount2">
-          </div>
-          <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.mount1 != null" class="equipmentCard" src={{this.myEquipmentImage.mount1}} (click)="this.myEquipmentImage.mount1">
+            <img *ngIf="this.myEquipmentImage.weapon != null" class="equipmentCard" src={{this.myEquipmentImage.weapon}} (click)="this.myEquipmentImage.weapon">
           </div>
           <div class="blocks">
             <img *ngIf="this.myEquipmentImage.armor != null" class="equipmentCard" src={{this.myEquipmentImage.armor}} (click)="this.myEquipmentImage.armor">
           </div>
           <div class="blocks">
-            <img *ngIf="this.myEquipmentImage.weapon != null" class="equipmentCard" src={{this.myEquipmentImage.weapon}} (click)="this.myEquipmentImage.weapon">
+            <img *ngIf="this.myEquipmentImage.mount1 != null" class="equipmentCard" src={{this.myEquipmentImage.mount1}} (click)="this.myEquipmentImage.mount1">
+          </div>
+          <div class="blocks">
+            <img *ngIf="this.myEquipmentImage.mount2 != null" class="equipmentCard" src={{this.myEquipmentImage.mount2}} (click)="this.myEquipmentImage.mount2">
           </div>
         </div>
         <div class="myCharacter-card">
           <div class="blocks-s">
-
           </div>
           <div class="blocks-c">
-            <img class="myCharacter" src={{this.test}} (click)="activateMoon(this.test)">
+            <img *ngIf="this.test != null " class="myCharacter" src={{this.test}} (click)="activateMoon(this.test)">
           </div>
 
         </div>
@@ -679,10 +677,10 @@
 
       <div class='player1' id="card1">
         <div class="myCharacter-card">
-          <div class="blocks-s">
+          <div class="blocks-ss">
           </div>
           <div class="blocks-c-o">
-            <img class="myCharacter2" src={{this.img1}} (click)="activateMoon(this.img1)">
+            <img *ngIf="this.img1 != null " class="myCharacter2" src={{this.img1}} (click)="activateMoon(this.img1)">
           </div>
 
         </div>
@@ -705,11 +703,11 @@
 
       <div class='player6' id="card6">
         <div class="myCharacter-card">
-          <div class="blocks-s">
+          <div class="blocks-ss">
 
           </div>
           <div class="blocks-c-o">
-            <img class="myCharacter2" src={{this.img6}} (click)="activateMoon(this.img6)">
+            <img *ngIf="this.img6 != null " class="myCharacter2" src={{this.img6}} (click)="activateMoon(this.img6)">
           </div>
 
         </div>
@@ -733,19 +731,18 @@
       </div>
 
       <div class='player2' id="card2">
-        <div class="equipment mb-4">
-          <!-- <div class="block-empty"></div> -->
+        <div class="equipments mb-4">
           <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair2.mount2.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.mount2.image}} (click)="activateMoon(this.otherEquipment.chair2.mount2.image)">
+            <img *ngIf="this.otherEquipment.chair2.weapon.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.weapon.image}} (click)="activateMoon(this.otherEquipment.chair2.weapon.image)">
           </div>
           <div class="blocks">
             <img *ngIf="this.otherEquipment.chair2.mount1.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.mount1.image}} (click)="activateMoon(this.otherEquipment.chair2.mount1.image)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair2.armor.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.armor.image}} (click)="activateMoon(this.otherEquipment.chair2.armor.image)">
+            <img *ngIf="this.otherEquipment.chair2.mount1.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.mount1.image}} (click)="activateMoon(this.otherEquipment.chair2.mount1.image)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair2.weapon.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.weapon.image}} (click)="activateMoon(this.otherEquipment.chair2.weapon.image)">
+            <img *ngIf="this.otherEquipment.chair2.mount2.image != null" class="equipmentCard" src={{this.otherEquipment.chair2.mount2.image}} (click)="activateMoon(this.otherEquipment.chair2.mount2.image)">
           </div>
 
         </div>
@@ -753,26 +750,26 @@
           <div class="blocks-s">
           </div>
           <div class="blocks-c">
-            <img class="myCharacter" src={{this.img2}} (click)="activateMoon(this.img2)">
+            <img *ngIf="this.img2 != null " class="myCharacter" src={{this.img2}} (click)="activateMoon(this.img2)">
           </div>
 
         </div>
       </div>
 
       <div class='player3' id="card3">
-        <div class="equipment mb-4">
+        <div class="equipments mb-4">
           <!-- <div class="block-empty"></div> -->
           <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair3.mount2.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.mount2.image}} (click)="activateMoon(this.otherEquipment.chair3.mount2.image)">
-          </div>
-          <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair3.mount1.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.mount1.image}} (click)="activateMoon(this.otherEquipment.chair3.mount1.image)">
+            <img *ngIf="this.otherEquipment.chair3.weapon.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.weapon.image}} (click)="activateMoon(this.otherEquipment.chair3.weapon.image)">
           </div>
           <div class="blocks">
             <img *ngIf="this.otherEquipment.chair3.armor.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.armor.image}} (click)="activateMoon(this.otherEquipment.chair3.armor.image)">
           </div>
           <div class="blocks">
-            <img *ngIf="this.otherEquipment.chair3.weapon.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.weapon.image}} (click)="activateMoon(this.otherEquipment.chair3.weapon.image)">
+            <img *ngIf="this.otherEquipment.chair3.mount1.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.mount1.image}} (click)="activateMoon(this.otherEquipment.chair3.mount1.image)">
+          </div>
+          <div class="blocks">
+            <img *ngIf="this.otherEquipment.chair3.mount2.image != null" class="equipmentCard" src={{this.otherEquipment.chair3.mount2.image}} (click)="activateMoon(this.otherEquipment.chair3.mount2.image)">
           </div>
 
         </div>
@@ -781,7 +778,7 @@
 
           </div>
           <div class="blocks-c">
-            <img class="myCharacter" src={{this.img3}} (click)="activateMoon(this.img3)">
+            <img *ngIf="this.img3 != null " class="myCharacter" src={{this.img3}} (click)="activateMoon(this.img3)">
           </div>
 
         </div>
@@ -789,11 +786,11 @@
 
       <div class='player5' id="card5">
         <div class="myCharacter-card">
-          <div class="blocks-s">
+          <div class="blocks-ss">
 
           </div>
           <div class="blocks-c-o">
-            <img class="myCharacter2" src={{this.img5}} (click)="activateMoon(this.img5)">
+            <img *ngIf="this.img5 != null " class="myCharacter2" src={{this.img5}} (click)="activateMoon(this.img5)">
           </div>
 
         </div>

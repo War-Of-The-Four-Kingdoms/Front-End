@@ -126,7 +126,7 @@ export class GameStartComponent implements OnInit {
   maxHp: any;
   confirmEffect: boolean = false;
   othersHandCard: any[] = [];
- //processing
+  //processing
   youLose: boolean = false;
   youWin: boolean = false;
   coma: boolean = false;
@@ -204,6 +204,8 @@ export class GameStartComponent implements OnInit {
   handing: any[] = [];
   activingCard: boolean = false;
   showingCard: any;
+  kingImage: any;
+
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -240,10 +242,11 @@ export class GameStartComponent implements OnInit {
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
+      console.log(data);
+
       for (var i = 1; i < 7; i++) {
         if (!this.testing.includes(this.chairPos[i])) {
           let icon = this.elementRef.nativeElement.querySelector("#chair" + i)
-
           let icons = this.elementRef.nativeElement.querySelector("#card" + i)
           icon.classList.remove("user" + i)
           icons.classList.remove("player" + i)
@@ -282,6 +285,7 @@ export class GameStartComponent implements OnInit {
       if (this.myPosId == this.king_uid) {
         this.extra_hp = 1
         this.crown4 = true
+
       } else {
         if (this.chair1 == this.king_pos) {
           this.crown1 = true
@@ -471,16 +475,16 @@ export class GameStartComponent implements OnInit {
       this.handCard.forEach(hc => {
         handc.push(hc.id)
       });
-      if(this.myEquipment.weapon != null){
+      if (this.myEquipment.weapon != null) {
         handc.push(this.myEquipment.weapon['id'])
       }
-      if(this.myEquipment.armor != null){
+      if (this.myEquipment.armor != null) {
         handc.push(this.myEquipment.armor['id'])
       }
-      if(this.myEquipment.mount1 != null){
+      if (this.myEquipment.mount1 != null) {
         handc.push(this.myEquipment.mount1['id'])
       }
-      if(this.myEquipment.mount2 != null){
+      if (this.myEquipment.mount2 != null) {
         handc.push(this.myEquipment.mount2['id'])
       }
       this.api.dropCard(this.roomcode, handc).subscribe((data: any) => {
@@ -495,61 +499,61 @@ export class GameStartComponent implements OnInit {
       this.enemyDistance = []
       this.testing.forEach((d: any) => {
         if (this.chair1 == d) {
-          if(this.testing.length <= 3){
-            this.enemyDistance.push({ position: d, distance: 1})
-          }else if(this.testing.length == 4){
-            if(this.testing.filter((dt:any) => dt == this.chair6 || dt == this.chair5).length == 2 || this.testing.filter((dt:any) => dt == this.chair2 || dt == this.chair3).length == 2){
-              this.enemyDistance.push({ position: d, distance: 1})
-            }else{
-              this.enemyDistance.push({ position: d, distance: 2})
+          if (this.testing.length <= 3) {
+            this.enemyDistance.push({ position: d, distance: 1 })
+          } else if (this.testing.length == 4) {
+            if (this.testing.filter((dt: any) => dt == this.chair6 || dt == this.chair5).length == 2 || this.testing.filter((dt: any) => dt == this.chair2 || dt == this.chair3).length == 2) {
+              this.enemyDistance.push({ position: d, distance: 1 })
+            } else {
+              this.enemyDistance.push({ position: d, distance: 2 })
             }
           }
-          else if(this.testing.length == 5){
-            this.enemyDistance.push({ position: d, distance: 2})
+          else if (this.testing.length == 5) {
+            this.enemyDistance.push({ position: d, distance: 2 })
           }
-          else if(this.testing.length == 6){
-            this.enemyDistance.push({ position: d, distance: 3})
-          }else{
-            this.enemyDistance.push({ position: d, distance: 1})
+          else if (this.testing.length == 6) {
+            this.enemyDistance.push({ position: d, distance: 3 })
+          } else {
+            this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if(this.otherEquipment.chair1.mount2.card != null){
+          if (this.otherEquipment.chair1.mount2.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair1.mount2.card['distance']
           }
         } else if (this.chair2 == d) {
-          if(this.testing.filter((dt:any) => dt == this.chair1 || dt == this.chair5 || dt == this.chair6).length >= 1){
-            if(this.testing.find((dt:any) => dt == this.chair3)){
-              this.enemyDistance.push({ position: d, distance: 2})
-            }else{
-              this.enemyDistance.push({ position: d, distance: 1})
+          if (this.testing.filter((dt: any) => dt == this.chair1 || dt == this.chair5 || dt == this.chair6).length >= 1) {
+            if (this.testing.find((dt: any) => dt == this.chair3)) {
+              this.enemyDistance.push({ position: d, distance: 2 })
+            } else {
+              this.enemyDistance.push({ position: d, distance: 1 })
             }
-          }else{
-            this.enemyDistance.push({ position: d, distance: 1})
+          } else {
+            this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if(this.otherEquipment.chair2.mount2.card != null){
+          if (this.otherEquipment.chair2.mount2.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair2.mount2.card['distance']
           }
         } else if (this.chair3 == d) {
-          this.enemyDistance.push({ position: d, distance: 1})
-          if(this.otherEquipment.chair3.mount2.card != null){
+          this.enemyDistance.push({ position: d, distance: 1 })
+          if (this.otherEquipment.chair3.mount2.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair3.mount2.card['distance']
           }
         } else if (this.chair5 == d) {
-          this.enemyDistance.push({ position: d, distance: 1})
-          if(this.otherEquipment.chair5.mount2.card != null){
+          this.enemyDistance.push({ position: d, distance: 1 })
+          if (this.otherEquipment.chair5.mount2.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair5.mount2.card['distance']
           }
         }
         else if (this.chair6 == d) {
-          if(this.testing.filter((dt:any) => dt == this.chair3 || dt == this.chair2 || dt == this.chair1).length >= 1){
-            if(this.testing.find((dt:any) => dt == this.chair5)){
-              this.enemyDistance.push({ position: d, distance: 2})
-            }else{
-              this.enemyDistance.push({ position: d, distance: 1})
+          if (this.testing.filter((dt: any) => dt == this.chair3 || dt == this.chair2 || dt == this.chair1).length >= 1) {
+            if (this.testing.find((dt: any) => dt == this.chair5)) {
+              this.enemyDistance.push({ position: d, distance: 2 })
+            } else {
+              this.enemyDistance.push({ position: d, distance: 1 })
             }
-          }else{
-            this.enemyDistance.push({ position: d, distance: 1})
+          } else {
+            this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if(this.otherEquipment.chair6.mount2.card != null){
+          if (this.otherEquipment.chair6.mount2.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount2.card['distance']
           }
         }
@@ -557,15 +561,15 @@ export class GameStartComponent implements OnInit {
     })
     this.socket.listen('you win').subscribe((data: any) => {
       this.youWin = true;
-      setTimeout(()=>{
+      setTimeout(() => {
         window.location.href = '/';
-      },5000);
+      }, 5000);
     })
     this.socket.listen('you lose').subscribe((data: any) => {
       this.youLose = true;
-      setTimeout(()=>{
+      setTimeout(() => {
         window.location.href = '/';
-      },5000);
+      }, 5000);
     })
     this.socket.listen('attacked').subscribe((data: any) => {
       if (this.myCharacter.char_name == 'foxia') {
@@ -754,19 +758,19 @@ export class GameStartComponent implements OnInit {
       this.coma = true;
     });
     this.socket.listen('rescue coma').subscribe((data: any) => {
-      if(this.myCharacter.char_name == 'nightingale'){
+      if (this.myCharacter.char_name == 'nightingale') {
         this.healCard = this.handCard.filter(hc => hc.info.item_name == 'heal' || hc.info.symbol == 'spade' || hc.info.symbol == 'club');
-      }else{
+      } else {
         this.healCard = this.handCard.filter(hc => hc.info.item_name == 'heal');
       }
       this.comaPlayer = data.position;
       this.rescue = true;
     });
     this.socket.listen('coma rescued').subscribe((data: any) => {
-      if(data.position == this.myPos){
+      if (data.position == this.myPos) {
         this.coma = false;
         this.hp4.push(0);
-      }else{
+      } else {
         this.healCard = [];
         this.healSelected = [];
         this.comaPlayer = null;
@@ -788,15 +792,15 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('attack success').subscribe((data: any) => {
       console.log(data);
 
-      if(data.legion){
-        console.log('life4 '+this.life4);
+      if (data.legion) {
+        console.log('life4 ' + this.life4);
         console.log(this.maxHp);
 
-        if(this.life4 < this.maxHp){
+        if (this.life4 < this.maxHp) {
           this.life4 += 1;
-          this.updateHp(this.hp4,1);
-          this.socket.emit('update hp',{code: this.roomcode,hp: this.life4});
-        }else{
+          this.updateHp(this.hp4, 1);
+          this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+        } else {
           this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
             this.test555 = true
             this.showDraw = data
@@ -834,6 +838,8 @@ export class GameStartComponent implements OnInit {
 
 
     this.socket.listen('ready to start').subscribe((data: any) => {
+
+
       this.otherEquipment.chair1.position = this.chair1;
       this.otherEquipment.chair2.position = this.chair2;
       this.otherEquipment.chair3.position = this.chair3;
@@ -872,53 +878,75 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('set player character').subscribe((data: any) => {
+      console.log(data);
       this.inGameChar.push(data);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character.image_name
         this.life4 = data.remain_hp
         this.hp4 = Array.from(Array(this.life4).keys())
         let icon = this.elementRef.nativeElement.querySelector("#myh")
-        icon.classList.add("length"+data.remain_hp)
+        icon.classList.add("length" + data.remain_hp)
         console.log(icon);
+        if (this.myPos == this.king_pos) {
+          this.kingImage = this.test
+        }
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character.image_name
           this.life1 = data.remain_hp
           this.hp1 = Array.from(Array(this.life1).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh1")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair1 == this.king_pos) {
+            this.kingImage = this.img1
+          }
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character.image_name
           this.life2 = data.remain_hp
           this.hp2 = Array.from(Array(this.life2).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh2")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair2 == this.king_pos) {
+            this.kingImage = this.img2
+          }
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character.image_name
           this.life3 = data.remain_hp
           this.hp3 = Array.from(Array(this.life3).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh3")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair3 == this.king_pos) {
+            this.kingImage = this.img3
+          }
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character.image_name
           this.life4 = data.remain_hp
           this.hp4 = Array.from(Array(this.life4).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh4")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair4 == this.king_pos) {
+            this.kingImage = this.img4
+          }
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character.image_name
           this.life5 = data.remain_hp
           this.hp5 = Array.from(Array(this.life5).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh5")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair5 == this.king_pos) {
+            this.kingImage = this.img5
+          }
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character.image_name
           this.life6 = data.remain_hp
           this.hp6 = Array.from(Array(this.life6).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh6")
-          icon.classList.add("lengths"+data.remain_hp)
+          icon.classList.add("lengths" + data.remain_hp)
+          if (this.chair6 == this.king_pos) {
+            this.kingImage = this.img6
+          }
         }
       }
 
@@ -944,6 +972,9 @@ export class GameStartComponent implements OnInit {
     }
 
   }
+
+
+
   setItem(type: any, card: any, object: any) {
     switch (type) {
       case 'weapon':
@@ -1142,24 +1173,24 @@ export class GameStartComponent implements OnInit {
       this.healSelected = this.healSelected.filter(hs => hs != event.target.value)
     }
   }
-  confirmRescue(){
-    if(this.healSelected.length == 1){
+  confirmRescue() {
+    if (this.healSelected.length == 1) {
       this.healSelected.forEach(ds => {
         this.handCard = this.handCard.filter(hc => hc.id != ds)
       });
       this.socket.emit("update inhand card", { code: this.roomcode, hand: this.handCard });
       this.api.dropCard(this.roomcode, this.healSelected).subscribe((data: any) => {
       });
-      this.socket.emit('rescue coma',{code: this.roomcode,target: this.comaPlayer});
+      this.socket.emit('rescue coma', { code: this.roomcode, target: this.comaPlayer });
       this.healCard = [];
       this.healSelected = [];
       this.rescue = false;
-    }else{
+    } else {
       alert('กรุณาเลือกการ์ดฟื้นฟู 1 ใบ');
     }
   }
-  ignoreRescue(){
-    this.socket.emit('ignore coma',{code: this.roomcode,target: this.comaPlayer});
+  ignoreRescue() {
+    this.socket.emit('ignore coma', { code: this.roomcode, target: this.comaPlayer });
     this.healCard = [];
     this.healSelected = [];
     this.rescue = false;
@@ -1484,12 +1515,12 @@ export class GameStartComponent implements OnInit {
         if (s_check) {
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
           });
-          this.socket.emit('force attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('force attack', { code: this.roomcode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck });
         } else {
           this.waitingDef = true;
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
           });
-          this.socket.emit('use attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck});
+          this.socket.emit('use attack', { code: this.roomcode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck });
         }
         this.luckyghostTarget = null;
         break;
@@ -1551,6 +1582,10 @@ export class GameStartComponent implements OnInit {
     this.showChat = !this.showChat
   }
 
+
+
+
+
   copyCodeToClipboard() {
     navigator.clipboard.writeText(this.roomcode);
     let a = this.elementRef.nativeElement.querySelector('.copy-noti');
@@ -1583,7 +1618,7 @@ export class GameStartComponent implements OnInit {
     if (this.myCharacter.char_name == 'luckyghost') {
       this.luckyghostTarget = data;
       this.dc_condition = 'luckyghost';
-      if( this.inGameChar.find(c => c.character.char_name == 'merguin')){
+      if (this.inGameChar.find(c => c.character.char_name == 'merguin')) {
         this.flexAction('merguin');
         this.waiting = true
         this.showTrigger = true
@@ -1596,7 +1631,7 @@ export class GameStartComponent implements OnInit {
       this.waitingDef = true;
       this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
       });
-      this.socket.emit('use attack',{code: this.roomcode,target: data,damage: this.damage(), card: this.cardCheck});
+      this.socket.emit('use attack', { code: this.roomcode, target: data, damage: this.damage(), card: this.cardCheck });
     }
 
   }
@@ -1623,7 +1658,7 @@ export class GameStartComponent implements OnInit {
             this.myEquipment.weapon = this.cardCheck;
             this.myEquipmentImage.weapon = cardInfo.image;
             this.attackDistance += cardInfo.distance;
-          }else{
+          } else {
             change = true;
             oldEquipment = this.myEquipment.weapon;
             this.attackDistance -= oldEquipment.info.distance;
@@ -1631,7 +1666,7 @@ export class GameStartComponent implements OnInit {
             this.myEquipmentImage.weapon = cardInfo.image;
             this.attackDistance += cardInfo.distance;
           }
-          if(cardInfo.item_name == 'wooden_club'){
+          if (cardInfo.item_name == 'wooden_club') {
             this.maxAttack = 100;
           }
           break;
@@ -1663,7 +1698,7 @@ export class GameStartComponent implements OnInit {
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = cardInfo.image;
               this.attackDistance += cardInfo.distance;
-            }else{
+            } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
               this.attackDistance -= oldEquipment.info.distance;
@@ -1811,14 +1846,14 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair2 == d.position) {
           this.chair2user = true
-          if(data.filter((dt:any) => dt.position == this.chair1 || dt.position == this.chair5 || dt.position == this.chair6).length >= 1){
-            if(data.find((dt:any) => dt.position == this.chair3)){
-              this.enemyDistance.push({ position: d.position, distance: 2})
-            }else{
-              this.enemyDistance.push({ position: d.position, distance: 1})
+          if (data.filter((dt: any) => dt.position == this.chair1 || dt.position == this.chair5 || dt.position == this.chair6).length >= 1) {
+            if (data.find((dt: any) => dt.position == this.chair3)) {
+              this.enemyDistance.push({ position: d.position, distance: 2 })
+            } else {
+              this.enemyDistance.push({ position: d.position, distance: 1 })
             }
-          }else{
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          } else {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
           if (d.sid == this.roomHost) {
             this.hosting2 = true
@@ -1843,14 +1878,14 @@ export class GameStartComponent implements OnInit {
         }
         else if (this.chair6 == d.position) {
           this.chair6user = true
-          if(data.filter((dt:any) => dt.position == this.chair3 || dt.position == this.chair2 || dt.position == this.chair1).length >= 1){
-            if(data.find((dt:any) => dt.position == this.chair5)){
-              this.enemyDistance.push({ position: d.position, distance: 2})
-            }else{
-              this.enemyDistance.push({ position: d.position, distance: 1})
+          if (data.filter((dt: any) => dt.position == this.chair3 || dt.position == this.chair2 || dt.position == this.chair1).length >= 1) {
+            if (data.find((dt: any) => dt.position == this.chair5)) {
+              this.enemyDistance.push({ position: d.position, distance: 2 })
+            } else {
+              this.enemyDistance.push({ position: d.position, distance: 1 })
             }
-          }else{
-            this.enemyDistance.push({ position: d.position, distance: 1})
+          } else {
+            this.enemyDistance.push({ position: d.position, distance: 1 })
           }
 
           if (d.sid == this.roomHost) {
