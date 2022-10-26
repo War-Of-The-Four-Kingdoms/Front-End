@@ -523,8 +523,8 @@ export class GameStartComponent implements OnInit {
           } else {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if (this.otherEquipment.chair1.mount2.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair1.mount2.card['distance']
+          if (this.otherEquipment.chair1.mount1.card != null) {
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair1.mount1.card['distance']
           }
         } else if (this.chair2 == d) {
           if (this.testing.filter((dt: any) => dt == this.chair1 || dt == this.chair5 || dt == this.chair6).length >= 1) {
@@ -536,18 +536,18 @@ export class GameStartComponent implements OnInit {
           } else {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if (this.otherEquipment.chair2.mount2.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair2.mount2.card['distance']
+          if (this.otherEquipment.chair2.mount1.card != null) {
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair2.mount1.card['distance']
           }
         } else if (this.chair3 == d) {
           this.enemyDistance.push({ position: d, distance: 1 })
-          if (this.otherEquipment.chair3.mount2.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair3.mount2.card['distance']
+          if (this.otherEquipment.chair3.mount1.card != null) {
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair3.mount1.card['distance']
           }
         } else if (this.chair5 == d) {
           this.enemyDistance.push({ position: d, distance: 1 })
-          if (this.otherEquipment.chair5.mount2.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair5.mount2.card['distance']
+          if (this.otherEquipment.chair5.mount1.card != null) {
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair5.mount1.card['distance']
           }
         }
         else if (this.chair6 == d) {
@@ -561,7 +561,7 @@ export class GameStartComponent implements OnInit {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
           if (this.otherEquipment.chair6.mount2.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount2.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount1.card['distance']
           }
         }
       });
@@ -781,7 +781,7 @@ export class GameStartComponent implements OnInit {
       } else {
         this.healCard = this.handCard.filter(hc => hc.info.item_name == 'heal');
       }
-      this.comaPlayer = data.position;
+      this.comaPlayer = this.others.find((o:any) => o.position == data.position);
       this.rescue = true;
     });
     this.socket.listen('coma rescued').subscribe((data: any) => {
@@ -1217,7 +1217,7 @@ export class GameStartComponent implements OnInit {
       this.socket.emit("update inhand card", { code: this.roomcode, hand: this.handCard });
       this.api.dropCard(this.roomcode, this.healSelected).subscribe((data: any) => {
       });
-      this.socket.emit('rescue coma', { code: this.roomcode, target: this.comaPlayer });
+      this.socket.emit('rescue coma', { code: this.roomcode, target: this.comaPlayer.position });
       this.healCard = [];
       this.healSelected = [];
       this.rescue = false;
@@ -1226,7 +1226,7 @@ export class GameStartComponent implements OnInit {
     }
   }
   ignoreRescue() {
-    this.socket.emit('ignore coma', { code: this.roomcode, target: this.comaPlayer });
+    this.socket.emit('ignore coma', { code: this.roomcode, target: this.comaPlayer.position });
     this.healCard = [];
     this.healSelected = [];
     this.rescue = false;
@@ -1764,14 +1764,14 @@ export class GameStartComponent implements OnInit {
             if (this.myEquipment.mount2 == null) {
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = this.urls+cardInfo.image;
-              this.attackDistance += cardInfo.distance;
+              this.attackDistance -= cardInfo.distance;
             } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
               this.attackDistance -= oldEquipment.info.distance;
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = this.urls+cardInfo.image;
-              this.attackDistance += cardInfo.distance;
+              this.attackDistance -= cardInfo.distance;
               //attackDistance +
             }
           }

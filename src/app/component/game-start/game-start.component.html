@@ -45,7 +45,7 @@
       <div class="d-flex justify-content-center m-0 w-100 py-5">
         <input type="checkbox" class="dropcard-checkbox stealSelect" value="1" id="p1"
           (change)="checkedSteal($event)" />
-        <label for='p1' class="player-coma d-flex justify-content-center align-items-center mx-3">&nbsp;safs</label>
+        <label for='p1' class="player-coma d-flex justify-content-center align-items-center mx-3">&nbsp;{{ this.comaPlayer.username }}</label>
       </div>
       <div class="card-canvas d-flex flex-wrap justify-content-center">
         <div class="m-0 p-0" *ngFor="let healcard of this.healCard">
@@ -96,7 +96,7 @@
     <div class="card-canvas d-flex flex-wrap justify-content-center" *ngIf="!this.dropFire">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
-          (change)="checkedState($event)" />      
+          (change)="checkedState($event)" />
         <label for='c{{handcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+handcard.info.image}}></label>
       </div>
     </div>
