@@ -560,7 +560,7 @@ export class GameStartComponent implements OnInit {
           } else {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
-          if (this.otherEquipment.chair6.mount2.card != null) {
+          if (this.otherEquipment.chair6.mount1.card != null) {
             this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount1.card['distance']
           }
         }
