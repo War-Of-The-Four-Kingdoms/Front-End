@@ -205,6 +205,7 @@
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
       <button class="player-give-select mx-3" *ngFor="let other of this.others"
         (click)="giveCardToPlayer(other.uuid)">{{ other.username }}</button>
+        <!-- เพิ่มอวตาร์-->
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
       <button *ngIf="this.myCharacter.char_name == 'puta'" class="putaFin" (click)="putaFinish()">
@@ -259,6 +260,7 @@
           (change)="checkedSteal($event)" />
         <label for='p{{ other.uuid }}' class="player-steal-select d-flex justify-content-center align-items-center mx-3"
           [ngClass]="{stealed:other.stealed}">&nbsp;{{ other.username }}</label>
+          <!-- เพิ่มอวตาร์-->
       </div>
     </div>
 
