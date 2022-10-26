@@ -1652,11 +1652,13 @@ export class GameStartComponent implements OnInit {
 
   activateMoon(data: any) {
     this.activingCard = !this.activingCard;
+    if(data != null){
     if (data.startsWith("../assets/picture/card/")) {
       data = data
     } else {
       data = "../assets/picture/card/" + data
     }
+  }
     this.showingCard = data
     console.log(this.activingCard);
 
