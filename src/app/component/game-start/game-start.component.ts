@@ -444,7 +444,7 @@ export class GameStartComponent implements OnInit {
             setTimeout(() => {
               this.currentQueue = 'drop';
               this.dropQueue = new Queue<Object>();
-              if (this.handCard.length > this.life4) {
+              if (this.handCard.length > this.hp4.length) {
                 this.dropQueue.enqueue({ waiting: false, name: 'drop' });
               }
               this.turnChange = false
@@ -500,6 +500,9 @@ export class GameStartComponent implements OnInit {
       this.youLose = true;
     });
     this.socket.listen('player died').subscribe((data: any) => {
+      if(this.waitingLegionDrop){
+        this.waitingLegionDrop = false;
+      }
       this.quitRage.push(data.position)
       this.others = this.others.filter((o: any) => o.position != data.position);
       this.testing = this.testing.filter((t: any) => t != data.position);
@@ -607,8 +610,7 @@ export class GameStartComponent implements OnInit {
       for (let i = 0; i < data.damage; i++) {
         this.hp4.splice(-1)
       }
-      this.life4 -= data.damage;
-      this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+      this.socket.emit('update hp', { code: this.roomcode, hp: this.hp4.length });
       if(data.legion){
         this.legionDrop = true;
         this.showDropTemplate = true;
@@ -617,20 +619,15 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('update remain hp').subscribe((data: any) => {
 
       if (this.chair1 == data.position) {
-        this.updateHp(this.hp1, data.hp - this.life1);
-        this.life1 = data.hp
+        this.updateHp(this.hp1, data.hp - this.hp1.length);
       } else if (this.chair2 == data.position) {
-        this.updateHp(this.hp2, data.hp - this.life2);
-        this.life2 = data.hp
+        this.updateHp(this.hp2, data.hp - this.hp2.length);
       } else if (this.chair3 == data.position) {
-        this.updateHp(this.hp3, data.hp - this.life3);
-        this.life3 = data.hp
+        this.updateHp(this.hp3, data.hp - this.hp3.length);
       } else if (this.chair5 == data.position) {
-        this.updateHp(this.hp5, data.hp - this.life5);
-        this.life5 = data.hp
+        this.updateHp(this.hp5, data.hp - this.hp5.length);
       } else if (this.chair6 == data.position) {
-        this.updateHp(this.hp6, data.hp - this.life6);
-        this.life6 = data.hp
+        this.updateHp(this.hp6, data.hp - this.hp6.length);
       }
     });
 
@@ -811,13 +808,12 @@ export class GameStartComponent implements OnInit {
       console.log(data);
 
       if (data.legion) {
-        console.log('life4 ' + this.life4);
+        console.log('life4 ' + this.hp4.length);
         console.log(this.maxHp);
 
-        if (this.life4 < this.maxHp) {
-          this.life4 += 1;
+        if (this.hp4.length < this.maxHp) {
           this.updateHp(this.hp4, 1);
-          this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+          this.socket.emit('update hp', { code: this.roomcode, hp: this.hp4.length });
         } else {
           this.api.drawCard(this.roomcode, 1).subscribe((data: any) => {
             this.test555 = true
@@ -903,8 +899,7 @@ export class GameStartComponent implements OnInit {
       this.inGameChar.push(data);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character.image_name
-        this.life4 = data.remain_hp
-        this.hp4 = Array.from(Array(this.life4).keys())
+        this.hp4 = Array.from(Array(data.remain_hp).keys())
         let icon = this.elementRef.nativeElement.querySelector("#myh")
         icon.classList.add("length" + data.remain_hp)
         console.log(icon);
@@ -914,8 +909,7 @@ export class GameStartComponent implements OnInit {
       } else {
         if (this.chair1 == data.position) {
           this.img1 = "../assets/picture/card/" + data.character.image_name
-          this.life1 = data.remain_hp
-          this.hp1 = Array.from(Array(this.life1).keys())
+          this.hp1 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh1")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair1 == this.king_pos) {
@@ -923,8 +917,7 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair2 == data.position) {
           this.img2 = "../assets/picture/card/" + data.character.image_name
-          this.life2 = data.remain_hp
-          this.hp2 = Array.from(Array(this.life2).keys())
+          this.hp2 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh2")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair2 == this.king_pos) {
@@ -932,8 +925,7 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair3 == data.position) {
           this.img3 = "../assets/picture/card/" + data.character.image_name
-          this.life3 = data.remain_hp
-          this.hp3 = Array.from(Array(this.life3).keys())
+          this.hp3 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh3")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair3 == this.king_pos) {
@@ -941,8 +933,7 @@ export class GameStartComponent implements OnInit {
           }
         } else if (this.chair4 == data.position) {
           this.img4 = "../assets/picture/card/" + data.character.image_name
-          this.life4 = data.remain_hp
-          this.hp4 = Array.from(Array(this.life4).keys())
+          this.hp4 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh4")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair4 == this.king_pos) {
@@ -951,8 +942,7 @@ export class GameStartComponent implements OnInit {
         }
         else if (this.chair5 == data.position) {
           this.img5 = "../assets/picture/card/" + data.character.image_name
-          this.life5 = data.remain_hp
-          this.hp5 = Array.from(Array(this.life5).keys())
+          this.hp5 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh5")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair5 == this.king_pos) {
@@ -961,8 +951,7 @@ export class GameStartComponent implements OnInit {
         }
         else if (this.chair6 == data.position) {
           this.img6 = "../assets/picture/card/" + data.character.image_name
-          this.life6 = data.remain_hp
-          this.hp6 = Array.from(Array(this.life6).keys())
+          this.hp6 = Array.from(Array(data.remain_hp).keys())
           let icon = this.elementRef.nativeElement.querySelector("#myh6")
           icon.classList.add("lengths" + data.remain_hp)
           if (this.chair6 == this.king_pos) {
@@ -1185,7 +1174,7 @@ export class GameStartComponent implements OnInit {
   }
   checkedState(event: any) {
     let dropnum: any = 0;
-    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.life4; ;
+    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.hp4.length; ;
     if (event.target.checked === true) {
       if (this.selectedItems.length < dropnum) {
         this.selectedItems.push(event.target.value)
@@ -1313,8 +1302,7 @@ export class GameStartComponent implements OnInit {
   }
 
   putaFinish() {
-    if (this.putaGiveCount >= 2 && this.life4 < this.maxHp) {
-      this.life4 += 1;
+    if (this.putaGiveCount >= 2 && this.hp4.length < this.maxHp) {
       this.updateHp(this.hp4, 1);
     }
     this.selectedItems = [];
@@ -1372,9 +1360,9 @@ export class GameStartComponent implements OnInit {
 
   dropSelectedCard() {
     let dropnum: any = 0;
-    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.life4
+    this.legionDrop ? dropnum = 1 : dropnum = this.handCard.length - this.hp4.length
     if (this.selectedItems.length != dropnum) {
-      alert('เลือกการ์ดอีก ' + ((this.handCard.length - this.life4) - this.selectedItems.length) + ' ใบ')
+      alert('เลือกการ์ดอีก ' + ((this.handCard.length - this.hp4.length) - this.selectedItems.length) + ' ใบ')
     } else {
       this.dropFire = true
       setTimeout(() => {
@@ -1463,7 +1451,7 @@ export class GameStartComponent implements OnInit {
     if (this.myPos == this.queue && this.currentQueue == 'play') {
       if (card.info.item_name == 'attack' && this.attackCount < this.maxAttack) {
         return true;
-      } else if (card.info.item_name == 'heal' && this.life4 < this.maxHp) {
+      } else if (card.info.item_name == 'heal' && this.hp4.length < this.maxHp) {
         return true;
       } else if (card.info.type == "trick" || card.info.type == "equipment") {
         return true;
@@ -1490,7 +1478,7 @@ export class GameStartComponent implements OnInit {
         case 'active':
           if (card.info.item_name == 'attack' && this.attackCount < this.maxAttack) {
             this.canUse = true;
-          } else if (card.info.item_name == 'heal' && this.life4 < this.maxHp) {
+          } else if (card.info.item_name == 'heal' && this.hp4.length < this.maxHp) {
             this.canUse = true;
           }
           break;
@@ -1800,23 +1788,23 @@ export class GameStartComponent implements OnInit {
               let armor: any = null;
               switch (b) {
                 case 1:
-                  hp = this.life1;
+                  hp = this.hp1.length
                   armor = this.otherEquipment.chair1.armor.card;
                   break;
                 case 2:
-                  hp = this.life2;
+                  hp = this.hp2.length;
                   armor = this.otherEquipment.chair2.armor.card;
                   break;
                 case 3:
-                  hp = this.life3;
+                  hp = this.hp3.length;
                   armor = this.otherEquipment.chair3.armor.card;
                   break;
                 case 5:
-                  hp = this.life5;
+                  hp = this.hp5.length;
                   armor = this.otherEquipment.chair5.armor.card;
                   break;
                 case 6:
-                  hp = this.life6;
+                  hp = this.hp6.length;
                   armor = this.otherEquipment.chair6.armor.card;
                   break;
               }
@@ -1864,10 +1852,9 @@ export class GameStartComponent implements OnInit {
         }
       }
     }else if (cardInfo.item_name == "heal") {
-      if(this.life4 < this.maxHp){
-        this.life4 += 1;
+      if(this.hp4.length < this.maxHp){
         this.hp4.push(0);
-        this.socket.emit('update hp', { code: this.roomcode, hp: this.life4 });
+        this.socket.emit('update hp', { code: this.roomcode, hp: this.hp4.length });
         this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
         this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
         this.cardShow = false
