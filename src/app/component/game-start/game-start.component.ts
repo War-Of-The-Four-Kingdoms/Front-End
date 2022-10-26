@@ -999,6 +999,7 @@ export class GameStartComponent implements OnInit {
   }
 
   closeAll() {
+    this.canAttack = false;
     this.cardShow = false;
     this.showGiveCard = false;
     this.showDecisionTemplate = false;
@@ -1651,6 +1652,11 @@ export class GameStartComponent implements OnInit {
 
   activateMoon(data: any) {
     this.activingCard = !this.activingCard;
+    if (data.startsWith("../assets/picture/card/")) {
+      data = data
+    } else {
+      data = "../assets/picture/card/" + data
+    }
     this.showingCard = data
     console.log(this.activingCard);
 
@@ -1665,14 +1671,14 @@ export class GameStartComponent implements OnInit {
         case 'weapon':
           if (this.myEquipment.weapon == null) {
             this.myEquipment.weapon = this.cardCheck;
-            this.myEquipmentImage.weapon = cardInfo.image;
+            this.myEquipmentImage.weapon = this.urls+cardInfo.image;
             this.attackDistance += cardInfo.distance;
           } else {
             change = true;
             oldEquipment = this.myEquipment.weapon;
             this.attackDistance -= oldEquipment.info.distance;
             this.myEquipment.weapon = this.cardCheck;
-            this.myEquipmentImage.weapon = cardInfo.image;
+            this.myEquipmentImage.weapon = this.urls+cardInfo.image;
             this.attackDistance += cardInfo.distance;
           }
           if (cardInfo.item_name == 'wooden_club') {
@@ -1682,37 +1688,37 @@ export class GameStartComponent implements OnInit {
         case 'armor':
           if (this.myEquipment.armor == null) {
             this.myEquipment.armor = this.cardCheck;
-            this.myEquipmentImage.armor = cardInfo.image;
+            this.myEquipmentImage.armor = this.urls+cardInfo.image;
           } else {
             change = true;
             oldEquipment = this.myEquipment.armor;
             this.myEquipment.armor = this.cardCheck;
-            this.myEquipmentImage.armor = cardInfo.image;
+            this.myEquipmentImage.armor = this.urls+cardInfo.image;
           }
           break;
         case 'mount':
           if (cardInfo.distance == 1) {
             if (this.myEquipment.mount1 == null) {
               this.myEquipment.mount1 = this.cardCheck;
-              this.myEquipmentImage.mount1 = cardInfo.image;
+              this.myEquipmentImage.mount1 = this.urls+cardInfo.image;
             } else {
               change = true;
               oldEquipment = this.myEquipment.mount1;
               this.myEquipment.mount1 = this.cardCheck;
-              this.myEquipmentImage.mount1 = cardInfo.image;
+              this.myEquipmentImage.mount1 = this.urls+cardInfo.image;
             }
 
           } else {
             if (this.myEquipment.mount2 == null) {
               this.myEquipment.mount2 = this.cardCheck;
-              this.myEquipmentImage.mount2 = cardInfo.image;
+              this.myEquipmentImage.mount2 = this.urls+cardInfo.image;
               this.attackDistance += cardInfo.distance;
             } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
               this.attackDistance -= oldEquipment.info.distance;
               this.myEquipment.mount2 = this.cardCheck;
-              this.myEquipmentImage.mount2 = cardInfo.image;
+              this.myEquipmentImage.mount2 = this.urls+cardInfo.image;
               this.attackDistance += cardInfo.distance;
               //attackDistance +
             }
@@ -2019,6 +2025,15 @@ export class GameStartComponent implements OnInit {
   }
 
   pass(): void {
+    if(this.canAttack == true){
+    for (let index = 1; index < 7; index++) {
+      if(this.chairPos[index] != this.myPos){
+      let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(index))
+      icon.className = 'none';
+      }
+    }
+  }
+    this.closeAll();
     clearInterval(this.interval);
     this.socket.emit('end stage', { code: this.lobbyCode });
   }
