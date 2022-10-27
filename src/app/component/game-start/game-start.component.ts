@@ -487,6 +487,9 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
     this.socket.listen('you died').subscribe((data: any) => {
+      if(this.legionDrop){
+        this.legionDrop = false;
+      }
       this.coma = false;
       let handc: any[] = [];
       this.handCard.forEach(hc => {
@@ -508,7 +511,7 @@ export class GameStartComponent implements OnInit {
       });
       this.handCard = [];
       this.socket.emit("update inhand card", { code: this.roomcode, hand: this.handCard });
-      this.youLose = true;
+      this.youDied = true;
     });
     this.socket.listen('player died').subscribe((data: any) => {
       if(this.waitingLegionDrop){
@@ -619,14 +622,23 @@ export class GameStartComponent implements OnInit {
       this.incomingDamage = data.damage;
       this.showSelectDef = true;
     });
+    this.socket.listen('target no handcard').subscribe((data: any) => {
+      this.waitingLegionDrop = false;
+      this.canPass = true;
+    });
     this.socket.listen('damaged').subscribe((data: any) => {
       for (let i = 0; i < data.damage; i++) {
         this.hp4.splice(-1)
       }
       this.socket.emit('update hp', { code: this.roomcode, hp: this.hp4.length });
       if(data.legion){
-        this.legionDrop = true;
-        this.showDropTemplate = true;
+        if(this.handCard.length > 0){
+          this.legionDrop = true;
+          this.showDropTemplate = true;
+        }else{
+          this.socket.emit('no hand card', { code: this.roomcode});
+        }
+
       }
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
@@ -1680,7 +1692,7 @@ export class GameStartComponent implements OnInit {
 
 
   cfKill(data: any) {
-    this.canPass = true;
+    this.canPass = false;
     this.attackCount++;
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
