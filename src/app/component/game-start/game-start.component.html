@@ -185,7 +185,7 @@
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
           (change)="checkedMerguin($event)" />
-        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+handcard.info.image}}></label>
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
@@ -424,7 +424,7 @@
     </div>
     <!-- pass button -->
 
-    <div class="wrapper" *ngIf="this.myPos == this.queue">
+    <div class="wrapper" *ngIf="this.myPos == this.queue && this.canPass">
       <div class="link_wrapper">
         <a (click)="pass()">Next Stage</a>
         <div class="icon">

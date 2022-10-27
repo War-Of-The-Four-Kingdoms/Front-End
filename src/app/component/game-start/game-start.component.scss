@@ -7,7 +7,7 @@
   width: 450px;
   height: 600px;
   background-color: red;
-  z-index: 9000;
+  z-index: 8000;
   top: 18%;
   left: 39%;
   border-radius: 10px;
@@ -37,7 +37,7 @@
   position: absolute;
   width: 450px;
   height: 600px;
-  z-index: 9000;
+  z-index: 8000;
   top: 18%;
   left: 10%;
   border-radius: 10px;
@@ -370,7 +370,7 @@
   background-color: rgba(109, 107, 107, 0.651);
   height: 200px;
   transform: skew(-25deg);
-  z-index: 9001;
+  z-index: 9005;
   text-align: center;
   animation: phraseChange 2s;
 }
@@ -402,7 +402,7 @@
   display: flex;
   justify-content: space-around;
   perspective: 800px;
-  z-index: 9999;
+  z-index: 9003;
   top: 150%;
   left: 25%;
   animation: decrease 3.5s;
@@ -803,7 +803,7 @@
   top: 50%;
   left: 50%;
   position: absolute;
-  z-index: 9998;
+  z-index: 9990;
 }
 
 body {
@@ -1133,7 +1133,7 @@ body {
   width: 850px;
   height: 200px;
   border-radius: 5px;
-  z-index: 9999;
+  z-index: 9990;
 
 }
 
@@ -1452,7 +1452,7 @@ body {
   color: #fff;
   font-size: 67px;
   text-align: center;
-  z-index: 9999;
+  z-index: 9990;
 }
 
 
@@ -1691,7 +1691,7 @@ body {
   height: 8em;
   object-fit: cover;
   width: 8em;
-  z-index: 9999;
+  z-index: 9990;
 }
 
 .effect-pattern {
@@ -1700,7 +1700,7 @@ body {
   height: 8em;
   object-fit: cover;
   width: 8em;
-  z-index: 9999;
+  z-index: 9990;
   position: absolute;
 }
 
@@ -2185,7 +2185,7 @@ a:hover+.icon {
   width: 350px;
   height: 560px;
   position: absolute;
-  z-index: 9999;
+  z-index: 9990;
   top: 0;
   animation: burnbaby 1.5s;
   background-color: rgb(49, 19, 1);
@@ -3296,7 +3296,7 @@ input[type=checkbox]:checked+label {
   width: 850px;
   height: 200px;
   border-radius: 5px;
-  z-index: 9999;
+  z-index: 9990;
 }
 
 .useButton {
@@ -3404,7 +3404,7 @@ input[type=checkbox]:checked+label {
 
 .winlose {
   position: absolute;
-  z-index: 9000;
+  z-index: 9999;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.87);
@@ -3432,7 +3432,7 @@ input[type=checkbox]:checked+label {
 
 .rescueBack {
   position: absolute;
-  z-index: 30;
+  z-index: 9999;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.829);
@@ -3450,7 +3450,7 @@ input[type=checkbox]:checked+label {
 }
 
 .rescue:hover {
-  z-index: 100;
+  z-index: 9999;
   transform: scale(1.2);
 }
 
