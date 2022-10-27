@@ -52,7 +52,7 @@
         <div class="m-0 p-0" *ngFor="let healcard of this.healCard">
           <input type="checkbox" class="dropcard-checkbox" value="{{healcard.id}}" id="c{{healcard.id}}"
             (change)="checkedHeal($event)" />
-          <label for='c{{healcard.id}}' class="rescue">&nbsp;{{ healcard.info.name }}</label>
+          <label for='c{{healcard.id}}' class="rescue">&nbsp;<img class="popupCards"  src={{this.urls+healcard.info.image}}></label>
         </div>
       </div>
       <div class="m-0 p-0 w-100 d-flex justify-content-center my-5">
