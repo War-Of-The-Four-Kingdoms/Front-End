@@ -129,6 +129,7 @@ export class GameStartComponent implements OnInit {
   othersHandCard: any[] = [];
   legionTemp: boolean = false;
  //processing
+  canPass: boolean = false;
   youLose: boolean = false;
   youWin: boolean = false;
   coma: boolean = false;
@@ -211,6 +212,7 @@ export class GameStartComponent implements OnInit {
   waitingKingSelect: boolean = false;
   kingImage: any;
   foxiaLuck: any;
+
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -313,13 +315,13 @@ export class GameStartComponent implements OnInit {
         }
       }
     });
-    if (this.started) {
-      window.addEventListener("beforeunload", function (e) {
-        var confirmationMessage = "You will lost the process.";
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-      });
-    }
+
+    window.addEventListener("beforeunload", function (e) {
+      var confirmationMessage = "You will lost the process.";
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    });
+
     this.socket.listen('next turn').subscribe((pos: any) => {
       this.clock = true
       // if (this.myPos == pos) {
@@ -379,6 +381,7 @@ export class GameStartComponent implements OnInit {
       if (data.position == this.myPos) {
         switch (data.stage) {
           case 'prepare':
+            this.canPass = false;
             this.drawAdjust = 0;
             this.currentQueue = 'prepare';
             this.prepareQueue = new Queue<Object>();
@@ -391,6 +394,7 @@ export class GameStartComponent implements OnInit {
             this.prepareStage();
             break;
           case 'decide':
+            this.canPass = false;
             this.currentQueue = 'decide';
             this.decideQueue = new Queue<Object>();
 
@@ -405,6 +409,7 @@ export class GameStartComponent implements OnInit {
             this.decideStage();
             break;
           case 'draw':
+            this.canPass = false;
             this.textTurn = "DRAW PHARSE"
             this.turnChange = true
             setTimeout(() => {
@@ -428,6 +433,7 @@ export class GameStartComponent implements OnInit {
             }, 2000);
             break;
           case 'play':
+            this.canPass = true;
             this.textTurn = "ACTION PHARSE"
             this.attackCount = 0;
             this.turnChange = true
@@ -439,6 +445,7 @@ export class GameStartComponent implements OnInit {
             }, 2000);
             break;
           case 'drop':
+            this.canPass = false;
             this.textTurn = "DROP PHARSE"
             this.turnChange = true
             setTimeout(() => {
@@ -452,6 +459,7 @@ export class GameStartComponent implements OnInit {
             }, 2000);
             break;
           case 'end':
+            this.canPass = false;
             this.currentQueue = 'end';
             this.endQueue = new Queue<Object>();
             this.endStage();
@@ -571,18 +579,19 @@ export class GameStartComponent implements OnInit {
     })
     this.socket.listen('you win').subscribe((data: any) => {
       this.youWin = true;
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 5000);
+      // setTimeout(() => {
+      //   window.location.href = '/';
+      // }, 5000);
     })
     this.socket.listen('you lose').subscribe((data: any) => {
       this.youLose = true;
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 5000);
+      // setTimeout(() => {
+      //   window.location.href = '/';
+      // }, 5000);
     })
     this.socket.listen('legion dropped').subscribe((data: any) => {
       this.waitingLegionDrop = false;
+      this.canPass = true;
     })
     this.socket.listen('waiting king select').subscribe((data: any) => {
       this.waitingKingSelect = true;
@@ -634,7 +643,7 @@ export class GameStartComponent implements OnInit {
     this.socket.emit('get room info', { code: this.roomcode, max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     this.socket.listen('need more player').subscribe(() => {
       this.started = false
-      alert('This game require atleast 4 players.')
+      alert('ต้องการผู้เล่นอย่างน้อย 4 คนในการเล่น')
     });
     this.socket.listen('update inhand').subscribe((data: any) => {
       if (data.position != this.myPos) {
@@ -805,7 +814,6 @@ export class GameStartComponent implements OnInit {
 
     });
     this.socket.listen('attack success').subscribe((data: any) => {
-      console.log(data);
 
       if (data.legion) {
         console.log('life4 ' + this.hp4.length);
@@ -830,8 +838,10 @@ export class GameStartComponent implements OnInit {
         }
       }
       this.waitingDef = false;
+      this.canPass = true;
       if(this.myCharacter.char_name == 'legioncommander'){
         this.waitingLegionDrop = true;
+        this.canPass = false;
       }
     });
     this.socket.listen('attack fail').subscribe((data: any) => {
@@ -1379,6 +1389,7 @@ export class GameStartComponent implements OnInit {
         if(this.legionDrop){
           this.socket.emit("legion drop done", { code: this.roomcode});
           this.legionDrop = false;
+
         }else{
           this.next_queue();
         }
@@ -1560,6 +1571,7 @@ export class GameStartComponent implements OnInit {
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
           });
           this.socket.emit('force attack',{code: this.roomcode,target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck , legion: false});
+          this.canPass = true;
         } else {
           this.waitingDef = true;
           this.api.dropCard(this.roomcode, [this.cardCheck.id]).subscribe((data: any) => {
@@ -1648,6 +1660,7 @@ export class GameStartComponent implements OnInit {
 
 
   cfKill(data: any) {
+    this.canPass = true;
     this.attackCount++;
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
@@ -1869,6 +1882,9 @@ export class GameStartComponent implements OnInit {
       this.socket.emit('king selected', { cid: char.id, code: this.roomcode });
     }else{
       this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
+    }
+    if(char.char_name == 'lucifer'){
+      this.cardMethod(char.char_name);
     }
     this.myCharacter = char
     this.maxHp = char.hp + (this.extra_hp != undefined ? this.extra_hp : 0);
@@ -2214,7 +2230,7 @@ export class GameStartComponent implements OnInit {
   }
 
   luciferEffect(): void {
-    this.maxAttack = 10
+    this.maxAttack = 100;
   }
 
   bloodyknightEffect(): void {
