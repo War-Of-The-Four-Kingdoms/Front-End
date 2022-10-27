@@ -867,6 +867,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('attack fail').subscribe((data: any) => {
       this.waitingDef = false;
+      this.canPass = true;
     });
     this.socket.listen('change equipment image').subscribe((data: any) => {
       if (this.otherEquipment.chair1.position == data.position) {
