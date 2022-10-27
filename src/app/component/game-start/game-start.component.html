@@ -45,7 +45,8 @@
       <div class="d-flex justify-content-center m-0 w-100 py-5">
         <input type="checkbox" class="dropcard-checkbox stealSelect" value="1" id="p1"
           (change)="checkedSteal($event)" />
-        <label for='p1' class="player-coma d-flex justify-content-center align-items-center mx-3">&nbsp;{{ this.comaPlayer.username }}</label>
+        <label for='p1' class="player-coma d-flex justify-content-center align-items-center mx-3">&nbsp;<img class="image-coma"  src={{this.urluser+convert(this.comaPlayer.position)}}></label>
+        <!-- เพิ่มอวตาร์-->
       </div>
       <div class="card-canvas d-flex flex-wrap justify-content-center">
         <div class="m-0 p-0" *ngFor="let healcard of this.healCard">
@@ -199,12 +200,13 @@
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
           (change)="checkedGive($event)" />
-        <label for='c{{handcard.id}}' class="carddrop">&nbsp;{{ handcard.info.name }}</label>
+        <label for='c{{handcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+handcard.info.image}}></label>
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
-      <button class="player-give-select mx-3" *ngFor="let other of this.others"
-        (click)="giveCardToPlayer(other.uuid)">{{ other.username }}</button>
+
+      <div class="player-give-select mx-3" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)"> <img class="popupCard" *ngFor="let other of this.others"  src={{this.urluser+convert(other.position)}}></div>
+      
         <!-- เพิ่มอวตาร์-->
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
@@ -259,7 +261,7 @@
         <input type="checkbox" class="dropcard-checkbox stealSelect" value="{{ other.uuid }}" id="p{{ other.uuid }}"
           (change)="checkedSteal($event)" />
         <label for='p{{ other.uuid }}' class="player-steal-select d-flex justify-content-center align-items-center mx-3"
-          [ngClass]="{stealed:other.stealed}">&nbsp;{{ other.username }}</label>
+          [ngClass]="{stealed:other.stealed}">&nbsp;<img class="circleCard"  src={{this.urluser+convert(other.position)}}></label>
           <!-- เพิ่มอวตาร์-->
       </div>
     </div>
@@ -524,7 +526,7 @@
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1">
         <img
           [ngClass]="{circle2: this.chair1 == this.queue, circle: this.chair1 != this.queue,circleLeave:this.quitRage.includes(this.chair1) && this.chair1 != this.queue}"
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair1user"><img
+          src={{this.urluser+convert(this.chairPos[1])}} alt="Tyler" *ngIf="this.chair1user"><img
           class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown1"></div>
     </div>
 
@@ -556,7 +558,7 @@
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler"
           *ngIf="this.hosting6"><img
           [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave:this.quitRage.includes(this.chair6) && this.chair6 != this.queue}"
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair6user"><img
+          src={{this.urluser+convert(this.chairPos[6])}} alt="Tyler" *ngIf="this.chair6user"><img
           class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
 
     </div>
@@ -588,7 +590,7 @@
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
         <img
           [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave:this.quitRage.includes(this.chair2) && this.chair2 != this.queue}"
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair2user"><img
+          src={{this.urluser+convert(this.chairPos[2])}} alt="Tyler" *ngIf="this.chair2user"><img
           class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2"></div>
 
     </div>
@@ -621,7 +623,7 @@
       </div>
       <img
         [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave:this.quitRage.includes(this.chair5) && this.chair5 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair5user">
+        src={{this.urluser+convert(this.chairPos[5])}} alt="Tyler" *ngIf="this.chair5user">
       <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
     </div>
     <div class="user3" id="chair3">
@@ -652,7 +654,7 @@
       </div>
       <img
         [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair3user"><img
+        src={{this.urluser+convert(this.chairPos[3])}} alt="Tyler" *ngIf="this.chair3user"><img
         class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
     </div>
     <div class="user4" id="chair4">
@@ -663,7 +665,7 @@
       </div>
       <div> <img
           [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave:this.quitRage.includes(this.chair4) && this.chair4 != this.queue}"
-          src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg" alt="Tyler" *ngIf="this.chair4user"> <img
+          src={{this.urluser+convert(this.chairPos[4])}} alt="Tyler" *ngIf="this.chair4user"> <img
           class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4"><img
           class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown4">
       </div>

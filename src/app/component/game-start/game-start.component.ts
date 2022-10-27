@@ -13,6 +13,7 @@ import { query } from '@angular/animations';
 })
 export class GameStartComponent implements OnInit {
   urls:any = "../assets/picture/card/"
+  urluser:any = "../assets/picture/card/user"
   dropFire: boolean = false;
   turnChange: boolean = false;
   textTurn: any = "";
@@ -779,6 +780,8 @@ export class GameStartComponent implements OnInit {
         this.healCard = this.handCard.filter(hc => hc.info.item_name == 'heal');
       }
       this.comaPlayer = this.others.find((o:any) => o.position == data.position);
+      console.log(this.comaPlayer);
+      
       this.rescue = true;
     });
     this.socket.listen('coma rescued').subscribe((data: any) => {
@@ -892,6 +895,8 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('set player info').subscribe((data: any) => {
       this.players = data.players;
       this.others = data.players.filter((p: any) => p.id != this.myPosId);
+      console.log(this.others);
+      
     });
 
     this.socket.listen('set player character').subscribe((data: any) => {
@@ -1435,6 +1440,9 @@ export class GameStartComponent implements OnInit {
     // }
 
     this.showTrigger = false
+  }
+  convert(data:any){
+    return data+".png"
   }
 
   loopChair() {
