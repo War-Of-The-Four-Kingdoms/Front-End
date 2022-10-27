@@ -511,6 +511,7 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('player died').subscribe((data: any) => {
       if(this.waitingLegionDrop){
         this.waitingLegionDrop = false;
+        this.canPass = true;
       }
       this.quitRage.push(data.position)
       this.others = this.others.filter((o: any) => o.position != data.position);
