@@ -3404,7 +3404,7 @@ input[type=checkbox]:checked+label {
 
 .winlose {
   position: absolute;
-  z-index: 9999;
+  z-index: 9998;
   width: 1920px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.87);
@@ -3580,4 +3580,11 @@ input[type=checkbox]:checked+label {
 .rescueButton:disabled {
   cursor: default;
   opacity: .24;
+}
+
+.diedButton{
+  position: absolute;
+  z-index: 9998;
+  width: 1920px;
+  top: 70%;
 }

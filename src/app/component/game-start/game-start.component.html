@@ -21,8 +21,21 @@
     </div>
   </div>
   <!--  -->
+<!-- died -->
+<div *ngIf="this.youDied" class="winlose d-flex align-items-center">
+  <div class="loser d-flex justify-content-center align-items-center">
+    <div class="row w-50 mx-auto d-flex justify-content-center">
+      คุณตายแล้ว
+    </div>
+  </div>
+</div>
+<div *ngIf="this.youDied" class="diedButton d-flex justify-content-center align-content-center">
+  <button class="rescueButton mx-5" (click)="spectate()">ดูต่อ</button>
+  <button class="rescueButton mx-5" (click)="leaveNow()">ออก</button>
+</div>
 
-   <!-- died -->
+<!--  -->
+   <!-- win -->
    <div *ngIf="this.youWin" class="winlose d-flex align-items-center">
     <div class="winner d-flex justify-content-center align-items-center">
       <div class="row w-50 mx-auto d-flex justify-content-center">
@@ -206,7 +219,7 @@
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
 
       <div class="player-give-select mx-3" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)"> <img class="popupCard" *ngFor="let other of this.others"  src={{this.urluser+convert(other.position)}}></div>
-      
+
         <!-- เพิ่มอวตาร์-->
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">

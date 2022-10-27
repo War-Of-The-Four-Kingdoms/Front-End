@@ -131,6 +131,7 @@ export class GameStartComponent implements OnInit {
   legionTemp: boolean = false;
  //processing
   canPass: boolean = false;
+  youDied: boolean = false;
   youLose: boolean = false;
   youWin: boolean = false;
   coma: boolean = false;
@@ -317,11 +318,11 @@ export class GameStartComponent implements OnInit {
       }
     });
 
-    window.addEventListener("beforeunload", function (e) {
-      var confirmationMessage = "You will lost the process.";
-      e.returnValue = confirmationMessage;
-      return confirmationMessage;
-    });
+    // window.addEventListener("beforeunload", function (e) {
+    //   var confirmationMessage = "You will lost the process.";
+    //   e.returnValue = confirmationMessage;
+    //   return confirmationMessage;
+    // });
 
     this.socket.listen('next turn').subscribe((pos: any) => {
       this.clock = true
@@ -506,6 +507,7 @@ export class GameStartComponent implements OnInit {
       this.api.dropCard(this.roomcode, handc).subscribe((data: any) => {
       });
       this.handCard = [];
+      this.socket.emit("update inhand card", { code: this.roomcode, hand: this.handCard });
       this.youLose = true;
     });
     this.socket.listen('player died').subscribe((data: any) => {
@@ -790,7 +792,7 @@ export class GameStartComponent implements OnInit {
       }
       this.comaPlayer = this.others.find((o:any) => o.position == data.position);
       console.log(this.comaPlayer);
-      
+
       this.rescue = true;
     });
     this.socket.listen('coma rescued').subscribe((data: any) => {
@@ -805,7 +807,10 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('player leave').subscribe((data: any) => {
-      this.quitRage.push(data.position)
+      if(!this.quitRage.includes(data.position)){
+        this.quitRage.push(data.position)
+      }
+
     });
     this.socket.listen('waiting other select character').subscribe((data: any) => {
       this.characterCard = false;
@@ -906,7 +911,7 @@ export class GameStartComponent implements OnInit {
       this.players = data.players;
       this.others = data.players.filter((p: any) => p.id != this.myPosId);
       console.log(this.others);
-      
+
     });
 
     this.socket.listen('set player character').subscribe((data: any) => {
@@ -998,7 +1003,13 @@ export class GameStartComponent implements OnInit {
 
   }
 
+  leaveNow(){
+    window.location.href = '/';
+  }
 
+  spectate(){
+    this.youDied = false;
+  }
 
   setItem(type: any, card: any, object: any) {
     switch (type) {
