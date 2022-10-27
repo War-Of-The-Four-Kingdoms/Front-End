@@ -205,7 +205,7 @@
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
 
-      <div class="player-give-select mx-3" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)"> <img class="popupCard" *ngFor="let other of this.others"  src={{this.urluser+convert(other.position)}}></div>
+      <div class="player-give-select mx-3"> <img class="popupCard" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)"  src={{this.urluser+convert(other.position)}}></div>
       
         <!-- เพิ่มอวตาร์-->
     </div>
