@@ -1916,8 +1916,12 @@ export class GameStartComponent implements OnInit {
     }else{
       this.socket.emit('character selected', { cid: char.id, code: this.roomcode });
     }
+    console.log(char);
     if(char.char_name == 'lucifer'){
+      console.log('do');
       this.cardMethod(char.char_name);
+      console.log(this.maxAttack);
+
     }
     this.myCharacter = char
     this.maxHp = char.hp + (this.extra_hp != undefined ? this.extra_hp : 0);
@@ -2224,7 +2228,9 @@ export class GameStartComponent implements OnInit {
       case 'merguin':
         this.merguinEffect();
         break;
-
+      case 'lucifer':
+        this.luciferEffect();
+        break;
       case 'martin':
         this.martinEffect();
         break;
