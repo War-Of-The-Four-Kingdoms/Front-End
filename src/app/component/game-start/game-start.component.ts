@@ -487,6 +487,7 @@ export class GameStartComponent implements OnInit {
 
     this.listen_position();
     this.socket.listen('you died').subscribe((data: any) => {
+      this.closeAll();
       if(this.legionDrop){
         this.legionDrop = false;
       }
@@ -585,12 +586,14 @@ export class GameStartComponent implements OnInit {
       });
     })
     this.socket.listen('you win').subscribe((data: any) => {
+      this.closeAll();
       this.youWin = true;
       // setTimeout(() => {
       //   window.location.href = '/';
       // }, 5000);
     })
     this.socket.listen('you lose').subscribe((data: any) => {
+      this.closeAll();
       this.youLose = true;
       // setTimeout(() => {
       //   window.location.href = '/';
@@ -660,6 +663,10 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('need more player').subscribe(() => {
       this.started = false
       alert('ต้องการผู้เล่นอย่างน้อย 4 คนในการเล่น')
+    });
+    this.socket.listen('player not select pos').subscribe(() => {
+      this.started = false
+      alert('มีผู้เล่นที่ยังไม่ได้เลือกตำแหน่งที่นั่ง')
     });
     this.socket.listen('update inhand').subscribe((data: any) => {
       if (data.position != this.myPos) {
@@ -1053,6 +1060,8 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
+    this.waitingKingSelect = false;
+    this.characterCard = false;
     this.canAttack = false;
     this.cardShow = false;
     this.showGiveCard = false;
