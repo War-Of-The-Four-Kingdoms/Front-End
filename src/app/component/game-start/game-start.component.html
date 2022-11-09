@@ -376,6 +376,12 @@
       <img class="popupCard" src={{this.showingCard}}>
       <img class="cancelsi" width="45px" src="../assets/picture/cancel.png" (click)="this.activateMoon(null)">
     </div>
+    <div class="listUser" >
+ <ul>Spectator
+  <li *ngFor="let data of this.specterUser">Test1</li>
+
+ </ul>
+    </div>
 
     <div class="swordPvP">
       <img class="pvp" src="../assets/picture/pvp.png" width="150px" id="main" *ngIf="this.canAttack" />
@@ -497,6 +503,9 @@
     </nz-modal>
 
     <div class="user1" id="chair1">
+      <div class="none" id="chat1">
+        asdasdadasd
+      </div>
 
       <div class="otherCard1" *ngIf="this.started">
         <div class="textOther">{{this.handing[1]}}</div>
@@ -532,6 +541,9 @@
 
 
     <div class="user6" id="chair6">
+      <div class="none" id="chat6">
+        {{this.chatShow[6]}}
+      </div>
       <div class="otherCard2" *ngIf="this.started">
         <div class="textOther">{{this.handing[6]}}</div>
         <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
@@ -563,6 +575,9 @@
 
     </div>
     <div class="user2" id="chair2">
+      <div class="none" id="chat2">
+        {{this.chatShow[2]}}
+      </div>
       <div class="otherCard1" *ngIf="this.started">
         <div class="textOther">{{this.handing[2]}}</div>
         <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
@@ -596,6 +611,9 @@
     </div>
 
     <div class="user5" id="chair5">
+      <div class="none" id="chat5">
+        {{this.chatShow[5]}}
+      </div>
       <div class="otherCard2" *ngIf="this.started">
         <div class="textOther">{{this.handing[5]}}</div>
         <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
@@ -627,6 +645,9 @@
       <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
     </div>
     <div class="user3" id="chair3">
+      <div class="none" id="chat3">
+        {{this.chatShow[3]}}
+      </div>
       <div class="otherCard1" *ngIf="this.started">
         <div class="textOther">{{this.handing[3]}}</div>
         <img src="../assets/picture/handpoker.png" class="imaging" style="width: 45px;">
@@ -658,6 +679,9 @@
         class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
     </div>
     <div class="user4" id="chair4">
+      <div class="none" id="chat4">
+        {{this.chatShow[4]}}
+      </div>
       <div class="circles" *ngIf="!this.chair4user">
         <p class="circle-content" (click)="select_position(this.chair4)">
           {{this.chair4}}
