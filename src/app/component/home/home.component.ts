@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
   inputCode: string = '';
   isVisible = true;
   ngOnInit(): void {
+    localStorage.removeItem('repeat');
     window.history.pushState({}, '');
 
     this.socket.emit('list room', {});
@@ -45,7 +46,7 @@ export class HomeComponent implements OnInit {
     this.socket.listen('user checked').subscribe((data: any) => {
       if (data.is_created) {
         console.log('do');
-        this.router.navigate(['start' + '/' + data.code]);
+        this.router.navigate(['start']);
       } else {
         console.log('not');
         alert("User Not Found!");

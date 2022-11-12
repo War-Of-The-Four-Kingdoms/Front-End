@@ -20,6 +20,9 @@
       </div>
     </div>
   </div>
+  <div *ngIf="this.youLose" class="diedButton d-flex justify-content-center align-content-center">
+    <button class="rescueButton mx-5" (click)="leaveNow()">กลับหน้าหลัก</button>
+  </div>
   <!--  -->
 <!-- died -->
 <div *ngIf="this.youDied" class="winlose d-flex align-items-center">
@@ -31,7 +34,7 @@
 </div>
 <div *ngIf="this.youDied" class="diedButton d-flex justify-content-center align-content-center">
   <button class="rescueButton mx-5" (click)="spectate()">ดูต่อ</button>
-  <button class="rescueButton mx-5" (click)="leaveNow()">ออก</button>
+  <button class="rescueButton mx-5" (click)="leaveNow()">กลับหน้าหลัก</button>
 </div>
 
 <!--  -->
@@ -43,6 +46,13 @@
       </div>
     </div>
   </div>
+  <div *ngIf="this.youWin" class="diedButton d-flex justify-content-center align-content-center">
+    <button class="rescueButton mx-5" (click)="leaveNow()">กลับหน้าหลัก</button>
+  </div>
+  <!-- win -->
+
+
+
   <!--  -->
 
   <!-- coma -->
