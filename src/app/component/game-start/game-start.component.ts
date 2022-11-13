@@ -219,7 +219,6 @@ export class GameStartComponent implements OnInit {
   specterUser: any;
 
 
-
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
       headers: new HttpHeaders({
@@ -231,6 +230,12 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
+    if(localStorage.getItem('repeat')){
+      this.router.navigate(['/home']);
+    }else{
+      localStorage.setItem('repeat','1');
+      this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
+    }
     this.loopChat();
     if(localStorage.getItem('repeat')){
       this.router.navigate(['/home']);
@@ -632,12 +637,12 @@ export class GameStartComponent implements OnInit {
         this.hp4.splice(-1)
       }
       this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
-      if (data.legion) {
-        if (this.handCard.length > 0) {
+      if(data.legion){
+        if(this.handCard.length > 0){
           this.legionDrop = true;
           this.showDropTemplate = true;
-        } else {
-          this.socket.emit('no hand card', { code: this.lobbyCode });
+        }else{
+          this.socket.emit('no hand card', { code: this.lobbyCode});
         }
 
       }
