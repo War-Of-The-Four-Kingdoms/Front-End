@@ -153,7 +153,7 @@ export class GameStartComponent implements OnInit {
   waitingLegionDrop: boolean = false;
   drawAdjust: any;
   attackDistance: any = 1;
-  trickDistance: any;
+  trickDistance: any = 1;
   enemyDistance: any[] = [];
   specialDefense: any;
   specialAttack: any;
@@ -167,6 +167,13 @@ export class GameStartComponent implements OnInit {
     chair3: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
     chair5: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
     chair6: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } }
+  }
+  otherDecisionCard = {
+    chair1: { position: 0, image: [] },
+    chair2: { position: 0, image: [] },
+    chair3: { position: 0, image: [] },
+    chair5: { position: 0, image: [] },
+    chair6: { position: 0, image: [] }
   }
   myEquipmentImage = { weapon: null, armor: null, mount1: null, mount2: null };
   //dropcard
@@ -1215,7 +1222,6 @@ export class GameStartComponent implements OnInit {
       // clearInterval(this.interval);
       // this.socket.emit('end stage', { code: this.lobbyCode });
     }
-    console.log(this.enemyDistance);
 
   }
 
@@ -1466,7 +1472,6 @@ export class GameStartComponent implements OnInit {
         });
         this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
         this.api.dropCard(this.lobbyCode, this.selectedItems).subscribe((data: any) => {
-          this.dropCard = data
         });
         this.showDropTemplate = false;
         this.selectedItems = [];
@@ -1562,6 +1567,8 @@ export class GameStartComponent implements OnInit {
         return true;
       } else if (card.info.type == "trick" || card.info.type == "equipment") {
         return true;
+      } else if (card.info.type == "defense" && this.myCharacter.char_name == "ninjakappa") {
+        return true;
       } else {
         return false;
       }
@@ -1587,6 +1594,8 @@ export class GameStartComponent implements OnInit {
             this.canUse = true;
           } else if (card.info.item_name == 'heal' && this.hp4.length < this.maxHp) {
             this.canUse = true;
+          } else if (card.info.item_name == 'defense' && this.myCharacter.char_name == 'ninjakappa'){
+            this.canUse = true;
           }
           break;
         case 'trick':
@@ -1608,6 +1617,7 @@ export class GameStartComponent implements OnInit {
       }
     }
     this.cardCheck = null;
+    this.canAttack = false;
     this.canUse = false;
     this.cardShow = false
   }
@@ -1824,13 +1834,16 @@ export class GameStartComponent implements OnInit {
             this.myEquipment.weapon = this.cardCheck;
             this.myEquipmentImage.weapon = this.urls + cardInfo.image;
             this.attackDistance += cardInfo.distance;
+            this.trickDistance += cardInfo.distance;
           } else {
             change = true;
             oldEquipment = this.myEquipment.weapon;
             this.attackDistance -= oldEquipment.info.distance;
+            this.trickDistance -= oldEquipment.info.distance;
             this.myEquipment.weapon = this.cardCheck;
             this.myEquipmentImage.weapon = this.urls + cardInfo.image;
             this.attackDistance += cardInfo.distance;
+            this.trickDistance += cardInfo.distance;
           }
           if (cardInfo.item_name == 'wooden_club') {
             this.maxAttack = 100;
@@ -1864,13 +1877,16 @@ export class GameStartComponent implements OnInit {
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = this.urls + cardInfo.image;
               this.attackDistance -= cardInfo.distance;
+              this.trickDistance -= cardInfo.distance;
             } else {
               change = true;
               oldEquipment = this.myEquipment.mount2;
-              this.attackDistance -= oldEquipment.info.distance;
+              this.attackDistance += oldEquipment.info.distance;
+              this.trickDistance += oldEquipment.info.distance;
               this.myEquipment.mount2 = this.cardCheck;
               this.myEquipmentImage.mount2 = this.urls + cardInfo.image;
               this.attackDistance -= cardInfo.distance;
+              this.trickDistance -= cardInfo.distance;
               //attackDistance +
             }
           }
@@ -1878,7 +1894,6 @@ export class GameStartComponent implements OnInit {
       }
       if (oldEquipment != null) {
         this.api.dropCard(this.lobbyCode, [oldEquipment.id]).subscribe((data: any) => {
-          this.dropCard = data
         });
       }
       this.socket.emit('change equipment', { code: this.lobbyCode, card: this.cardCheck });
@@ -1967,10 +1982,45 @@ export class GameStartComponent implements OnInit {
         this.hp4.push(0);
         this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
         this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
         this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
         this.cardShow = false
       } else {
         alert('เลือดคุณเต็มแล้ว')
+      }
+    } else if (cardInfo.type == 'trick'){
+      if (cardInfo.item_name == "greedypot"){
+        this.cardShow = false
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.drawCard(this.lobbyCode, 2).subscribe((data: any) => {
+          //effect
+          this.test555 = true
+          this.showDraw = data
+          setTimeout(() => {
+            data.forEach((card: any) => {
+              this.handCard.push(card);
+              this.test555 = false
+              this.showDraw = [];
+            });
+            this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+          }, 2500);
+        });
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+      }else if(cardInfo.item_name == "coaching"){
+        // -------------- use trick ---------------
+        this.canAttack = true
+        for (var b = 1; b < 7; b++) {
+          if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+            let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+            if (this.trickDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
+              icon.classList.remove("none")
+              icon.classList.add("pvp" + b)
+            }
+          }
+        }
+         // --------------------------------------
       }
     }
   }
@@ -1983,10 +2033,9 @@ export class GameStartComponent implements OnInit {
     }
     console.log(char);
     if (char.char_name == 'lucifer') {
-      console.log('do');
       this.cardMethod(char.char_name);
-      console.log(this.maxAttack);
-
+    }else if (char.char_name == 'luckyghost'){
+      this.cardMethod(char.char_name);
     }
     this.myCharacter = char
     this.maxHp = char.hp + (this.extra_hp != undefined ? this.extra_hp : 0);
@@ -2281,6 +2330,9 @@ export class GameStartComponent implements OnInit {
   cardMethod(name: string) {
     switch (name) {
       //character
+      case 'luckyghost':
+        this.luckyGhostEffect();
+        break;
       case 'witch':
         this.witchEffect();
         break;
@@ -2327,14 +2379,14 @@ export class GameStartComponent implements OnInit {
   }
 
   luckyGhostEffect(): void {
-    this.trickDistance + 1;
-    this.attackDistance + 1;
+    this.trickDistance += 1;
+    this.attackDistance += 1;
     //วัดใจ : เมื่อใช้การ์ดโจมตี ให้เปิดการ์ดตัดสิน 1 ใบ ถ้าเป็น ♥/♦ จะถือว่าสำเร็จ
   }
-  ninjakappaEffect(): void {
-    this.specialDefense = ['attack', 'defense'];
-    this.specialAttack = ['attack', 'defense'];
-  }
+  // ninjakappaEffect(): void {
+  //   this.specialDefense = ['attack', 'defense'];
+  //   this.specialAttack = ['attack', 'defense'];
+  // }
 
   witchEffect(): void {
     if (this.handCard.length == 0) {

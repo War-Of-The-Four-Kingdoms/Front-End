@@ -30,16 +30,16 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     localStorage.removeItem('repeat');
     window.history.pushState({}, '');
-
+    this.getDetails();
     this.socket.emit('list room', {});
+
     this.socket.listen('room full').subscribe(() => {
       alert("The room is full.");
     });
     this.socket.listen('set room list').subscribe((rooms: any) => {
-
       this.roomsarray = rooms
     });
-    this.getDetails();
+
     this.socket.listen('no room').subscribe((data: any) => {
       alert("Room "+data.code+" not exists!");
     });
