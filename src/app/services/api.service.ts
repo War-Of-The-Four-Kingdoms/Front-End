@@ -22,7 +22,7 @@ export class ApiService {
 
 
   drawCard(code: any,num: any) {
-    let params = new HttpParams().set('room_code', code).set('num',num);
+    let params = new HttpParams().set('roomcode', code).set('num',num);
     return this.http.get(this.apiUrl + '/drawCard',{ params: params });
   }
 
@@ -31,7 +31,7 @@ export class ApiService {
   }
 
   openCard(code: any) {
-    let params = new HttpParams().set('room_code', code);
+    let params = new HttpParams().set('roomcode', code);
     return this.http.get(this.apiUrl + '/openCard',{ params: params });
   }
 
@@ -40,11 +40,11 @@ export class ApiService {
   }
 
   getTopCards(code: any,num: any) {
-    let params = new HttpParams().set('room_code', code).set('num',num);
+    let params = new HttpParams().set('roomcode', code).set('num',num);
     return this.http.get(this.apiUrl + '/getTop',{ params: params });
   }
 
-  //neworder: [155,125,140] , drop: [177,156] , card_num: 5 , room_code: 'asfasf'
+  //neworder: [155,125,140] , drop: [177,156] , card_num: 5 , roomcode: 'asfasf'
   setNewOrder(code: any,neworder: any,drop: any,num: any) {
     return this.http.put(this.apiUrl + '/setNewOrder',{ roomcode: code, card_num: num, neworder: neworder, drop: drop });
   }

@@ -132,6 +132,7 @@ export class GameStartComponent implements OnInit {
   othersHandCard: any[] = [];
   legionTemp: boolean = false;
   //processing
+  skipPlay: boolean = false;
   canPass: boolean = false;
   youDied: boolean = false;
   youLose: boolean = false;
@@ -169,11 +170,11 @@ export class GameStartComponent implements OnInit {
     chair6: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } }
   }
   otherDecisionCard = {
-    chair1: { position: 0, image: [] },
-    chair2: { position: 0, image: [] },
-    chair3: { position: 0, image: [] },
-    chair5: { position: 0, image: [] },
-    chair6: { position: 0, image: [] }
+    chair1: { card: [] as any, image: [] as any},
+    chair2: { card: [] as any, image: [] as any},
+    chair3: { card: [] as any, image: [] as any},
+    chair5: { card: [] as any, image: [] as any},
+    chair6: { card: [] as any, image: [] as any}
   }
   myEquipmentImage = { weapon: null, armor: null, mount1: null, mount2: null };
   //dropcard
@@ -332,7 +333,7 @@ export class GameStartComponent implements OnInit {
     // });
 
     this.socket.listen('next turn').subscribe((pos: any) => {
-      this.clock = true
+      // this.clock = true
       this.queue = pos
     });
     this.socket.listen('get card from others').subscribe((data: any) => {
@@ -350,7 +351,7 @@ export class GameStartComponent implements OnInit {
 
     this.socket.listen('change stage').subscribe((data: any) => {
       this.closeAll();
-      clearInterval(this.interval)
+      // clearInterval(this.interval)
       let othericon = this.elementRef.nativeElement.querySelector('.finish')
       if (othericon != null) {
         othericon.classList.remove("finish")
@@ -363,17 +364,18 @@ export class GameStartComponent implements OnInit {
         icon.classList.remove("nonfinish")
         icon.classList.add("finish")
       }
-      this.counterTime = 0
-      clearInterval(this.interval);
-      var interval = this.interval = setInterval(() => {
-        this.counterTime++;
-        if (this.counterTime >= 30) {
-          clearInterval(interval);
-        }
-      }, 1000);
+      // this.counterTime = 0
+      // clearInterval(this.interval);
+      // var interval = this.interval = setInterval(() => {
+      //   this.counterTime++;
+      //   if (this.counterTime >= 30) {
+      //     clearInterval(interval);
+      //   }
+      // }, 1000);
       if (data.position == this.myPos) {
         switch (data.stage) {
           case 'prepare':
+            this.skipPlay = false;
             this.canPass = false;
             this.drawAdjust = 0;
             this.currentQueue = 'prepare';
@@ -396,7 +398,7 @@ export class GameStartComponent implements OnInit {
                 if (this.inGameChar.find(c => c.character.char_name == 'merguin') && this.myCharacter.char_name != 'merguin') {
                   this.decideQueue.enqueue({ waiting: true, name: 'merguin' });
                 }
-                this.decideQueue.enqueue({ waiting: false, name: d.item_name });
+                this.decideQueue.enqueue({ waiting: false, name: d.info.item_name });
               });
             }
             this.decideStage();
@@ -426,16 +428,22 @@ export class GameStartComponent implements OnInit {
             }, 2000);
             break;
           case 'play':
-            this.canPass = true;
-            this.textTurn = "ACTION PHARSE"
-            this.attackCount = 0;
-            this.turnChange = true
-            setTimeout(() => {
-              this.currentQueue = 'play';
-              this.playQueue = new Queue<Object>();
-              this.turnChange = false
-              this.playStage();
-            }, 2000);
+            console.log('skipplay is'+this.skipPlay);
+
+            if(this.skipPlay){
+              this.socket.emit('end stage', { code: this.lobbyCode });
+            }else{
+              this.textTurn = "ACTION PHARSE"
+              this.attackCount = 0;
+              this.turnChange = true
+              setTimeout(() => {
+                this.currentQueue = 'play';
+                this.playQueue = new Queue<Object>();
+                this.turnChange = false
+                this.canPass = true;
+                this.playStage();
+              }, 2000);
+            }
             break;
           case 'drop':
             this.canPass = false;
@@ -922,10 +930,58 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('attack fail').subscribe((data: any) => {
-      console.log(data);
-
       this.waitingDef = false;
       this.canPass = true;
+    });
+    this.socket.listen('add decision card image').subscribe((data: any) => {
+      if(!data.card.info.image.startsWith("../assets/picture/card/")){
+        data.card.info.image = "../assets/picture/card/"+data.card.info.image;
+      }
+      if(data.position == this.myPos){
+        this.decisionCard.push(data.card)
+      }else{
+        let index = this.chairPos.indexOf(data.position);
+        switch(index){
+          case 1:
+            this.otherDecisionCard.chair1.card.push(data.card);
+            break;
+          case 2:
+            this.otherDecisionCard.chair2.card.push(data.card);
+            break;
+          case 3:
+            this.otherDecisionCard.chair3.card.push(data.card);
+            break;
+          case 5:
+            this.otherDecisionCard.chair5.card.push(data.card);
+            break;
+          case 6:
+            this.otherDecisionCard.chair6.card.push(data.card);
+            break;
+        }
+      }
+
+    });
+    this.socket.listen('remove decision card image').subscribe((data: any) => {
+      console.log(data.card);
+      console.log(data.position);
+      let index = this.chairPos.indexOf(data.position);
+        switch(index){
+          case 1:
+            this.otherDecisionCard.chair1.card = this.otherDecisionCard.chair1.card.filter((c: any) => c.id != data.card.id);
+            break;
+          case 2:
+            this.otherDecisionCard.chair2.card = this.otherDecisionCard.chair2.card.filter((c: any) => c.id != data.card.id);
+            break;
+          case 3:
+            this.otherDecisionCard.chair3.card = this.otherDecisionCard.chair3.card.filter((c: any) => c.id != data.card.id);
+            break;
+          case 5:
+            this.otherDecisionCard.chair5.card = this.otherDecisionCard.chair5.card.filter((c: any) => c.id != data.card.id);
+            break;
+          case 6:
+            this.otherDecisionCard.chair6.card = this.otherDecisionCard.chair6.card.filter((c: any) => c.id != data.card.id);
+            break;
+        }
     });
     this.socket.listen('change equipment image').subscribe((data: any) => {
       if (this.otherEquipment.chair1.position == data.position) {
@@ -1162,7 +1218,7 @@ export class GameStartComponent implements OnInit {
         this.cardMethod(q.name);
       }
     } else {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
@@ -1201,7 +1257,7 @@ export class GameStartComponent implements OnInit {
         }
       }
     } else {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
@@ -1218,9 +1274,6 @@ export class GameStartComponent implements OnInit {
           this.cardMethod(q.name);
         }
       }
-    } else {
-      // clearInterval(this.interval);
-      // this.socket.emit('end stage', { code: this.lobbyCode });
     }
 
   }
@@ -1239,7 +1292,7 @@ export class GameStartComponent implements OnInit {
         }
       }
     } else {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
@@ -1255,7 +1308,7 @@ export class GameStartComponent implements OnInit {
         this.cardMethod(q.name);
       }
     } else {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
@@ -1502,7 +1555,7 @@ export class GameStartComponent implements OnInit {
         this.cardMethod(q.name);
       }
     } else {
-      clearInterval(this.interval);
+      // clearInterval(this.interval);
       this.socket.emit('end stage', { code: this.lobbyCode });
     }
   }
@@ -1663,7 +1716,19 @@ export class GameStartComponent implements OnInit {
         console.log(true);
         break;
       case 'coaching':
-        console.log(true);
+        if(card.info.symbol != 'heart'){
+          console.log('skip');
+          this.skipPlay = true;
+        }
+        let c = this.decisionCard.find(dc => dc.info.item_name == 'coaching');
+        console.log(c);
+        this.api.dropCard(this.lobbyCode, [c.id]).subscribe((data: any) => {
+        });
+        this.socket.emit('decision card done', { code: this.lobbyCode, position: this.myPos, card: c});
+        console.log(this.decisionCard);
+        this.decisionCard = this.decisionCard.filter(dc => dc.id != c.id);
+        console.log(this.decisionCard);
+
         break;
       case 'luckyghost':
         let symbols = ['diamond', 'heart'];
@@ -1674,14 +1739,10 @@ export class GameStartComponent implements OnInit {
           }
         });
         if (s_check) {
-          this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
-          });
           this.socket.emit('force attack', { code: this.lobbyCode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck, legion: false });
           this.canPass = true;
         } else {
           this.waitingDef = true;
-          this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
-          });
           this.socket.emit('use attack', { code: this.lobbyCode, target: this.luckyghostTarget, damage: this.damage(), card: this.cardCheck, legion: false });
         }
         this.luckyghostTarget = null;
@@ -1769,6 +1830,8 @@ export class GameStartComponent implements OnInit {
     this.canPass = false;
     this.attackCount++;
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+    this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+    });
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
     this.cardShow = false
     this.canAttack = false
@@ -1792,8 +1855,6 @@ export class GameStartComponent implements OnInit {
       }
     } else {
       this.waitingDef = true;
-      this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
-      });
       if (this.myCharacter.char_name == 'legioncommander') {
         this.socket.emit('use attack', { code: this.lobbyCode, target: data, damage: this.damage(), card: this.cardCheck, legion: true });
       } else {
@@ -1804,7 +1865,19 @@ export class GameStartComponent implements OnInit {
   }
 
   cfTrick(data: any){
-
+    this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+    this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+    this.cardShow = false
+    this.canAttack = false
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+    }
+    if(this.cardCheck.info.item_name == 'coaching'){
+      this.socket.emit('set decision card',{ code: this.lobbyCode, target: data, card: this.cardCheck});
+    }
   }
 
   damage() {
@@ -2267,7 +2340,7 @@ export class GameStartComponent implements OnInit {
       }
     }
     this.closeAll();
-    clearInterval(this.interval);
+    // clearInterval(this.interval);
     this.socket.emit('end stage', { code: this.lobbyCode });
   }
 
