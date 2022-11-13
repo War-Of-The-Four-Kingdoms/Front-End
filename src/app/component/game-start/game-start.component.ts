@@ -1766,8 +1766,6 @@ export class GameStartComponent implements OnInit {
 
 
   cfKill(data: any) {
-    console.log(data);
-
     this.canPass = false;
     this.attackCount++;
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
@@ -1805,7 +1803,7 @@ export class GameStartComponent implements OnInit {
 
   }
 
-  cfTrick(){
+  cfTrick(data: any){
 
   }
 
