@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
   inputCode: string = '';
   isVisible = true;
   ngOnInit(): void {
+    localStorage.removeItem('repeat');
     window.history.pushState({}, '');
 
     this.socket.emit('list room', {});

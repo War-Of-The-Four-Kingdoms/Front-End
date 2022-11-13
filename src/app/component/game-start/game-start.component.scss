@@ -2,6 +2,20 @@
   font-family: 'Oswald', sans-serif;
 }
 
+
+
+@keyframes moons {
+  0% {
+    transform: rotateZ(180deg);
+  }
+
+  100% {
+    top: 87%;
+    left: 48%;
+    transform: rotateZ(0deg);
+  }
+}
+
 .right {
   color: white;
   position: absolute;
@@ -13,7 +27,7 @@
   border: 1px solid #ccc;
   float: right;
   left: 110%;
-  top:30%;
+  top: 30%;
 }
 
 .right::before {
@@ -48,7 +62,7 @@
   border: 1px solid #ccc;
   float: right;
   right: 110%;
-  top:30%;
+  top: 30%;
 }
 
 .left::before {
@@ -72,12 +86,12 @@
   clear: both;
 }
 
-.listUser{
+.listUser {
   position: absolute;
   color: white;
 }
 
-.chatbar2{
+.chatbar2 {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.267);
   padding: 15px;
@@ -87,16 +101,16 @@
 }
 
 @keyframes chathi {
-  0%{
-    scale:1
+  0% {
+    scale: 1
   }
 
-  100%{
-    scale:1.5
+  100% {
+    scale: 1.5
   }
 }
 
-.chatbar{
+.chatbar {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.267);
   padding: 15px;
@@ -1548,6 +1562,64 @@ body {
   top: 9%;
   left: 47%;
   position: absolute;
+}
+
+.killer {
+  z-index: 9999;
+  animation: chon 2s;
+}
+
+.killed {
+  z-index: 9999;
+  animation: choning 2s;
+}
+
+@keyframes chon {
+  0% {
+    scale: 1.5;
+  }
+
+  30% {
+    top: 40%;
+    left: 30%;
+  }
+
+  60% {
+    scale: 2;
+  }
+
+  70% {
+    scale: 2;
+  }
+
+  80% {
+    top: 40%;
+    left: 42%;
+  }
+
+  100% {}
+}
+
+@keyframes choning {
+  0% {
+    scale: 1.5;
+  }
+
+  30% {
+    top: 40%;
+    left: 65%;
+  }
+
+  70% {
+    scale: 1.5;
+  }
+
+  80% {
+    top: 40%;
+    left: 47%;
+  }
+
+  100% {}
 }
 
 .circle-content {
@@ -3470,6 +3542,7 @@ input[type=checkbox]:checked+label {
   width: 900px;
   background-color: red;
   text-align: center;
+  position: absolute;
 
 }
 
@@ -3685,7 +3758,7 @@ input[type=checkbox]:checked+label {
   opacity: .24;
 }
 
-.diedButton{
+.diedButton {
   position: absolute;
   z-index: 9998;
   width: 1920px;

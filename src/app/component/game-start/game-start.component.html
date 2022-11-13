@@ -89,8 +89,8 @@
   </div>
   <div class="deftemplate row m-0 p-0" *ngIf="this.showSelectDef">
     <div class="card-canvas d-flex flex-wrap justify-content-center" >
+      <div class="cantUse" *ngIf="this.defCard.length == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
       <div class="m-0 p-0" *ngFor="let defCard of this.defCard" >
-        <div class="cantUse" *ngIf="this.defCard.lenght == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
         <input type="checkbox" class="dropcard-checkbox" value="{{defCard.id}}" id="c{{defCard.id}}"
           (change)="checkedDef($event)" />
         <label *ngIf="this.defCard.lenght != 0" for='c{{defCard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+defCard.info.image}}></label>
@@ -517,8 +517,12 @@
 
     <div class="user1" id="chair1">
       <div class="none" id="chat1">
-        asdasdadasd
+        {{this.chatShow[1]}}
       </div>
+
+      
+        <!-- <img class="sword1" width="50px" src="../assets/picture/attacking.png"> -->
+     
 
       <div class="otherCard1" *ngIf="this.started">
         <div class="textOther">{{this.handing[1]}}</div>
