@@ -1805,6 +1805,10 @@ export class GameStartComponent implements OnInit {
 
   }
 
+  cfTrick(){
+
+  }
+
   damage() {
     return 1 + this.bearylDamageAdjust;
   }
