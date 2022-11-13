@@ -237,12 +237,6 @@ export class GameStartComponent implements OnInit {
       this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     }
     this.loopChat();
-    if(localStorage.getItem('repeat')){
-      this.router.navigate(['/home']);
-    }else{
-      localStorage.setItem('repeat','1');
-      this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
-    }
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
     });
