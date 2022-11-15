@@ -599,7 +599,6 @@ export class GameStartComponent implements OnInit {
       } else {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense');
       }
-      console.log(this.defCard);
       if (data.extra_def) {
         this.defUse = 2;
       }
@@ -614,16 +613,23 @@ export class GameStartComponent implements OnInit {
       this.canPass = true;
     });
     this.socket.listen('damaged').subscribe((data: any) => {
-      console.log(data);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
-          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          icon.className = "user" + String(index)
           icon.classList.add("killer")
-          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(4))
+          iconn.className = "none"
+          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(4)+ String(4))
+          let iconss = this.elementRef.nativeElement.querySelector("#cs" + String(4))
+          icons.className = "user4"
           icons.classList.add("killed")
+          iconss.className = "none"
           setTimeout(() => {
-            icon.classList.remove("killer")
-            icons.classList.remove("killed")
+            icon.className = "none"
+            icons.className = "none"
+            iconn.className = ""
+            iconss.className = ""
           }, 3000);
         }
       }
@@ -645,19 +651,27 @@ export class GameStartComponent implements OnInit {
       console.log(this.queue);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
-          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          icon.className = "user" + String(index)
           icon.classList.add("killer")
+          iconn.className = "none"
           setTimeout(() => {
-            icon.classList.remove("killer")
+            icon.className = "none"
+            iconn.className = ""
           }, 3000);
         }
       }
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
-          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(index))
-          icons.classList.add("killed")
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          icon.className = "user" + String(index)
+          icon.classList.add("killed")
+          iconn.className = "none"
           setTimeout(() => {
-            icons.classList.remove("killed")
+            icon.className = "none"
+            iconn.className = ""
           }, 3000);
         }
       }
