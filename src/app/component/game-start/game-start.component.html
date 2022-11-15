@@ -104,7 +104,7 @@
       <div class="m-0 p-0" *ngFor="let defCard of this.defCard" >
         <input type="checkbox" class="dropcard-checkbox" value="{{defCard.id}}" id="c{{defCard.id}}"
           (change)="checkedDef($event)" />
-        <label *ngIf="this.defCard.lenght != 0" for='c{{defCard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+defCard.info.image}}></label>
+        <label *ngIf="this.defCard.length != 0" for='c{{defCard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+defCard.info.image}}></label>
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
@@ -131,7 +131,7 @@
     <div class="drop" *ngIf="this.dropFire">
       <div class="dropTest">
         <div class="droped" *ngFor="let handcard of this.dropCard">
-          <div class="overlay"><img class="card-drop" src={{this.urls+handcard.info.image}}>
+          <div class="overlay"><img class="card-drop">
             <div class="mo-fire">
               <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="125px" height="189.864px"
@@ -230,7 +230,7 @@
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
 
       <div class="player-give-select mx-3" *ngFor="let other of this.others" (click)="giveCardToPlayer(other.uuid)"> <img class="popupCard"  src={{this.urluser+convert(other.position)}}></div>
-
+lenght
         <!-- เพิ่มอวตาร์-->
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
@@ -401,8 +401,8 @@
       <img class="cancelsi" width="45px" src="../assets/picture/cancel.png" (click)="this.activateMoon(null)">
     </div>
     <div class="listUser" >
- <ul>Spectator
-  <li *ngFor="let data of this.specterUser">Test1</li>
+ <ul>Waiting Player
+  <li *ngFor="let data of this.specterUser">{{ data.username }}</li>
 
  </ul>
     </div>
@@ -580,9 +580,9 @@
         {{this.chatShow[1]}}
       </div>
 
-      
+
         <!-- <img class="sword1" width="50px" src="../assets/picture/attacking.png"> -->
-     
+
 
       <div class="otherCard1" *ngIf="this.started">
         <div class="textOther">{{this.handing[1]}}</div>
@@ -792,6 +792,7 @@
         </div>
         <div class="myCharacter-card">
           <div class="blocks-s">
+            <img *ngIf="this.decisionCard.length != 0" class="decisionCard" src={{this.decisionCard[this.decisionCard.length-1].info.image}} (click)="activateMoon(this.decisionCard[this.decisionCard.length-1].info.image)">
           </div>
           <div class="blocks-c">
             <img *ngIf="this.test != null " class="myCharacter" src={{this.test}} (click)="activateMoon(this.test)">
@@ -803,6 +804,7 @@
       <div class='player1' id="card1">
         <div class="myCharacter-card">
           <div class="blocks-ss">
+            <img *ngIf="this.otherDecisionCard.chair1.card.length != 0" class="decisionCard" src={{this.otherDecisionCard.chair1.card[this.otherDecisionCard.chair1.card.length-1].info.image}} (click)="activateMoon(this.otherDecisionCard.chair1.card[this.otherDecisionCard.chair1.card.length-1].info.image)">
           </div>
           <div class="blocks-c-o">
             <img *ngIf="this.img1 != null " class="myCharacter2" src={{this.img1}} (click)="activateMoon(this.img1)">
@@ -829,7 +831,7 @@
       <div class='player6' id="card6">
         <div class="myCharacter-card">
           <div class="blocks-ss">
-
+            <img *ngIf="this.otherDecisionCard.chair6.card.length != 0" class="decisionCard" src={{this.otherDecisionCard.chair6.card[this.otherDecisionCard.chair6.card.length-1].info.image}} (click)="activateMoon(this.otherDecisionCard.chair6.card[this.otherDecisionCard.chair6.card.length-1].info.image)">
           </div>
           <div class="blocks-c-o">
             <img *ngIf="this.img6 != null " class="myCharacter2" src={{this.img6}} (click)="activateMoon(this.img6)">
@@ -873,6 +875,7 @@
         </div>
         <div class="myCharacter-card">
           <div class="blocks-s">
+            <img *ngIf="this.otherDecisionCard.chair2.card.length != 0" class="decisionCard" src={{this.otherDecisionCard.chair2.card[this.otherDecisionCard.chair2.card.length-1].info.image}} (click)="activateMoon(this.otherDecisionCard.chair2.card[this.otherDecisionCard.chair2.card.length-1].info.image)">
           </div>
           <div class="blocks-c">
             <img *ngIf="this.img2 != null " class="myCharacter" src={{this.img2}} (click)="activateMoon(this.img2)">
@@ -900,7 +903,7 @@
         </div>
         <div class="myCharacter-card">
           <div class="blocks-s">
-
+            <img *ngIf="this.otherDecisionCard.chair3.card.length != 0" class="decisionCard" src={{this.otherDecisionCard.chair3.card[this.otherDecisionCard.chair3.card.length-1].info.image}} (click)="activateMoon(this.otherDecisionCard.chair3.card[this.otherDecisionCard.chair3.card.length-1].info.image)">
           </div>
           <div class="blocks-c">
             <img *ngIf="this.img3 != null " class="myCharacter" src={{this.img3}} (click)="activateMoon(this.img3)">
@@ -912,7 +915,7 @@
       <div class='player5' id="card5">
         <div class="myCharacter-card">
           <div class="blocks-ss">
-
+            <img *ngIf="this.otherDecisionCard.chair5.card.length != 0" class="decisionCard" src={{this.otherDecisionCard.chair5.card[this.otherDecisionCard.chair5.card.length-1].info.image}} (click)="activateMoon(this.otherDecisionCard.chair5.card[this.otherDecisionCard.chair5.card.length-1].info.image)">
           </div>
           <div class="blocks-c-o">
             <img *ngIf="this.img5 != null " class="myCharacter2" src={{this.img5}} (click)="activateMoon(this.img5)">
