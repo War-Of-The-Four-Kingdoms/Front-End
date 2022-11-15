@@ -1201,6 +1201,13 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
+
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.waitingKingSelect = false;
     this.characterCard = false;
     this.canAttack = false;
