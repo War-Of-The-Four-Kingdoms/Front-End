@@ -2,6 +2,12 @@
   font-family: 'Oswald', sans-serif;
 }
 
+.attacking{
+  position: absolute;
+  top: -70%;
+  left: 20px;
+}
+
 
 
 @keyframes moons {
@@ -1040,7 +1046,8 @@ body {
   height: 100%;
   // transform: rotateX(0deg) rotateZ(180deg) scale(1);
 }
-.decisionCard{
+
+.decisionCard {
   width: 100%;
   height: 100%;
 }
@@ -1572,7 +1579,7 @@ body {
 }
 
 .killed {
-  z-index: 9999;
+  z-index: 9990;
   animation: choning 2s;
 }
 
@@ -1586,18 +1593,25 @@ body {
     left: 30%;
   }
 
+  40% {
+    scale: 2;
+  }
+
+  50% {
+    scale: 2;
+  }
+
   60% {
-    scale: 2;
-  }
-
-  70% {
-    scale: 2;
-  }
-
-  80% {
     top: 40%;
     left: 42%;
   }
+
+  85% {
+    top: 40%;
+    left: 30%;
+  }
+
+  
 
   100% {}
 }
@@ -1612,14 +1626,65 @@ body {
     left: 65%;
   }
 
-  70% {
+  40% {
     scale: 1.5;
   }
-
-  80% {
-    top: 40%;
-    left: 47%;
+  50% {
+    scale: 1.5;
   }
+  60% {
+    -webkit-filter: invert(40%) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
+    filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+    top: 40%;
+    left: 50%;
+  }
+
+  70%{
+    top: 41%;
+    left: 53%;
+  }
+
+  72%{
+    top: 41%;
+    left: 54%;
+  }
+
+  74%{
+    top: 41%;
+    left: 53%;
+  }
+
+  76%{
+    top: 41%;
+    left: 54%;
+  }
+
+  78%{
+    top: 41%;
+    left: 53%;
+  }
+
+  80%{
+    top: 41%;
+    left: 54%;
+  }
+
+  82%{
+    top: 41%;
+    left: 53%;
+  }
+
+  84%{
+    top: 41%;
+    left: 54%;
+  }
+
+  86%{
+    top: 41%;
+    left: 54%;
+  }
+
+
 
   100% {}
 }
@@ -1779,6 +1844,10 @@ body {
   object-fit: cover;
   width: 8em;
   animation: anim-glow 2s ease infinite;
+}
+
+.circle2none {
+  opacity: 0;
 }
 
 .circleLeave {

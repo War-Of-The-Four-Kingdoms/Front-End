@@ -414,7 +414,14 @@ lenght
       <img id="chairpvp2" class="none" src="../assets/picture/pvp.png" width="45px" (click)="cfKill(this.chairPos[2])">
       <img id="chairpvp1" class="none" src="../assets/picture/pvp.png" width="45px" (click)="cfKill(this.chairPos[1])">
       <img id="chairpvp6" class="none" src="../assets/picture/pvp.png" width="45px" (click)="cfKill(this.chairPos[6])">
-
+    </div>
+    <div class="trickPvP">
+      <img class="pvp" src="../assets/picture/magic-hat.png" width="150px" id="main" *ngIf="this.canTrick" />
+      <img id="chairtrick5" class="none" src="../assets/picture/magic-hat.png" width="45px" (click)="cfTrick(this.chairPos[5])">
+      <img id="chairtrick3" class="none" src="../assets/picture/magic-hat.png" width="45px" (click)="cfTrick(this.chairPos[3])">
+      <img id="chairtrick2" class="none" src="../assets/picture/magic-hat.png" width="45px" (click)="cfTrick(this.chairPos[2])">
+      <img id="chairtrick1" class="none" src="../assets/picture/magic-hat.png" width="45px" (click)="cfTrick(this.chairPos[1])">
+      <img id="chairtrick6" class="none" src="../assets/picture/magic-hat.png" width="45px" (click)="cfTrick(this.chairPos[6])">
     </div>
     <div class="changeTurn" *ngIf="this.turnChange">
       <div class="fontTurn">{{this.textTurn}}</div>
@@ -528,6 +535,8 @@ lenght
 
     <div class="none" id="chair11">
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting1">
+        <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s1">
+        <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d1">
         <img
           [ngClass]="{circle2: this.chair1 == this.queue, circle: this.chair1 != this.queue,circleLeave:this.quitRage.includes(this.chair1) && this.chair1 != this.queue}"
           src={{this.urluser+convert(this.chairPos[1])}} alt="Tyler" *ngIf="this.chair1user"><img
@@ -535,6 +544,8 @@ lenght
     </div>
 
     <div class="none" id="chair22">
+      <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s2">
+      <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d2">
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting2">
         <img
           [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave:this.quitRage.includes(this.chair2) && this.chair2 != this.queue}"
@@ -543,6 +554,8 @@ lenght
     </div>
 
     <div class="none" id="chair33">
+      <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s3">
+      <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d3">
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
         <img
           [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
@@ -551,6 +564,8 @@ lenght
     </div>
 
     <div class="user4" id="chair44">
+      <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s4">
+      <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d4">
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4">
         <img
           [ngClass]="{circle2: this.chair4 == this.queue, circle: this.chair4 != this.queue,circleLeave:this.quitRage.includes(this.chair4) && this.chair4 != this.queue}"
@@ -559,6 +574,8 @@ lenght
     </div>
 
     <div class="none" id="chair55">
+      <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s5">
+      <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d5">
       <div ><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting5">
         <img
           [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave:this.quitRage.includes(this.chair5) && this.chair5 != this.queue}"
@@ -567,6 +584,8 @@ lenght
     </div>
 
     <div class="none" id="chair66">
+      <img class="none"  src="../assets/picture/attacking.png" style="width:75px" alt="Tyler" id="s6">
+      <img class="none"  src="../assets/picture/shields.png" style="width:75px" alt="Tyler" id="d6">
       <div><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting6">
         <img
           [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave:this.quitRage.includes(this.chair6) && this.chair6 != this.queue}"
@@ -748,7 +767,8 @@ lenght
         <img src="../assets/picture/recycle-bin.png" class="stageIcon nonfinish" id="35" width="30px">
         <img src="../assets/picture/flag.png" class="stageIcon nonfinish" id="36" width="30px">
       </div>
-      <div class="" id="cs3"><img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
+      <div class="" id="cs3">
+        <img class="hosting" src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting3">
       </div>
       <img
         [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
