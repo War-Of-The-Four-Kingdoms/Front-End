@@ -407,7 +407,6 @@ export class GameStartComponent implements OnInit {
             this.canPass = false;
             this.currentQueue = 'decide';
             this.decideQueue = new Queue<Object>();
-
             if (this.decisionCard.length > 0) {
               this.decisionCard.forEach(d => {
                 if(d.info.item_name != "russianroulette" || this.rouletteCount == 0){
@@ -417,6 +416,7 @@ export class GameStartComponent implements OnInit {
                   this.decideQueue.enqueue({ waiting: false, name: d.info.item_name });
                   d.info.item_name == "russianroulette"? this.rouletteCount++ : '';
                 }
+                d.info.item_name == "russianroulette"? this.rouletteCount++ : '';
               });
             }
             this.decideStage();
@@ -1591,14 +1591,14 @@ export class GameStartComponent implements OnInit {
       alert('กรุณาเลือกการ์ดอย่างน้อย 1 ใบ');
     } else {
       this.putaGiveCount += this.selectedItems.length;
-      if (this.selectedItems.length == this.handCard.length) {
-        this.putaFinish();
-      }
       this.selectedItems.forEach(card_id => {
         this.handCard = this.handCard.filter(hc => hc.id != card_id);
       });
       this.socket.emit('give card to others', { code: this.lobbyCode, cards: this.selectedItems, target: uuid });
       this.selectedItems = [];
+      if (this.selectedItems.length == this.handCard.length) {
+        this.putaFinish();
+      }
     }
   }
 
@@ -1870,7 +1870,7 @@ export class GameStartComponent implements OnInit {
           }
         });
         if(check){
-          for (let i = 0; i < 3+this.rouletteCount; i++) {
+          for (let i = 0; i < 2+this.rouletteCount; i++) {
             this.hp4.splice(-1)
           }
           this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
@@ -2050,7 +2050,7 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
-    if(this.cardCheck.info.item_name == 'coaching'){
+    if(this.cardCheck.info.item_name == 'coaching' || this.cardCheck.info.item_name == 'russianroulette'){
       this.socket.emit('set decision card',{ code: this.lobbyCode, target: data, card: this.cardCheck});
     }
   }
@@ -2268,7 +2268,7 @@ export class GameStartComponent implements OnInit {
         });
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
         });
-      }else if(cardInfo.item_name == "coaching"){
+      }else if(cardInfo.item_name == "coaching" || cardInfo.item_name == "russianroulette"){
         // -------------- use trick ---------------
         this.canTrick = true
         for (var b = 1; b < 7; b++) {
