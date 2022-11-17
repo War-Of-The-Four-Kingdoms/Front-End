@@ -132,6 +132,12 @@ export class GameStartComponent implements OnInit {
   othersHandCard: any[] = [];
   legionTemp: boolean = false;
   //processing
+  canSelectBanquet:boolean = false;
+  isDead: boolean = false;
+  banquetTrick: boolean = false;
+  banquetCards: any[] = [];
+  rouletteCount: any = 0;
+  waitBetweenQueue: boolean = false;
   skipPlay: boolean = false;
   canPass: boolean = false;
   youDied: boolean = false;
@@ -261,7 +267,6 @@ export class GameStartComponent implements OnInit {
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
-      console.log(data);
 
       for (var i = 1; i < 7; i++) {
         if (!this.testing.includes(this.chairPos[i])) {
@@ -389,16 +394,21 @@ export class GameStartComponent implements OnInit {
             this.prepareStage();
             break;
           case 'decide':
+            this.decisionResult = null;
+            this.rouletteCount = 0;
             this.canPass = false;
             this.currentQueue = 'decide';
             this.decideQueue = new Queue<Object>();
 
             if (this.decisionCard.length > 0) {
               this.decisionCard.forEach(d => {
-                if (this.inGameChar.find(c => c.character.char_name == 'merguin') && this.myCharacter.char_name != 'merguin') {
-                  this.decideQueue.enqueue({ waiting: true, name: 'merguin' });
+                if(d.info.item_name != "russianroulette" || this.rouletteCount == 0){
+                  if (this.inGameChar.find(c => c.character.char_name == 'merguin') && this.myCharacter.char_name != 'merguin') {
+                    this.decideQueue.enqueue({ waiting: true, name: 'merguin' });
+                  }
+                  this.decideQueue.enqueue({ waiting: false, name: d.info.item_name });
+                  d.info.item_name == "russianroulette"? this.rouletteCount++ : '';
                 }
-                this.decideQueue.enqueue({ waiting: false, name: d.info.item_name });
               });
             }
             this.decideStage();
@@ -428,7 +438,6 @@ export class GameStartComponent implements OnInit {
             }, 2000);
             break;
           case 'play':
-            console.log('skipplay is'+this.skipPlay);
 
             if(this.skipPlay){
               this.socket.emit('end stage', { code: this.lobbyCode });
@@ -512,6 +521,7 @@ export class GameStartComponent implements OnInit {
       this.handCard = [];
       this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       this.youDied = true;
+      this.isDead = true;
     });
     this.socket.listen('player died').subscribe((data: any) => {
       if (this.waitingLegionDrop) {
@@ -614,7 +624,6 @@ export class GameStartComponent implements OnInit {
       } else {
         this.defCard = this.handCard.filter(hc => hc.info.item_name == 'defense');
       }
-      console.log(this.defCard);
       if (data.extra_def) {
         this.defUse = 2;
       }
@@ -629,7 +638,6 @@ export class GameStartComponent implements OnInit {
       this.canPass = true;
     });
     this.socket.listen('damaged').subscribe((data: any) => {
-      console.log(data);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
@@ -657,7 +665,6 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
-      console.log(this.queue);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
@@ -681,7 +688,6 @@ export class GameStartComponent implements OnInit {
       // let icons = this.elementRef.nativeElement.querySelector("#chair4")
       // icons.classList.add("killed")
 
-      console.log(data);
 
       if (this.chair1 == data.position) {
         this.updateHp(this.hp1, data.hp - this.hp1.length);
@@ -715,7 +721,6 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('sctc').subscribe((data: any) => {
-      console.log(data);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
           let icon = this.elementRef.nativeElement.querySelector("#chat" + String(index))
@@ -746,7 +751,6 @@ export class GameStartComponent implements OnInit {
 
     });
     this.socket.listen('set room').subscribe((room: any) => {
-      console.log(room);
 
       this.hosting1 = false
       this.hosting2 = false
@@ -867,7 +871,6 @@ export class GameStartComponent implements OnInit {
         this.healCard = this.handCard.filter(hc => hc.info.item_name == 'heal');
       }
       this.comaPlayer = this.others.find((o: any) => o.position == data.position);
-      console.log(this.comaPlayer);
 
       this.rescue = true;
     });
@@ -875,6 +878,9 @@ export class GameStartComponent implements OnInit {
       if (data.position == this.myPos) {
         this.coma = false;
         this.hp4.push(0);
+        if(this.waitBetweenQueue){
+          this.next_queue();
+        }
       } else {
         this.healCard = [];
         this.healSelected = [];
@@ -892,17 +898,12 @@ export class GameStartComponent implements OnInit {
       this.characterCard = false;
     });
     this.socket.listen('increase enemy distance').subscribe((data: any) => {
-      console.log(this.enemyDistance);
-      console.log(data);
       this.enemyDistance.find(e => e.position == data.position).distance += data.distance
 
     });
     this.socket.listen('attack success').subscribe((data: any) => {
-      console.log(data);
 
       if (data.legion) {
-        console.log('life4 ' + this.hp4.length);
-        console.log(this.maxHp);
 
         if (this.hp4.length < this.maxHp) {
           this.updateHp(this.hp4, 1);
@@ -933,7 +934,7 @@ export class GameStartComponent implements OnInit {
       this.waitingDef = false;
       this.canPass = true;
     });
-    this.socket.listen('add decision card image').subscribe((data: any) => {
+    this.socket.listen('add decision card').subscribe((data: any) => {
       if(!data.card.info.image.startsWith("../assets/picture/card/")){
         data.card.info.image = "../assets/picture/card/"+data.card.info.image;
       }
@@ -961,28 +962,132 @@ export class GameStartComponent implements OnInit {
       }
 
     });
-    this.socket.listen('remove decision card image').subscribe((data: any) => {
-      console.log(data.card);
-      console.log(data.position);
+    this.socket.listen('remove decision card').subscribe((data: any) => {
       let index = this.chairPos.indexOf(data.position);
         switch(index){
           case 1:
-            this.otherDecisionCard.chair1.card = this.otherDecisionCard.chair1.card.filter((c: any) => c.id != data.card.id);
+            this.otherDecisionCard.chair1.card = this.otherDecisionCard.chair1.card.filter((c: any) => !data.card.includes(c.id));
             break;
           case 2:
-            this.otherDecisionCard.chair2.card = this.otherDecisionCard.chair2.card.filter((c: any) => c.id != data.card.id);
+            this.otherDecisionCard.chair2.card = this.otherDecisionCard.chair2.card.filter((c: any) => !data.card.includes(c.id));
             break;
           case 3:
-            this.otherDecisionCard.chair3.card = this.otherDecisionCard.chair3.card.filter((c: any) => c.id != data.card.id);
+            this.otherDecisionCard.chair3.card = this.otherDecisionCard.chair3.card.filter((c: any) => !data.card.includes(c.id));
             break;
           case 5:
-            this.otherDecisionCard.chair5.card = this.otherDecisionCard.chair5.card.filter((c: any) => c.id != data.card.id);
+            this.otherDecisionCard.chair5.card = this.otherDecisionCard.chair5.card.filter((c: any) => !data.card.includes(c.id));
             break;
           case 6:
-            this.otherDecisionCard.chair6.card = this.otherDecisionCard.chair6.card.filter((c: any) => c.id != data.card.id);
+            this.otherDecisionCard.chair6.card = this.otherDecisionCard.chair6.card.filter((c: any) => !data.card.includes(c.id));
             break;
         }
     });
+    this.socket.listen('russianroulette pass').subscribe((data: any) => {
+      let dcid:any = [];
+      data.card.forEach((cd:any) => {
+        dcid.push(cd.id);
+      });
+      let index = this.chairPos.indexOf(data.position);
+        switch(index){
+          case 1:
+            this.otherDecisionCard.chair1.card = this.otherDecisionCard.chair1.card.filter((c: any) => !dcid.includes(c.id));
+            break;
+          case 2:
+            this.otherDecisionCard.chair2.card = this.otherDecisionCard.chair2.card.filter((c: any) => !dcid.includes(c.id));
+            break;
+          case 3:
+            this.otherDecisionCard.chair3.card = this.otherDecisionCard.chair3.card.filter((c: any) => !dcid.includes(c.id));
+            break;
+          case 5:
+            this.otherDecisionCard.chair5.card = this.otherDecisionCard.chair5.card.filter((c: any) => !dcid.includes(c.id));
+            break;
+          case 6:
+            this.otherDecisionCard.chair6.card = this.otherDecisionCard.chair6.card.filter((c: any) => !dcid.includes(c.id));
+            break;
+        }
+      data.card.forEach((cd:any) => {
+        if(!cd.info.image.startsWith("../assets/picture/card/")){
+          cd.info.image = "../assets/picture/card/"+cd.info.image;
+        }
+        if(data.target == this.myPos){
+          this.decisionCard.push(cd)
+        }else{
+          let target_index = this.chairPos.indexOf(data.target);
+          switch(target_index){
+            case 1:
+              this.otherDecisionCard.chair1.card.push(cd);
+              break;
+            case 2:
+              this.otherDecisionCard.chair2.card.push(cd);
+              break;
+            case 3:
+              this.otherDecisionCard.chair3.card.push(cd);
+              break;
+            case 5:
+              this.otherDecisionCard.chair5.card.push(cd);
+              break;
+            case 6:
+              this.otherDecisionCard.chair6.card.push(cd);
+              break;
+          }
+        }
+      });
+    });
+    this.socket.listen('set banquet card').subscribe((data: any) => {
+      data.cards.forEach((cd:any) => {
+        if(!cd.info.image.startsWith("../assets/picture/card/")){
+          cd.info.image = "../assets/picture/card/"+cd.info.image;
+        }
+      });
+      if(!this.isDead){
+        this.banquetCards = data.cards;
+        this.banquetTrick = true;
+        if(this.myPos == data.position){
+          this.canSelectBanquet = true;
+        }
+        else{
+          this.canSelectBanquet = false;
+        }
+      }
+    });
+    this.socket.listen('banquet next').subscribe((data: any) => {
+      console.log(data);
+
+      if((!this.isDead) && this.banquetTrick){
+        this.banquetCards.find(bc => bc.id == data.cid).selected = true;
+        this.banquetCards.find(bc => bc.id == data.cid).owner = data.selected_pos;
+        if(this.myPos == data.position){
+          this.canSelectBanquet = true;
+        }
+        else{
+          this.canSelectBanquet = false;
+        }
+      }
+    });
+    this.socket.listen('banquet done').subscribe((data: any) => {
+      this.banquetTrick = false;
+      if(!this.isDead){
+        console.log(data);
+        let myCard:any = [];
+        data.cards.forEach((card:any) => {
+          if(card.owner == this.myPos){
+            myCard.push(card);
+          }
+        });
+        this.test555 = true
+        this.showDraw = myCard
+        setTimeout(() => {
+          myCard.forEach((card: any) => {
+            this.handCard.push(card);
+            this.test555 = false
+            this.showDraw = [];
+          });
+          this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+        }, 2500);
+      }
+      this.banquetCards = [];
+    });
+
     this.socket.listen('change equipment image').subscribe((data: any) => {
       if (this.otherEquipment.chair1.position == data.position) {
         this.setItem(data.type, data.card, this.otherEquipment.chair1);
@@ -1036,22 +1141,18 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('set player info').subscribe((data: any) => {
-      console.log(data);
       this.players = data.players;
       this.others = data.players.filter((p: any) => p.id != this.myPosId);
-      console.log(this.others);
 
     });
 
     this.socket.listen('set player character').subscribe((data: any) => {
-      console.log(data);
       this.inGameChar.push(data);
       if (this.myPos == data.position) {
         this.test = "../assets/picture/card/" + data.character.image_name
         this.hp4 = Array.from(Array(data.remain_hp).keys())
         let icon = this.elementRef.nativeElement.querySelector("#myh")
         icon.classList.add("length" + data.remain_hp)
-        console.log(icon);
         if (this.myPos == this.king_pos) {
           this.kingImage = this.test
         }
@@ -1165,7 +1266,10 @@ export class GameStartComponent implements OnInit {
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
         let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
-        icon.className = 'none';
+        if(icon != null){
+          icon.className = 'none';
+        }
+
       }
     }
     this.waitingKingSelect = false;
@@ -1184,6 +1288,7 @@ export class GameStartComponent implements OnInit {
   }
 
   next_queue() {
+    this.waitBetweenQueue = false;
     switch (this.currentQueue) {
       case 'prepare':
         this.prepareStage();
@@ -1224,7 +1329,6 @@ export class GameStartComponent implements OnInit {
   }
 
   showCarding(data: any) {
-    console.log(data);
     return "../assets/picture/cover.png"
   }
 
@@ -1242,7 +1346,6 @@ export class GameStartComponent implements OnInit {
             this.showDraw = data
             setTimeout(() => {
               data.forEach((card: any) => {
-                console.log(card);
                 this.handCard.push(card);
                 this.test555 = false
                 this.showDraw = [];
@@ -1713,22 +1816,44 @@ export class GameStartComponent implements OnInit {
   conditionCheck(card: any) {
     switch (this.dc_condition) {
       case 'russianroulette':
-        console.log(true);
+        let codes = [2,3,4,5,6,7,8,9];
+        let check = false;
+        codes.forEach((cd: any) => {
+          if (card.info.symbol == 'spade' && card.info.code == cd) {
+            check = true;
+          }
+        });
+        if(check){
+          for (let i = 0; i < 3+this.rouletteCount; i++) {
+            this.hp4.splice(-1)
+          }
+          this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
+          let rid:any = [];
+          this.decisionCard.filter(dc => dc.info.item_name == 'russianroulette').forEach(r => {
+            rid.push(r.id);
+          });
+          this.api.dropCard(this.lobbyCode, [rid]).subscribe((data: any) => {
+          });
+          this.socket.emit('decision card done', { code: this.lobbyCode, position: this.myPos, card: rid});
+          this.decisionCard = this.decisionCard.filter(dc => dc.info.item_name != 'russianroulette');
+        }else{
+          let rr = this.decisionCard.filter(dc => dc.info.item_name == 'russianroulette');
+          this.socket.emit('russianroulette next', { code: this.lobbyCode, position: this.myPos, card: rr});
+          this.decisionCard = this.decisionCard.filter(dc => dc.info.item_name != 'russianroulette');
+        }
         break;
       case 'coaching':
         if(card.info.symbol != 'heart'){
-          console.log('skip');
           this.skipPlay = true;
         }
-        let c = this.decisionCard.find(dc => dc.info.item_name == 'coaching');
-        console.log(c);
-        this.api.dropCard(this.lobbyCode, [c.id]).subscribe((data: any) => {
+        let cid:any = [];
+        this.decisionCard.filter(dc => dc.info.item_name == 'coaching').forEach(c => {
+          cid.push(c.id);
         });
-        this.socket.emit('decision card done', { code: this.lobbyCode, position: this.myPos, card: c});
-        console.log(this.decisionCard);
-        this.decisionCard = this.decisionCard.filter(dc => dc.id != c.id);
-        console.log(this.decisionCard);
-
+        this.api.dropCard(this.lobbyCode, [cid]).subscribe((data: any) => {
+        });
+        this.socket.emit('decision card done', { code: this.lobbyCode, position: this.myPos, card: cid});
+        this.decisionCard = this.decisionCard.filter(dc => dc.info.item_name != 'coaching');
         break;
       case 'luckyghost':
         let symbols = ['diamond', 'heart'];
@@ -1750,7 +1875,11 @@ export class GameStartComponent implements OnInit {
     }
     this.showDecisionTemplate = false;
     this.decisionResult = null;
-    this.next_queue();
+    if(this.hp4.length == 0){
+      this.waitBetweenQueue = true;
+    }else{
+      this.next_queue();
+    }
   }
   // openDecisionCard(data: {symbol?:any , code?:any}){ //store_condition ['and','or']
   //   this.api.openCard(this.lobbyCode).subscribe((card: any) => {
@@ -1894,8 +2023,18 @@ export class GameStartComponent implements OnInit {
       }
     }
     this.showingCard = data
-    console.log(this.activingCard);
 
+  }
+
+  testUseCard() {
+    let cardInfo = this.cardCheck.info;
+    let change = false;
+    let oldEquipment: any = null;
+    this.cardShow = false
+    this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+    this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+    });
+    this.socket.emit("use banquet trick", { code: this.lobbyCode, position: this.myPos});
   }
 
   useCard() {
@@ -2096,6 +2235,12 @@ export class GameStartComponent implements OnInit {
           }
         }
          // --------------------------------------
+      }else if(cardInfo.item_name == "banquet"){
+        this.cardShow = false
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+        this.socket.emit("use banquet trick", { code: this.lobbyCode, position: this.myPos});
       }
     }
   }
@@ -2106,7 +2251,6 @@ export class GameStartComponent implements OnInit {
     } else {
       this.socket.emit('character selected', { cid: char.id, code: this.lobbyCode });
     }
-    console.log(char);
     if (char.char_name == 'lucifer') {
       this.cardMethod(char.char_name);
     }else if (char.char_name == 'luckyghost'){
@@ -2117,14 +2261,12 @@ export class GameStartComponent implements OnInit {
   }
 
   listen_position() {
-    console.log('hi');
     this.socket.listen('assign position').subscribe((data: any) => {
       this.specterUser = []
       this.waitingUser = data
       this.waitingUser.forEach((element, i) => {
         if (element.position == 0) {
           this.specterUser.push(element)
-          console.log(this.specterUser);
 
         }
       });
@@ -2218,6 +2360,22 @@ export class GameStartComponent implements OnInit {
 
 
     this.loopChair()
+  }
+
+  selectbanquetCard(id: any){
+    if(this.canSelectBanquet){
+      if(!this.banquetCards.find(p => p.id == id).selected){
+        let card = this.banquetCards.find(p => p.id == id);
+        card.selected = true;
+        card.owner = this.myPos;
+        this.socket.emit('banquet select',{ code: this.lobbyCode, cid: id, position: this.myPos});
+        this.canSelectBanquet = false;
+      }else{
+        alert('การ์ดใบนี้ถูกเลือกไปแล้ว');
+      }
+    }else{
+      alert('ยังไม่ถึงตาคุณเลือก');
+    }
   }
 
   flexAction(data: any) {

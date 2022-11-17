@@ -86,6 +86,22 @@
   </div>
   <!--  -->
 
+  <!-- Party -->
+  <div *ngIf="this.banquetTrick" class="banquettemplate d-flex m-0 p-0">
+    <div class="w-100 d-flex m-0 px-5 flex-wrap justify-content-center align-items-center">
+      <div class="banquetcard d-flex" *ngFor="let banquetCard of this.banquetCards">
+        <div *ngIf="banquetCard.selected" class="wmark d-flex justify-content-center align-items-center">
+          <div class="selectedImage">
+            <img class="selectedImage" src={{this.urluser+convert(banquetCard.owner)}} />
+          </div>
+        </div>
+        <img [ngClass]="{banquetselected:banquetCard.selected}" class="banquetselectcard" src={{banquetCard.info.image}} (click)="selectbanquetCard(banquetCard.id)">
+      </div>
+    </div>
+  </div>
+
+  <!-- -->
+
   <!-- def -->
   <div *ngIf="this.waitingLegionDrop" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
@@ -440,6 +456,7 @@ lenght
         <img class="popupCard" src={{this.urls+this.cardCheck.info.image}} />
       </div>
       <div class="confirm">
+        <!-- <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()" *ngIf="this.canUse"> -->
         <img src="../assets/picture/correct.png" style="width: 45px;" (click)="useCard()" *ngIf="this.canUse">
         <img src="../assets/picture/cancel.png" style="width: 45px;" (click)="cancelShow()">
       </div>
