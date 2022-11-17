@@ -957,6 +957,7 @@ export class GameStartComponent implements OnInit {
       }
       this.waitingDef = false;
       this.canPass = true;
+      this.canAttack = false;
       if (this.myCharacter.char_name == 'legioncommander') {
         this.waitingLegionDrop = true;
         this.canPass = false;
