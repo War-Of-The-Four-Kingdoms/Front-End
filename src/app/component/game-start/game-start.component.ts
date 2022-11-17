@@ -224,6 +224,7 @@ export class GameStartComponent implements OnInit {
 
   stealCardSelected: any[] = [];
   canAttack: boolean = false;
+  canTrick: boolean = false;
   handing: any[] = [];
   activingCard: boolean = false;
   showingCard: any;
@@ -267,6 +268,13 @@ export class GameStartComponent implements OnInit {
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
+      console.log(data);
+      this.hosting1 = false
+      this.hosting2 = false
+      this.hosting3 = false
+      this.hosting4 = false
+      this.hosting5 = false
+      this.hosting6 = false
 
       for (var i = 1; i < 7; i++) {
         if (!this.testing.includes(this.chairPos[i])) {
@@ -640,13 +648,27 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('damaged').subscribe((data: any) => {
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
-          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
+          attack.className = "attacking"
+          icon.className = "user" + String(index)
           icon.classList.add("killer")
-          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(4))
+          iconn.className = "circle2none"
+          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(4)+ String(4))
+          let iconss = this.elementRef.nativeElement.querySelector("#cs" + String(4))
+          let defend = this.elementRef.nativeElement.querySelector("#d" + String(4))
+          defend.className = "attacking"
+          icons.className = "user4"
           icons.classList.add("killed")
+          iconss.className = "circle2none"
           setTimeout(() => {
-            icon.classList.remove("killer")
-            icons.classList.remove("killed")
+            icon.className = "none"
+            icons.className = "none"
+            iconn.className = ""
+            iconss.className = ""
+            attack.className = "none"
+            defend.className = "none"
           }, 3000);
         }
       }
@@ -667,19 +689,33 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('update remain hp').subscribe((data: any) => {
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
-          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index))
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
+          icon.className = "user" + String(index)
           icon.classList.add("killer")
+          iconn.className = "circle2none"
+          attack.className = "attacking"
           setTimeout(() => {
-            icon.classList.remove("killer")
+            icon.className = "none"
+            iconn.className = ""
+            attack.className = "none"
           }, 3000);
         }
       }
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
-          let icons = this.elementRef.nativeElement.querySelector("#chair" + String(index))
-          icons.classList.add("killed")
+          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+          let defend = this.elementRef.nativeElement.querySelector("#d" + String(index))
+          icon.className = "user" + String(index)
+          icon.classList.add("killed")
+          iconn.className = "circle2none"
+          defend.className = "attacking"
           setTimeout(() => {
-            icons.classList.remove("killed")
+            icon.className = "none"
+            iconn.className = ""
+            defend.className = "none"
           }, 3000);
         }
       }
@@ -925,6 +961,7 @@ export class GameStartComponent implements OnInit {
       }
       this.waitingDef = false;
       this.canPass = true;
+      this.canAttack = false;
       if (this.myCharacter.char_name == 'legioncommander') {
         this.waitingLegionDrop = true;
         this.canPass = false;
@@ -1272,9 +1309,17 @@ export class GameStartComponent implements OnInit {
 
       }
     }
+
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.waitingKingSelect = false;
     this.characterCard = false;
     this.canAttack = false;
+    this.canTrick = false;
     this.cardShow = false;
     this.showGiveCard = false;
     this.showDecisionTemplate = false;
@@ -1774,6 +1819,7 @@ export class GameStartComponent implements OnInit {
     }
     this.cardCheck = null;
     this.canAttack = false;
+    this.canTrick = false;
     this.canUse = false;
     this.cardShow = false
   }
@@ -1963,7 +2009,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
     this.cardShow = false
-    this.canAttack = false
+    this.canTrick = false
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
         let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
@@ -1997,7 +2043,7 @@ export class GameStartComponent implements OnInit {
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
     this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
     this.cardShow = false
-    this.canAttack = false
+    this.canTrick = false
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
         let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
@@ -2224,10 +2270,10 @@ export class GameStartComponent implements OnInit {
         });
       }else if(cardInfo.item_name == "coaching"){
         // -------------- use trick ---------------
-        this.canAttack = true
+        this.canTrick = true
         for (var b = 1; b < 7; b++) {
           if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-            let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+            let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
             if (this.trickDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
               icon.classList.remove("none")
               icon.classList.add("pvp" + b)
