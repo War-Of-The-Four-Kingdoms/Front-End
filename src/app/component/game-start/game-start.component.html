@@ -72,7 +72,7 @@
         <!-- เพิ่มอวตาร์-->
       </div>
       <div class="card-canvas d-flex flex-wrap justify-content-center">
-        <div class="cantUse" *ngIf="this.healCard.length == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
+        <div class="cantUses" *ngIf="this.healCard.length == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
         <div class="m-0 p-0" *ngFor="let healcard of this.healCard">
           <input type="checkbox" class="dropcard-checkbox" value="{{healcard.id}}" id="c{{healcard.id}}"
             (change)="checkedHeal($event)" />
@@ -90,6 +90,7 @@
   <!-- Party -->
   <div *ngIf="this.banquetTrick" class="banquettemplate d-flex m-0 p-0">
     <div class="w-100 d-flex m-0 px-5 flex-wrap justify-content-center align-items-center">
+      <div class="selectedUser">ผู้เล่น: <label class="reding">{{this.nameQueue}}</label> จงเลือก 1 ใบ</div>
       <div class="banquetcard d-flex" *ngFor="let banquetCard of this.banquetCards">
         <div *ngIf="banquetCard.selected" class="wmark d-flex justify-content-center align-items-center">
           <div class="selectedImage">
