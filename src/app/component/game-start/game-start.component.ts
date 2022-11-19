@@ -236,6 +236,7 @@ export class GameStartComponent implements OnInit {
   kingImage: any;
   foxiaLuck: any;
   specterUser: any;
+  nameQueue: any;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -691,8 +692,11 @@ export class GameStartComponent implements OnInit {
       }
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
+      console.log(data);
+      
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
+          if(this.checkhp(index,data)){
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
           let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
           let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
@@ -707,8 +711,10 @@ export class GameStartComponent implements OnInit {
           }, 3000);
         }
       }
+      }
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
+          if(this.checkhp(index,data)){
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
           let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
           let defend = this.elementRef.nativeElement.querySelector("#d" + String(index))
@@ -722,6 +728,7 @@ export class GameStartComponent implements OnInit {
             defend.className = "none"
           }, 3000);
         }
+      }
       }
       // let icon = this.elementRef.nativeElement.querySelector("#chair1")
       // icon.classList.add("killer")
@@ -1111,6 +1118,12 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('set banquet card').subscribe((data: any) => {
+      console.log(data);
+      this.waitingUser.forEach((element:any) => {
+        if(element.position == data.position){
+          this.nameQueue = element.username
+        }
+      });
       data.cards.forEach((cd:any) => {
         if(!cd.info.image.startsWith("../assets/picture/card/")){
           cd.info.image = "../assets/picture/card/"+cd.info.image;
@@ -1129,7 +1142,11 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('banquet next').subscribe((data: any) => {
       console.log(data);
-
+      this.waitingUser.forEach((element:any) => {
+        if(element.position == data.position){
+          this.nameQueue = element.username
+        }
+      });
       if((!this.isDead) && this.banquetTrick){
         this.banquetCards.find(bc => bc.id == data.cid).selected = true;
         this.banquetCards.find(bc => bc.id == data.cid).owner = data.selected_pos;
@@ -1929,6 +1946,24 @@ export class GameStartComponent implements OnInit {
     this.cardShow = true;
   }
 
+  checkhp(index:any,data:any){
+    if(index == 1 && data.hp >= this.hp1){
+      return true;
+    }else if(index == 2 && data.hp >= this.hp2){
+      return true;
+    }else if(index == 3 && data.hp >= this.hp3){
+      return true;
+    }else if(index == 4 && data.hp >= this.hp4){
+      return true;
+    }else if(index == 5 && data.hp >= this.hp5){
+      return true;
+    }else if(index == 6 && data.hp >= this.hp6){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   cancelShow() {
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
@@ -2165,7 +2200,7 @@ export class GameStartComponent implements OnInit {
     this.canTrick = false
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-        let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
         icon.className = 'none';
       }
     }
@@ -2450,6 +2485,7 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('assign position').subscribe((data: any) => {
       this.specterUser = []
       this.waitingUser = data
+      console.log(this.waitingUser);
       this.waitingUser.forEach((element, i) => {
         if (element.position == 0) {
           this.specterUser.push(element)

@@ -2,7 +2,7 @@
   font-family: 'Oswald', sans-serif;
 }
 
-.attacking{
+.attacking {
   position: absolute;
   top: -70%;
   left: 20px;
@@ -1611,7 +1611,7 @@ body {
     left: 30%;
   }
 
-  
+
 
   100% {}
 }
@@ -1629,9 +1629,11 @@ body {
   40% {
     scale: 1.5;
   }
+
   50% {
     scale: 1.5;
   }
+
   60% {
     -webkit-filter: invert(40%) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
     filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
@@ -1639,47 +1641,47 @@ body {
     left: 50%;
   }
 
-  70%{
+  70% {
     top: 41%;
     left: 53%;
   }
 
-  72%{
+  72% {
     top: 41%;
     left: 54%;
   }
 
-  74%{
+  74% {
     top: 41%;
     left: 53%;
   }
 
-  76%{
+  76% {
     top: 41%;
     left: 54%;
   }
 
-  78%{
+  78% {
     top: 41%;
     left: 53%;
   }
 
-  80%{
+  80% {
     top: 41%;
     left: 54%;
   }
 
-  82%{
+  82% {
     top: 41%;
     left: 53%;
   }
 
-  84%{
+  84% {
     top: 41%;
     left: 54%;
   }
 
-  86%{
+  86% {
     top: 41%;
     left: 54%;
   }
@@ -3614,7 +3616,30 @@ input[type=checkbox]:checked+label {
   background-color: rgba(255, 255, 255, 0);
   text-align: center;
   position: absolute;
+}
 
+.selectedUser{
+  font-size: 56px;
+  color: white;
+  width: 900px;
+  background-color: rgba(255, 255, 255, 0);
+  text-align: center;
+  position: absolute;
+  top: 10%;
+}
+
+.reding{
+  color: red;
+}
+
+.cantUses {
+  font-size: 56px;
+  color: white;
+  width: 900px;
+  background-color: rgba(255, 255, 255, 0);
+  text-align: center;
+  position: absolute;
+  top: 55%;
 }
 
 .waitingdef {
@@ -3836,7 +3861,7 @@ input[type=checkbox]:checked+label {
   top: 70%;
 }
 
-.banquettemplate{
+.banquettemplate {
   position: absolute;
   width: 1920px;
   height: 100%;
@@ -3844,7 +3869,7 @@ input[type=checkbox]:checked+label {
   background-color: rgba(0, 0, 0, .5);
 }
 
-.banquetcard{
+.banquetcard {
   width: 300px;
   height: 400px;
   margin: 0 2px;
@@ -3854,27 +3879,28 @@ input[type=checkbox]:checked+label {
   background-size: 100% 100%;
 }
 
-.banquetselectcard{
+.banquetselectcard {
   position: relative;
   z-index: 9001;
   width: 100%;
   height: 100%;
 }
-.banquetselected{
+
+.banquetselected {
   filter: brightness(0.2);
 }
 
-.wmark{
+.wmark {
   width: 300px;
   height: 400px;
   position: fixed;
   font-size: 100px;
   z-index: 9005;
-  color:rgb(0, 0, 0);
- }
+  color: rgb(0, 0, 0);
+}
 
- .selectedImage{
+.selectedImage {
   width: 200px;
   height: 200px;
   border-radius: 100px;
- }
+}
