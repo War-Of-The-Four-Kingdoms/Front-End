@@ -132,6 +132,10 @@ export class GameStartComponent implements OnInit {
   othersHandCard: any[] = [];
   legionTemp: boolean = false;
   //processing
+  ccSelected: any = null;
+  callcenterCards: any[] = [];
+  callcenterDrop:boolean = false;
+  waitingCallcenterDrop:boolean = false;
   canSelectBanquet:boolean = false;
   isDead: boolean = false;
   banquetTrick: boolean = false;
@@ -167,13 +171,13 @@ export class GameStartComponent implements OnInit {
   specialStage: any;
   decisionResult: any = null;
   dc_condition: any = null;
-  myEquipment = { weapon: null, armor: null, mount1: null, mount2: null };
+  myEquipment = { weapon: null as any, armor: null as any, mount1: null as any, mount2: null as any };
   otherEquipment = {
-    chair1: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
-    chair2: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
-    chair3: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
-    chair5: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } },
-    chair6: { position: 0, weapon: { card: null, image: null }, armor: { card: null, image: null }, mount1: { card: null, image: null }, mount2: { card: null, image: null } }
+    chair1: { position: 0, weapon: { card: null as any, image: null as any }, armor: { card: null as any, image: null as any }, mount1: { card: null as any, image: null as any }, mount2: { card: null as any, image: null as any } },
+    chair2: { position: 0, weapon: { card: null as any, image: null as any }, armor: { card: null as any, image: null as any }, mount1: { card: null as any, image: null as any }, mount2: { card: null as any, image: null as any } },
+    chair3: { position: 0, weapon: { card: null as any, image: null as any }, armor: { card: null as any, image: null as any }, mount1: { card: null as any, image: null as any }, mount2: { card: null as any, image: null as any } },
+    chair5: { position: 0, weapon: { card: null as any, image: null as any }, armor: { card: null as any, image: null as any }, mount1: { card: null as any, image: null as any }, mount2: { card: null as any, image: null as any } },
+    chair6: { position: 0, weapon: { card: null as any, image: null as any }, armor: { card: null as any, image: null as any }, mount1: { card: null as any, image: null as any }, mount2: { card: null as any, image: null as any } }
   }
   otherDecisionCard = {
     chair1: { card: [] as any, image: [] as any},
@@ -182,7 +186,7 @@ export class GameStartComponent implements OnInit {
     chair5: { card: [] as any, image: [] as any},
     chair6: { card: [] as any, image: [] as any}
   }
-  myEquipmentImage = { weapon: null, armor: null, mount1: null, mount2: null };
+  myEquipmentImage = { weapon: null as any, armor: null as any, mount1: null as any, mount2: null as any };
   //dropcard
   selectedItems: any[] = [];
   showDropTemplate: boolean = false;
@@ -939,25 +943,9 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('attack success').subscribe((data: any) => {
 
-      if (data.legion) {
-
-        if (this.hp4.length < this.maxHp) {
-          this.updateHp(this.hp4, 1);
-          this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
-        } else {
-          this.api.drawCard(this.lobbyCode, 1).subscribe((data: any) => {
-            this.test555 = true
-            this.showDraw = data
-            setTimeout(() => {
-              data.forEach((card: any) => {
-                this.handCard.push(card);
-              });
-              this.test555 = false
-              this.showDraw = [];
-              this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-            }, 2500);
-          });
-        }
+      if (data.legion && (this.hp4.length < this.maxHp)) {
+        this.updateHp(this.hp4, 1);
+        this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
       }
       this.waitingDef = false;
       this.canPass = true;
@@ -1070,6 +1058,58 @@ export class GameStartComponent implements OnInit {
         }
       });
     });
+    this.socket.listen('teatime heal').subscribe((data: any) => {
+      //data.position -> position ของคนที่ใช้การ์ดจิบชา
+      if(!this.isDead && this.hp4.length < this.maxHp){
+        this.updateHp(this.hp4, 1);
+        this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
+      }
+    });
+    this.socket.listen('callcenter drop').subscribe((data: any) => {
+      this.handCard.forEach(hc => {
+        hc.cctype = 'hand';
+        this.callcenterCards.push(hc);
+      });
+      if(this.myEquipment.weapon != null){
+        this.myEquipment.weapon['cctype'] = 'weapon';
+        this.callcenterCards.push(this.myEquipment.weapon);
+      }
+      if(this.myEquipment.armor != null){
+        this.myEquipment.armor['cctype'] = 'armor';
+        this.callcenterCards.push(this.myEquipment.armor);
+      }
+      if(this.myEquipment.mount1 != null){
+        this.myEquipment.mount1['cctype'] = 'mount1';
+        this.callcenterCards.push(this.myEquipment.mount1);
+      }
+      if(this.myEquipment.mount2 != null){
+        this.myEquipment.mount2['cctype'] = 'mount2';
+        this.callcenterCards.push(this.myEquipment.mount2);
+      }
+      this.callcenterDrop = true;
+    });
+    this.socket.listen('other drop equipment').subscribe((data: any) => {
+      console.log('ode '+data.position);
+      if(data.position != this.myPos){
+        if (this.otherEquipment.chair1.position == data.position) {
+          this.removeItem(data.type, this.otherEquipment.chair1);
+        } else if (this.otherEquipment.chair2.position == data.position) {
+          this.removeItem(data.type, this.otherEquipment.chair2);
+        } else if (this.otherEquipment.chair3.position == data.position) {
+          this.removeItem(data.type, this.otherEquipment.chair3);
+        }
+        else if (this.otherEquipment.chair5.position == data.position) {
+          this.removeItem(data.type, this.otherEquipment.chair5);
+        }
+        else if (this.otherEquipment.chair6.position == data.position) {
+          this.removeItem(data.type, this.otherEquipment.chair6);
+        }
+      }
+    });
+    this.socket.listen('callcenter done').subscribe((data: any) => {
+      this.waitingCallcenterDrop = false;
+    });
+
     this.socket.listen('set banquet card').subscribe((data: any) => {
       data.cards.forEach((cd:any) => {
         if(!cd.info.image.startsWith("../assets/picture/card/")){
@@ -1299,6 +1339,27 @@ export class GameStartComponent implements OnInit {
     }
   }
 
+  removeItem(type: any, object: any) {
+    switch (type) {
+      case 'weapon':
+        object.weapon.card = null;
+        object.weapon.image = null;
+        break;
+      case 'armor':
+        object.armor.card = null;
+        object.armor.image = null;
+        break;
+      case 'mount1':
+        object.mount1.card = null;
+        object.mount1.image = null;
+        break;
+      case 'mount2':
+        object.mount2.card = null;
+        object.mount2.image = null;
+        break;
+    }
+  }
+
   closeAll() {
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
@@ -1316,6 +1377,8 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
+    this.callcenterDrop = false;
+    this.waitingCallcenterDrop = false;
     this.waitingKingSelect = false;
     this.characterCard = false;
     this.canAttack = false;
@@ -1580,6 +1643,61 @@ export class GameStartComponent implements OnInit {
     this.incomingDamage = 0;
     this.showSelectDef = false;
   }
+  checkedCallcenter(event: any) {
+    if (event.target.checked === true) {
+      console.log(this.ccSelected);
+
+      if (this.ccSelected == null) {
+        this.ccSelected = event.target.value
+      } else {
+        event.target.checked = false;
+      }
+    } else {
+      this.ccSelected = null;
+    }
+  }
+  dropCallcenter() {
+    if (this.ccSelected == null) {
+      alert('กรุณาเลือกการ์ด 1 ใบ')
+    } else {
+      let dcard = this.callcenterCards.find(cc => cc.id == this.ccSelected)
+      console.log(dcard.cctype);
+
+      if(dcard.cctype == 'hand'){
+        console.log('hand');
+        this.handCard = this.handCard.filter(hc => hc.id != this.ccSelected)
+        this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+      }else{
+        console.log('equipment');
+        switch(dcard.cctype){
+          case 'weapon':
+            this.myEquipment.weapon = null;
+            this.myEquipmentImage.weapon = null;
+            break;
+          case 'armor':
+            this.myEquipment.armor = null;
+            this.myEquipmentImage.armor = null;
+            break;
+          case 'mount1':
+            this.myEquipment.mount1 = null;
+            this.myEquipmentImage.mount1 = null;
+            break;
+          case 'mount2':
+            this.myEquipment.mount2 = null;
+            this.myEquipmentImage.mount2 = null;
+            break;
+        }
+        this.socket.emit("drop equipment", { code: this.lobbyCode, type: dcard.cctype, position: this.myPos});
+      }
+      this.api.dropCard(this.lobbyCode, [this.ccSelected]).subscribe((data: any) => {
+      });
+      this.callcenterDrop = false;
+      this.callcenterCards = [];
+      this.ccSelected = null;
+      this.socket.emit("callcenter drop done", { code: this.lobbyCode });
+    }
+
+  }
   useCharDef() {
 
   }
@@ -1605,6 +1723,7 @@ export class GameStartComponent implements OnInit {
   putaFinish() {
     if (this.putaGiveCount >= 2 && this.hp4.length < this.maxHp) {
       this.updateHp(this.hp4, 1);
+      this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
     }
     this.selectedItems = [];
     this.showGiveCard = false;
@@ -2053,6 +2172,10 @@ export class GameStartComponent implements OnInit {
     if(this.cardCheck.info.item_name == 'coaching' || this.cardCheck.info.item_name == 'russianroulette'){
       this.socket.emit('set decision card',{ code: this.lobbyCode, target: data, card: this.cardCheck});
     }
+    if(this.cardCheck.info.item_name == 'callcenter'){
+      this.waitingCallcenterDrop = true;
+      this.socket.emit('use callcenter',{ code: this.lobbyCode, position: this.myPos , target: data});
+    }
   }
 
   damage() {
@@ -2287,6 +2410,23 @@ export class GameStartComponent implements OnInit {
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
         });
         this.socket.emit("use banquet trick", { code: this.lobbyCode, position: this.myPos});
+      }else if(cardInfo.item_name == "teatime"){
+        this.cardShow = false
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+        this.socket.emit("use teatime trick", { code: this.lobbyCode, position: this.myPos});
+      }else if(cardInfo.item_name == "callcenter"){
+        this.canTrick = true
+        for (var b = 1; b < 7; b++) {
+          if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+            let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+            if (this.trickDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
+              icon.classList.remove("none")
+              icon.classList.add("pvp" + b)
+            }
+          }
+        }
       }
     }
   }

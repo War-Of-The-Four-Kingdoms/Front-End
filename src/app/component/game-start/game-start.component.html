@@ -12,6 +12,28 @@
     </div>
   </div>
 
+  <!-- call center drop-->
+  <div *ngIf="this.waitingCallcenterDrop" class="waitingdef d-flex align-items-center">
+    <div class="waitingtext d-flex justify-content-center align-items-center">
+      รอเป้าหมายเลือกทิ้งการ์ด
+    </div>
+  </div>
+
+  <div class="droptemplate row m-0 p-0" *ngIf="this.callcenterDrop">
+    <div class="card-canvas d-flex flex-wrap justify-content-center" *ngIf="!this.dropFire">
+      <div class="m-0 p-0" *ngFor="let dcard of this.callcenterCards">
+        <input type="checkbox" class="dropcard-checkbox" value="{{dcard.id}}" id="c{{dcard.id}}"
+          (change)="checkedCallcenter($event)" />
+        <label for='c{{dcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+dcard.info.image}}></label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="confirmdrop" (click)="dropCallcenter()">ทิ้ง</button>
+    </div>
+  </div>
+
+  <!-- -->
+
    <!-- lose -->
    <div *ngIf="this.youLose" class="winlose d-flex align-items-center">
     <div class="loser d-flex justify-content-center align-items-center">
@@ -609,7 +631,7 @@ lenght
           src={{this.urluser+convert(this.chairPos[6])}} alt="Tyler" *ngIf="this.chair6user"><img
           class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
     </div>
-    
+
 
     <div class="user1" id="chair1">
       <div class="none" id="chat1">
