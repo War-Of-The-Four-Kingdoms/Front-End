@@ -688,7 +688,9 @@ export class GameStartComponent implements OnInit {
       if(data.legion){
         if(this.handCard.length > 0){
           this.legionDrop = true;
+          setTimeout(() => {
           this.showDropTemplate = true;
+        }, 3000);
         }else{
           this.socket.emit('no hand card', { code: this.lobbyCode});
         }
@@ -1004,7 +1006,9 @@ export class GameStartComponent implements OnInit {
       this.canPass = true;
       this.canAttack = false;
       if (this.myCharacter.char_name == 'legioncommander') {
-        this.waitingLegionDrop = true;
+        setTimeout(() => {
+          this.waitingLegionDrop = true;
+        }, 3000);
         this.canPass = false;
       }
     });
@@ -1113,6 +1117,10 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('teatime heal').subscribe((data: any) => {
       //data.position -> position ของคนที่ใช้การ์ดจิบชา
+      this.groupEffect = true;
+      setTimeout(() => {
+      this.groupEffect = false;
+      }, 2500);
       if(!this.isDead && this.hp4.length < this.maxHp){
         this.updateHp(this.hp4, 1);
         this.socket.emit('update hp', { code: this.lobbyCode, hp: this.hp4.length });
