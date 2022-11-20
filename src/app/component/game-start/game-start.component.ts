@@ -129,9 +129,13 @@ export class GameStartComponent implements OnInit {
   others: any;
   maxHp: any;
   confirmEffect: boolean = false;
-  othersHandCard: any[] = [];
   legionTemp: boolean = false;
   //processing
+  decisionState: any = '';
+  stealTrickTarget: any = null;
+  stSelected: any = null;
+  stealTrickCards: any[] = [];
+  stealTrickTemplate:boolean = false;
   ccSelected: any = null;
   callcenterCards: any[] = [];
   callcenterDrop:boolean = false;
@@ -393,6 +397,7 @@ export class GameStartComponent implements OnInit {
       if (data.position == this.myPos) {
         switch (data.stage) {
           case 'prepare':
+            this.bearylDamageAdjust = 0;
             this.skipPlay = false;
             this.canPass = false;
             this.drawAdjust = 0;
@@ -419,7 +424,6 @@ export class GameStartComponent implements OnInit {
                     this.decideQueue.enqueue({ waiting: true, name: 'merguin' });
                   }
                   this.decideQueue.enqueue({ waiting: false, name: d.info.item_name });
-                  d.info.item_name == "russianroulette"? this.rouletteCount++ : '';
                 }
                 d.info.item_name == "russianroulette"? this.rouletteCount++ : '';
               });
@@ -565,7 +569,7 @@ export class GameStartComponent implements OnInit {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
           if (this.otherEquipment.chair1.mount1.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair1.mount1.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair1.mount1.card.info['distance']
           }
         } else if (this.chair2 == d) {
           if (this.testing.filter((dt: any) => dt == this.chair1 || dt == this.chair5 || dt == this.chair6).length >= 1) {
@@ -578,17 +582,17 @@ export class GameStartComponent implements OnInit {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
           if (this.otherEquipment.chair2.mount1.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair2.mount1.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair2.mount1.card.info['distance']
           }
         } else if (this.chair3 == d) {
           this.enemyDistance.push({ position: d, distance: 1 })
           if (this.otherEquipment.chair3.mount1.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair3.mount1.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair3.mount1.card.info['distance']
           }
         } else if (this.chair5 == d) {
           this.enemyDistance.push({ position: d, distance: 1 })
           if (this.otherEquipment.chair5.mount1.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair5.mount1.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair5.mount1.card.info['distance']
           }
         }
         else if (this.chair6 == d) {
@@ -602,7 +606,7 @@ export class GameStartComponent implements OnInit {
             this.enemyDistance.push({ position: d, distance: 1 })
           }
           if (this.otherEquipment.chair6.mount1.card != null) {
-            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount1.card['distance']
+            this.enemyDistance.find(e => e.position == d).distance += this.otherEquipment.chair6.mount1.card.info['distance']
           }
         }
       });
@@ -693,7 +697,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('update remain hp').subscribe((data: any) => {
       console.log(data);
-      
+
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
           if(this.checkhp(index,data)){
@@ -756,6 +760,16 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('player not select pos').subscribe(() => {
       this.started = false
       alert('มีผู้เล่นที่ยังไม่ได้เลือกตำแหน่งที่นั่ง')
+    });
+
+    this.socket.listen('set steal cards').subscribe((data: any) => {
+      data.cards.forEach((card: any) => {
+        card.sttype = 'hand';
+        card.info.image = 'cover.png';
+        this.stealTrickCards.push(card);
+      });
+      console.log(this.stealTrickCards);
+      this.stealTrickTemplate = true;
     });
     this.socket.listen('update inhand').subscribe((data: any) => {
       if (data.position != this.myPos) {
@@ -908,6 +922,38 @@ export class GameStartComponent implements OnInit {
         this.handCard = this.handCard.filter(hc => hc.id != card.id);
       });
     });
+    this.socket.listen('card stolen trick').subscribe((data: any) => {
+      if(!this.isDead){
+        if(data.type == 'hand'){
+          this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
+        }else{
+          switch(data.type){
+            case 'weapon':
+              this.attackDistance -= this.myEquipment.weapon.info.distance;
+              this.trickDistance -= this.myEquipment.weapon.info.distance
+              this.myEquipment.weapon = null;
+              this.myEquipmentImage.weapon = null;
+              break;
+            case 'armor':
+              this.myEquipment.armor = null;
+              this.myEquipmentImage.armor = null;
+              break;
+            case 'mount1':
+              this.myEquipment.mount1 = null;
+              this.myEquipmentImage.mount1 = null;
+              break;
+            case 'mount2':
+              this.attackDistance += this.myEquipment.mount2.info.distance;
+              this.trickDistance += this.myEquipment.mount2.info.distance
+              this.myEquipment.mount2 = null;
+              this.myEquipmentImage.mount2 = null;
+              break;
+        }
+        }
+      }
+
+    });
+
     this.socket.listen('coma').subscribe((data: any) => {
       this.coma = true;
     });
@@ -1096,20 +1142,19 @@ export class GameStartComponent implements OnInit {
       this.callcenterDrop = true;
     });
     this.socket.listen('other drop equipment').subscribe((data: any) => {
-      console.log('ode '+data.position);
       if(data.position != this.myPos){
         if (this.otherEquipment.chair1.position == data.position) {
-          this.removeItem(data.type, this.otherEquipment.chair1);
+          this.removeItem(data.type, this.otherEquipment.chair1, data.position);
         } else if (this.otherEquipment.chair2.position == data.position) {
-          this.removeItem(data.type, this.otherEquipment.chair2);
+          this.removeItem(data.type, this.otherEquipment.chair2, data.position);
         } else if (this.otherEquipment.chair3.position == data.position) {
-          this.removeItem(data.type, this.otherEquipment.chair3);
+          this.removeItem(data.type, this.otherEquipment.chair3, data.position);
         }
         else if (this.otherEquipment.chair5.position == data.position) {
-          this.removeItem(data.type, this.otherEquipment.chair5);
+          this.removeItem(data.type, this.otherEquipment.chair5, data.position);
         }
         else if (this.otherEquipment.chair6.position == data.position) {
-          this.removeItem(data.type, this.otherEquipment.chair6);
+          this.removeItem(data.type, this.otherEquipment.chair6, data.position);
         }
       }
     });
@@ -1339,24 +1384,24 @@ export class GameStartComponent implements OnInit {
     switch (type) {
       case 'weapon':
         object.weapon.card = card;
-        object.weapon.image = card.image;
+        object.weapon.image = card.info.image;
         break;
       case 'armor':
         object.armor.card = card;
-        object.armor.image = card.image;
+        object.armor.image = card.info.image;
         break;
       case 'mount1':
         object.mount1.card = card;
-        object.mount1.image = card.image;
+        object.mount1.image = card.info.image;
         break;
       case 'mount2':
         object.mount2.card = card;
-        object.mount2.image = card.image;
+        object.mount2.image = card.info.image;
         break;
     }
   }
 
-  removeItem(type: any, object: any) {
+  removeItem(type: any, object: any , pos: any) {
     switch (type) {
       case 'weapon':
         object.weapon.card = null;
@@ -1369,6 +1414,7 @@ export class GameStartComponent implements OnInit {
       case 'mount1':
         object.mount1.card = null;
         object.mount1.image = null;
+        this.enemyDistance.find(e => e.position == pos).distance -= 1;
         break;
       case 'mount2':
         object.mount2.card = null;
@@ -1673,6 +1719,34 @@ export class GameStartComponent implements OnInit {
       this.ccSelected = null;
     }
   }
+
+  checkedStealTrick(event: any) {
+    if (event.target.checked === true) {
+      if (this.stSelected == null) {
+        this.stSelected = event.target.value;
+      } else {
+        event.target.checked = false;
+      }
+    } else {
+      this.stSelected = null;
+    }
+  }
+
+  confirmStealTrick(){
+    if (this.stSelected == null) {
+      alert('กรุณาเลือกการ์ด 1 ใบ')
+    } else {
+      console.log('stealing');
+
+      let stcard = this.stealTrickCards.find(st => st.id == this.stSelected);
+      this.socket.emit("steal other card", { code: this.lobbyCode, type: stcard.sttype, card: stcard , target: this.stealTrickTarget});
+      this.stealTrickCards = [];
+      this.stealTrickTarget = null;
+      this.stealTrickTemplate = false;
+      this.stSelected = null;
+    }
+  }
+
   dropCallcenter() {
     if (this.ccSelected == null) {
       alert('กรุณาเลือกการ์ด 1 ใบ')
@@ -1983,7 +2057,7 @@ export class GameStartComponent implements OnInit {
       this.api.openCard(this.lobbyCode).subscribe((card: any) => {
         this.foxiaLuck = card
         let x = card;
-        if (this.myCharacter.char_name == 'foxia') {
+        if (this.decisionState == 'foxia') {
           let symbols = ['club', 'spade'];
           let s_check = false;
           symbols.forEach((sb: any) => {
@@ -2193,23 +2267,98 @@ export class GameStartComponent implements OnInit {
 
   }
 
-  cfTrick(data: any){
-    this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
-    this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-    this.cardShow = false
-    this.canTrick = false
-    for (var b = 1; b < 7; b++) {
-      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
-        icon.className = 'none';
-      }
+  setEquipmentStealTrickCards(chair: any){
+    console.log(chair);
+    if(chair.weapon.card != null){
+      chair.weapon.card['sttype'] = 'weapon';
+      this.stealTrickCards.push(chair.weapon.card);
     }
+    if(chair.armor.card != null){
+      chair.armor.card['sttype'] = 'armor';
+      this.stealTrickCards.push(chair.armor.card);
+    }
+    if(chair.mount1.card != null){
+      chair.mount1.card['sttype'] = 'mount1';
+      this.stealTrickCards.push(chair.mount1.card);
+    }
+    if(chair.mount2.card != null){
+      chair.mount2.card['sttype'] = 'mount2';
+      this.stealTrickCards.push(chair.mount2.card);
+    }
+  }
+
+  cfTrick(data: any){
+    let uCheck:boolean = true;
     if(this.cardCheck.info.item_name == 'coaching' || this.cardCheck.info.item_name == 'russianroulette'){
       this.socket.emit('set decision card',{ code: this.lobbyCode, target: data, card: this.cardCheck});
+    }else if(this.cardCheck.info.item_name == 'callcenter' || this.cardCheck.info.item_name == 'steal'){
+      let haveEquipment:boolean = false;
+      this.stealTrickCards = [];
+      if (this.chair1 == data) {
+        this.otherEquipment.chair1.weapon.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair1.armor.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair1.mount1.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair1.mount2.card != null ? haveEquipment = true : '';
+        if(this.cardCheck.info.item_name == 'steal'){
+          this.setEquipmentStealTrickCards(this.otherEquipment.chair1);
+        }
+      } else if (this.chair2 == data) {
+        this.otherEquipment.chair2.weapon.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair2.armor.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair2.mount1.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair2.mount2.card != null ? haveEquipment = true : '';
+        if(this.cardCheck.info.item_name == 'steal'){
+          this.setEquipmentStealTrickCards(this.otherEquipment.chair2);
+        }
+      } else if (this.chair3 == data) {
+        this.otherEquipment.chair3.weapon.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair3.armor.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair3.mount1.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair3.mount2.card != null ? haveEquipment = true : '';
+        if(this.cardCheck.info.item_name == 'steal'){
+          this.setEquipmentStealTrickCards(this.otherEquipment.chair3);
+        }
+      } else if (this.chair5 == data) {
+        this.otherEquipment.chair5.weapon.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair5.armor.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair5.mount1.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair5.mount2.card != null ? haveEquipment = true : '';
+        if(this.cardCheck.info.item_name == 'steal'){
+          this.setEquipmentStealTrickCards(this.otherEquipment.chair5);
+        }
+      } else if (this.chair6 == data) {
+        this.otherEquipment.chair6.weapon.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair6.armor.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair6.mount1.card != null ? haveEquipment = true : '';
+        this.otherEquipment.chair6.mount2.card != null ? haveEquipment = true : '';
+        if(this.cardCheck.info.item_name == 'steal'){
+          this.setEquipmentStealTrickCards(this.otherEquipment.chair6);
+        }
+      }
+      if(this.others.find((o: any) => o.position == data).in_hand != 0 || haveEquipment){
+        if(this.cardCheck.info.item_name == 'callcenter'){
+          this.waitingCallcenterDrop = true;
+          this.socket.emit('use callcenter',{ code: this.lobbyCode, position: this.myPos , target: data});
+        }else if(this.cardCheck.info.item_name == 'steal'){
+          this.stealTrickTarget = data;
+          this.socket.emit('use steal trick',{ code: this.lobbyCode, position: this.myPos , target: data});
+        }
+      }else{
+        alert('ผู้เล่นไม่มีการ์ดบนมือหรือในพื้นที่ติดตั้งอุปกรณ์');
+        uCheck = false;
+      }
     }
-    if(this.cardCheck.info.item_name == 'callcenter'){
-      this.waitingCallcenterDrop = true;
-      this.socket.emit('use callcenter',{ code: this.lobbyCode, position: this.myPos , target: data});
+    if(uCheck){
+      this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+      this.cardShow = false
+      this.canTrick = false
+      for (var b = 1; b < 7; b++) {
+        if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+          let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+          icon.className = 'none';
+        }
+      }
     }
   }
 
@@ -2353,7 +2502,7 @@ export class GameStartComponent implements OnInit {
                   break;
               }
               if (this.others.find((o: any) => o.position == martin_pos).in_hand > hp) {
-                if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
+                if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.info.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
                   let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
                   icon.classList.remove("none")
                   icon.classList.add("pvp" + b)
@@ -2385,7 +2534,7 @@ export class GameStartComponent implements OnInit {
               break;
           }
           if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-            if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
+            if ((this.myEquipment.weapon != null && this.myEquipment.weapon['item_name'] == 'shield_breaker') || armor == null || armor.info.item_name != 'frying_pan' || (this.cardCheck.info.symbol != 'spade' && this.cardCheck.info.symbol != 'club')) {
               let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
               if (this.attackDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
                 icon.classList.remove("none")
@@ -2426,7 +2575,7 @@ export class GameStartComponent implements OnInit {
         });
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
         });
-      }else if(cardInfo.item_name == "coaching" || cardInfo.item_name == "russianroulette"){
+      }else if(cardInfo.item_name == "coaching" || cardInfo.item_name == "russianroulette" || cardInfo.item_name == "callcenter" || cardInfo.item_name == "steal"){
         // -------------- use trick ---------------
         this.canTrick = true
         for (var b = 1; b < 7; b++) {
@@ -2451,18 +2600,19 @@ export class GameStartComponent implements OnInit {
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
         });
         this.socket.emit("use teatime trick", { code: this.lobbyCode, position: this.myPos});
-      }else if(cardInfo.item_name == "callcenter"){
-        this.canTrick = true
-        for (var b = 1; b < 7; b++) {
-          if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-            let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
-            if (this.trickDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
-              icon.classList.remove("none")
-              icon.classList.add("pvp" + b)
-            }
-          }
-        }
       }
+      // else if(cardInfo.item_name == "callcenter" || cardInfo.item_name == "steal"){
+      //   this.canTrick = true
+      //   for (var b = 1; b < 7; b++) {
+      //     if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+      //       let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+      //       if (this.trickDistance >= this.enemyDistance.find(e => e.position == this.chairPos[b]).distance) {
+      //         icon.classList.remove("none")
+      //         icon.classList.add("pvp" + b)
+      //       }
+      //     }
+      //   }
+      // }
     }
   }
 
@@ -2876,6 +3026,7 @@ export class GameStartComponent implements OnInit {
   }
 
   foxiaEffect() {
+    this.decisionState = 'foxia';
     this.isFoxiaEffect = true;
     this.showDecisionTemplate = true;
     //this.specialDefense = ['club','spade'];
@@ -2900,6 +3051,7 @@ export class GameStartComponent implements OnInit {
     this.isFoxiaEffect = false;
     this.showDecisionTemplate = false;
     this.decisionResult = null;
+    this.decisionState = '';
     this.next_queue();
   }
 
