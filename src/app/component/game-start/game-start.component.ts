@@ -1213,7 +1213,7 @@ export class GameStartComponent implements OnInit {
       console.log(data);
       console.log(this.myPos);
       this.waitingArrowshower = false;
-      this.waitingAmbush = false;a
+      this.waitingAmbush = false;
       if(data.position == this.myPos){
         if(data.type == 'def'){
           if (this.myCharacter.char_name == 'foxia') {
