@@ -2,6 +2,12 @@
   font-family: 'Oswald', sans-serif;
 }
 
+.ambushEffect{
+  position: absolute;
+  filter: invert(50%);
+  bottom: 10%;
+}
+
 .attacking {
   position: absolute;
   top: -70%;
