@@ -34,6 +34,42 @@
 
   <!-- -->
 
+  <!-- Ambush -->
+    <div *ngIf="this.waitingAmbush" class="waitingdef d-flex align-items-center">
+      <div class="waitingtext d-flex justify-content-center align-items-center">
+        AMBUSH!!!
+      </div>
+    </div>
+  <!-- -->
+
+  <!-- ArrowShower-->
+    <div *ngIf="this.waitingArrowshower" class="waitingdef d-flex align-items-center">
+      <div class="waitingtext d-flex justify-content-center align-items-center">
+        ARROWSHOWER!!!
+      </div>
+    </div>
+  <!-- -->
+
+<!-- -->
+<div class="deftemplate row m-0 p-0" *ngIf="this.showCounterAoe">
+  <!-- <div class="deftemplate row m-0 p-0" *ngIf="true"> -->
+  <div class="card-canvas d-flex flex-wrap justify-content-center" >
+    <div class="cantUse" *ngIf="this.counterAoeCards.length == 0">ไม่มีการ์ดที่ผู้เล่นสามารถใช้ได้</div>
+    <div class="m-0 p-0" *ngFor="let counterAoeCard of this.counterAoeCards" >
+      <input type="checkbox" class="dropcard-checkbox" value="{{counterAoeCard.id}}" id="c{{counterAoeCard.id}}"
+        (change)="checkedCounterAoe($event)" />
+      <label *ngIf="this.counterAoeCard.length != 0" for='c{{counterAoeCard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+counterAoeCard.info.image}}></label>
+    </div>
+  </div>
+  <div class="m-0 p-0 w-100 d-flex justify-content-center">
+    <button class="defButton greendef" (click)="useCounterAoe()">ใช้</button>
+    <button class="defButton reddef" (click)="noCounterAoe()">ไม่ใช้</button>
+    <!-- <button *ngIf="this.myCharacter.char_name == 'puta'" class="defButton" (click)="useCharDef()">ใช้ความสามารถตัวละคร</button> -->
+    <!-- <button *ngIf="this.myEquipment.armor != null && this.myEquipment.armor['item_name'] == 'knight_chainmail'" class="defButton" (click)="useArmorDef()">ใช้ความสามารถเกราะป้องกัน</button> -->
+  </div>
+</div>
+<!-- -->
+
   <!-- Steal Trick-->
   <div class="droptemplate row m-0 p-0" *ngIf="this.stealTrickTemplate">
     <div class="card-canvas d-flex flex-wrap justify-content-center">
@@ -164,8 +200,8 @@
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
       <button class="defButton greendef" (click)="useDef()">ใช้</button>
       <button class="defButton reddef" (click)="noDef()">ไม่ใช้</button>
-      <button *ngIf="this.myCharacter.char_name == 'puta'" class="defButton" (click)="useCharDef()">ใช้ความสามารถตัวละคร</button>
-      <button *ngIf="this.myEquipment.armor != null && this.myEquipment.armor['item_name'] == 'knight_chainmail'" class="defButton" (click)="useArmorDef()">ใช้ความสามารถเกราะป้องกัน</button>
+      <!-- <button *ngIf="this.myCharacter.char_name == 'puta'" class="defButton" (click)="useCharDef()">ใช้ความสามารถตัวละคร</button> -->
+      <!-- <button *ngIf="this.myEquipment.armor != null && this.myEquipment.armor['item_name'] == 'knight_chainmail'" class="defButton" (click)="useArmorDef()">ใช้ความสามารถเกราะป้องกัน</button> -->
     </div>
   </div>
   <!--  -->
