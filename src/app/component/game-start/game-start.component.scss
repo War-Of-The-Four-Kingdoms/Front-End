@@ -8,6 +8,36 @@
   left: 20px;
 }
 
+.robing{
+  position: absolute;
+  bottom: -10%;
+  right: 0%;
+  filter: brightness(50%);
+  animation: run 3s;
+  z-index: 25;
+}
+
+@keyframes run {
+20%{
+  bottom: -5%;
+}
+
+40%{
+  bottom: -14%;
+}
+
+60%{
+  bottom: -5%;
+}
+
+80%{
+  bottom: -14%;
+}
+100%{
+    right: 100%;
+  }
+}
+
 
 
 @keyframes moons {

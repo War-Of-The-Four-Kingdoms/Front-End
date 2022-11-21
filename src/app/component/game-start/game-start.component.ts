@@ -242,6 +242,8 @@ export class GameStartComponent implements OnInit {
   foxiaLuck: any;
   specterUser: any;
   nameQueue: any;
+  quickaction: any;
+  robing: boolean = false;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -921,11 +923,17 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('card stolen').subscribe((data: any) => {
-      data.cards.forEach((card: any) => {
-        this.handCard = this.handCard.filter(hc => hc.id != card.id);
-      });
+      this.robing = true
+      setTimeout(() => {
+        data.cards.forEach((card: any) => {
+          this.handCard = this.handCard.filter(hc => hc.id != card.id);
+          this.robing = false;
+        });
+      }, 3000);
     });
     this.socket.listen('card stolen trick').subscribe((data: any) => {
+      console.log(data);
+      
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
@@ -2783,10 +2791,12 @@ export class GameStartComponent implements OnInit {
       case 'martin':
         this.effectCharacter = "มาติน สกอร์เปี้ยน"
         this.effectDescription = "จองหอง : ในขั้นตอนการเตรียมการของราชา สามารถจั่วการ์ดได้ 1 ใบ หากเลือกที่จะจั่วการ์ด ขีดจำกัดสูงสุดของการ์ดในมือราชาจะลดลง 1 ใบในรอบนี้้ "
+        this.quickaction = this.urls+"martin"
         break;
       case 'merguin':
         this.effectCharacter = "เมอกวิ้น"
         this.effectDescription = "ศุนย์กลางของโลก : สามารถใช้สัญลักษณ์ของการ์ดบนมือ แทนผลการเปิดการ์ดตัดสินของทุกคนได้ (หลังจากนั้นให้ทิ้งการ์ดที่ถูกนำมาใช้) "
+        this.quickaction = this.urls+"merguin"
         break;
     }
 
