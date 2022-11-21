@@ -56,10 +56,6 @@ export class AppComponent {
   }
   async getDetails(): Promise<any> {
     await this.authService.detail().subscribe((res: any) => {
-      this.socket.emit('start', {
-        username: res.success.name,
-        uuid: res.success.uuid,
-      });
       sessionStorage.setItem('username',res.success.name);
       sessionStorage.setItem('uuid',res.success.uuid);
     });

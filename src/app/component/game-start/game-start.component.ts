@@ -706,6 +706,24 @@ export class GameStartComponent implements OnInit {
 
       }
     });
+
+    this.socket.listen('update remainhp aoe').subscribe((data: any) => {
+      console.log(data);
+      if (this.myPos == data.position) {
+        this.updateHp(this.hp4, data.hp - this.hp4.length);
+      } else if (this.chair1 == data.position) {
+        this.updateHp(this.hp1, data.hp - this.hp1.length);
+      } else if (this.chair2 == data.position) {
+        this.updateHp(this.hp2, data.hp - this.hp2.length);
+      } else if (this.chair3 == data.position) {
+        this.updateHp(this.hp3, data.hp - this.hp3.length);
+      } else if (this.chair5 == data.position) {
+        this.updateHp(this.hp5, data.hp - this.hp5.length);
+      } else if (this.chair6 == data.position) {
+        this.updateHp(this.hp6, data.hp - this.hp6.length);
+      }
+    });
+
     this.socket.listen('update remain hp').subscribe((data: any) => {
       console.log(data);
 
@@ -939,7 +957,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('card stolen trick').subscribe((data: any) => {
       console.log(data);
-      
+
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
@@ -1779,7 +1797,7 @@ export class GameStartComponent implements OnInit {
     if(this.aoeTrick == 'ambush'){
       this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: false , position: this.myPos , type: 'atk'});
     }else{
-      this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: true , position: this.myPos , type: 'def'});
+      this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: false , position: this.myPos , type: 'def'});
     }
     this.counterAoeSelected = null;
     this.showCounterAoe = false;
@@ -2006,9 +2024,7 @@ export class GameStartComponent implements OnInit {
         }
       }, 2000);
     }
-
   }
-
   prepareStage() {
     if (this.prepareQueue.length > 0) {
       let q = this.prepareQueue.dequeue();
@@ -2184,10 +2200,10 @@ export class GameStartComponent implements OnInit {
           });
           this.decisionResult = x;
           if (s_check) {
-            setTimeout(() => { this.storeConfirm = true; }, 3000);
+            setTimeout(() => { this.storeConfirm = true; }, 2500);
 
           } else {
-            setTimeout(() => { this.foxiaCancel() }, 3000);
+            setTimeout(() => { this.foxiaCancel() }, 2500);
           }
         } else {
           if (this.myCharacter.char_name == 'owliver') {
@@ -2197,7 +2213,7 @@ export class GameStartComponent implements OnInit {
             this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
           }
           this.decisionResult = x;
-          setTimeout(() => { this.conditionCheck(this.decisionResult); }, 3000);
+          setTimeout(() => { this.conditionCheck(this.decisionResult); }, 2500);
         }
       })
     } else {
@@ -2497,9 +2513,6 @@ export class GameStartComponent implements OnInit {
   }
 
   testUseCard() {
-    let cardInfo = this.cardCheck.info;
-    let change = false;
-    let oldEquipment: any = null;
     this.cardShow = false
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
     this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
@@ -2507,6 +2520,7 @@ export class GameStartComponent implements OnInit {
     this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'def'});
     this.waitingArrowshower = true;
   }
+
 
   useCard() {
     let cardInfo = this.cardCheck.info;
