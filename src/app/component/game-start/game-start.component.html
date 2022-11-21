@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center">
-      <button class="confirmdrop" (click)="dropCallcenter()">ทิ้ง</button>
+      <img class="confirmdrops" src="../assets/picture/fire.png" (click)="dropCallcenter()">
     </div>
   </div>
 
@@ -165,7 +165,7 @@
       </div>
     </div>
     <div class="m-0 p-0 w-100 d-flex justify-content-center" *ngIf="!this.dropFire">
-      <button class="confirmdrop" (click)="dropSelectedCard()">DROP</button>
+      <img class="confirmdrops" src="../assets/picture/fire.png" (click)="dropSelectedCard()">
     </div>
     <div class="drop" *ngIf="this.dropFire">
       <div class="dropTest">

@@ -79,6 +79,7 @@ export class GameStartComponent implements OnInit {
   handCard: any[] = []
   decisionCard: any[] = [];
   defCard: any[] = [];
+  inprogress = [1,3,4,6,8,9,10,11,12,13,14,15,20,21,22,24,17,7,25];
   test: any;
   img1: any;
   img2: any;
@@ -1924,9 +1925,15 @@ export class GameStartComponent implements OnInit {
 
 
   showCard(card: any) {
+    this.canAttack = false;
+    this.canTrick = false;
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
         let icon = this.elementRef.nativeElement.querySelector("#chairpvp" + String(b))
+        icon.className = 'none';
+      }
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
         icon.className = 'none';
       }
     }
@@ -2476,9 +2483,22 @@ export class GameStartComponent implements OnInit {
 
   selectCharacter(char: any) {
     if (this.role == 'king') {
-      this.socket.emit('king selected', { cid: char.id, code: this.lobbyCode });
+      console.log(char.id);
+      if(this.inprogress.includes(char.id)){
+      if(window.confirm('This character is still being developed, there may be some effects that cant be used, are you sure you can use them?')){
+        this.socket.emit('king selected', { cid: char.id, code: this.lobbyCode });
+       }
+      }else{
+        this.socket.emit('king selected', { cid: char.id, code: this.lobbyCode });
+      }
     } else {
+      if(this.inprogress.includes(char.id)){
+        if(window.confirm('This character is still being developed, there may be some effects that cant be used, are you sure you can use them?')){
       this.socket.emit('character selected', { cid: char.id, code: this.lobbyCode });
+        }
+      }else{
+        this.socket.emit('character selected', { cid: char.id, code: this.lobbyCode });
+      }
     }
     if (char.char_name == 'lucifer') {
       this.cardMethod(char.char_name);
