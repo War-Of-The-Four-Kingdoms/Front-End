@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
           sessionStorage.setItem('username', this.name);
           sessionStorage.setItem('uuid', this.uuid);
         }
-        // this.socket.emit('start', { username: this.name, uuid: this.uuid })
+        this.socket.emit('start', { username: this.name, uuid: this.uuid })
       });
     return 'success';
   }
