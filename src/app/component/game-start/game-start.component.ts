@@ -941,10 +941,10 @@ export class GameStartComponent implements OnInit {
       console.log(data);
       this.robing = true
       setTimeout(() => {
-        this.robing = false;
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
+          this.robing = false;
         }else{
           switch(data.type){
             case 'weapon':
