@@ -131,6 +131,12 @@ export class GameStartComponent implements OnInit {
   confirmEffect: boolean = false;
   legionTemp: boolean = false;
   //processing
+  counterAoeSelected: any = null;
+  aoeTrick: any = null;
+  showCounterAoe:boolean = false;
+  counterAoeCards: any[] = [];
+  waitingArrowshower:boolean = false;
+  waitingAmbush:boolean = false;
   decisionState: any = '';
   stealTrickTarget: any = null;
   stSelected: any = null;
@@ -1193,8 +1199,53 @@ export class GameStartComponent implements OnInit {
         }
       }
     });
-    this.socket.listen('banquet next').subscribe((data: any) => {
+
+    this.socket.listen('aoe trick next').subscribe((data: any) => {
       console.log(data);
+      console.log(this.myPos);
+      this.waitingArrowshower = false;
+      this.waitingAmbush = false;a
+      if(data.position == this.myPos){
+        if(data.type == 'def'){
+          if (this.myCharacter.char_name == 'foxia') {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.symbol == 'spade' || hc.info.symbol == 'club');
+          } else if (this.myCharacter.char_name == 'ninjakappa') {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.item_name == 'attack');
+          } else {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense');
+          }
+          this.aoeTrick = 'arrowshower';
+        }else{
+          if (this.myCharacter.char_name == 'ninjakappa') {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.item_name == 'attack');
+          } else if (this.myCharacter.char_name == 'bloodyknight') {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.symbol == 'diamond' || hc.info.symbol == 'heart' || hc.info.item_name == 'attack');
+          } else {
+            this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'attack');
+          }
+          this.aoeTrick = 'ambush';
+        }
+        this.showCounterAoe = true;
+      }else{
+        if(data.type == 'def'){
+          this.waitingArrowshower = true;
+          this.waitingAmbush = false;
+        }else{
+          this.waitingArrowshower = false;
+          this.waitingAmbush = true;
+        }
+      }
+    });
+    this.socket.listen('aoe trick done').subscribe((data: any) => {
+      this.aoeTrick = null;
+      this.showCounterAoe = false;
+      this.waitingArrowshower = false;
+      this.waitingAmbush = false;
+      this.counterAoeSelected = null;
+      this.counterAoeCards = [];
+    });
+
+    this.socket.listen('banquet next').subscribe((data: any) => {
       this.waitingUser.forEach((element:any) => {
         if(element.position == data.position){
           this.nameQueue = element.username
@@ -1682,6 +1733,48 @@ export class GameStartComponent implements OnInit {
       this.stealCardShowNum = 0;
     }
   }
+  checkedCounterAoe(event: any) {
+    if (event.target.checked === true) {
+      if (this.counterAoeSelected == null) {
+        this.counterAoeSelected = event.target.value;
+      } else {
+        event.target.checked = false;
+      }
+    } else {
+      this.counterAoeSelected = null;
+    }
+  }
+  useCounterAoe() {
+    if (this.counterAoeSelected != null) {
+      this.handCard = this.handCard.filter(hc => hc.id != this.counterAoeSelected);
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+      this.api.dropCard(this.lobbyCode, [this.counterAoeSelected]).subscribe((data: any) => {
+      });
+      if(this.aoeTrick == 'ambush'){
+        this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: true , position: this.myPos , type: 'atk'});
+      }else{
+        this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: true , position: this.myPos , type: 'def'});
+      }
+
+      this.counterAoeSelected = null;
+      this.showCounterAoe = false;
+    }else {
+      if(this.aoeTrick == 'ambush'){
+        alert('กรุณาเลือกการ์ดโจมตีจำนวน 1 ใบ');
+      }else{
+        alert('กรุณาเลือกการ์ดป้องกันจำนวน 1 ใบ');
+      }
+    }
+  }
+  noCounterAoe() {
+    if(this.aoeTrick == 'ambush'){
+      this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: false , position: this.myPos , type: 'atk'});
+    }else{
+      this.socket.emit('counter aoe trick', { code: this.lobbyCode, canCounter: true , position: this.myPos , type: 'def'});
+    }
+    this.counterAoeSelected = null;
+    this.showCounterAoe = false;
+  }
   checkedDef(event: any) {
     if (event.target.checked === true) {
       if (this.defSelected.length < this.defUse) {
@@ -1711,6 +1804,7 @@ export class GameStartComponent implements OnInit {
   }
   noDef() {
     this.socket.emit('use defense', { code: this.lobbyCode, canDef: false, damage: this.incomingDamage });
+    this.defSelected = [];
     this.incomingDamage = 0;
     this.showSelectDef = false;
   }
@@ -2395,7 +2489,8 @@ export class GameStartComponent implements OnInit {
     this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
     this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
     });
-    this.socket.emit("use banquet trick", { code: this.lobbyCode, position: this.myPos});
+    this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'def'});
+    this.waitingArrowshower = true;
   }
 
   useCard() {
@@ -2608,6 +2703,21 @@ export class GameStartComponent implements OnInit {
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
         });
         this.socket.emit("use teatime trick", { code: this.lobbyCode, position: this.myPos});
+      }else if(cardInfo.item_name == "ambush"){
+        this.cardShow = false
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+        this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'atk'});
+        this.waitingAmbush = true;
+      }
+      else if(cardInfo.item_name == "arrowshower"){
+        this.cardShow = false
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+        this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'def'});
+        this.waitingArrowshower = true;
       }
       // else if(cardInfo.item_name == "callcenter" || cardInfo.item_name == "steal"){
       //   this.canTrick = true
