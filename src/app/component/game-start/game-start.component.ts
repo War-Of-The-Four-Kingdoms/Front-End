@@ -939,7 +939,8 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('card stolen trick').subscribe((data: any) => {
       console.log(data);
-      
+      setTimeout(() => {
+      this.robing = true
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
@@ -968,7 +969,7 @@ export class GameStartComponent implements OnInit {
         }
         }
       }
-
+    }, 3000);
     });
 
     this.socket.listen('coma').subscribe((data: any) => {
