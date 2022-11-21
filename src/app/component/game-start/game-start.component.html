@@ -34,6 +34,21 @@
 
   <!-- -->
 
+  <!-- Steal Trick-->
+  <div class="droptemplate row m-0 p-0" *ngIf="this.stealTrickTemplate">
+    <div class="card-canvas d-flex flex-wrap justify-content-center">
+      <div class="m-0 p-0" *ngFor="let stcard of this.stealTrickCards">
+        <input type="checkbox" class="dropcard-checkbox" value="{{stcard.id}}" id="c{{stcard.id}}"
+          (change)="checkedStealTrick($event)" />
+        <label for='c{{stcard.id}}' class="carddrop">&nbsp;<img class="popupCards"  src={{this.urls+stcard.info.image}}></label>
+      </div>
+    </div>
+    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+      <button class="confirmdrop" (click)="confirmStealTrick()">ขโมย</button>
+    </div>
+  </div>
+  <!-- -->
+
    <!-- lose -->
    <div *ngIf="this.youLose" class="winlose d-flex align-items-center">
     <div class="loser d-flex justify-content-center align-items-center">
