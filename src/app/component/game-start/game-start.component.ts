@@ -939,8 +939,9 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('card stolen trick').subscribe((data: any) => {
       console.log(data);
-      setTimeout(() => {
       this.robing = true
+      setTimeout(() => {
+        this.robing = false;
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
