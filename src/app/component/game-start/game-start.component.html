@@ -38,7 +38,7 @@
   <!-- Ambush -->
   <div *ngIf="this.waitingAmbush" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
-      AMBUSH!!!
+      AMBUSH!!! YOU SURROUNDED BY HUNTER THAT WANNA KILL U
     </div>
   </div>
 
@@ -47,7 +47,7 @@
   <!-- ArrowShower-->
   <div *ngIf="this.waitingArrowshower" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
-      ARROWSHOWER!!!
+      ARROWSHOWER!!! RUNNNNNNNNNNNN
     </div>
   </div>
   <!-- -->
@@ -489,7 +489,7 @@
       <img class="effect-pattern effectuser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
         alt="Tyler">
       <div class="playerEffect cardEffect">
-        <img class="popupCard" src={{this.quickaction}} alt="Tyler">
+        <img class="popupCard" src="../assets/picture/card/martin" alt="Tyler">
       </div>
       <img class="effect-pattern effecteduser" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/penguin.jpg"
         alt="Tyler">
@@ -503,10 +503,25 @@
     <!-- โจมตีและป้องกัน -->
   </div>
   <!-- แทรกเทินชาวบ้าน -->
+  <!-- *ngIf="this.damageAmbush" -->
   <div class="all">
-    <div class="ambushEffect">
-      <img src="../assets/picture/crowd1.png">
+    <div class="ambushEffect" *ngIf="this.damageAmbush">
+      <img class="hunter1" src="../assets/picture/hunter.png">
     </div>
+    <div class="ambushEffect2" *ngIf="this.damageAmbush">
+      <img class="hunter2" src="../assets/picture/hunter.png">
+    </div>
+
+    <div *ngIf="this.damageArrowshower">
+      <img class="arrow archer" src="../assets/picture/archer.png">
+      <img class="arrow archer2" src="../assets/picture/archer.png">
+      <img class="arrow arrow1" src="../assets/picture/arrow.png">
+      <img class="arrow arrow2" src="../assets/picture/arrow.png">
+      <img class="arrow arrow3" src="../assets/picture/arrow.png">
+      <img class="arrow arrow4" src="../assets/picture/arrow.png">
+      <img class="arrow arrow5" src="../assets/picture/arrow.png">
+    </div>
+
     <img class="robing" src="../assets/picture/theif.png" *ngIf="this.robing">
     <div class="showingCard" *ngIf="this.activingCard" id="hi">
       <img class="popupCard" src={{this.showingCard}}>
@@ -515,7 +530,6 @@
     <div class="listUser">
       <ul>Waiting Player
         <li *ngFor="let data of this.specterUser">{{ data.username }}</li>
-
       </ul>
     </div>
 
@@ -752,7 +766,9 @@
         <img
           [ngClass]="{circle2: this.chair1 == this.queue, circle: this.chair1 != this.queue,circleLeave:this.quitRage.includes(this.chair1) && this.chair1 != this.queue}"
           src={{this.urluser+convert(this.chairPos[1])}} alt="Tyler" *ngIf="this.chair1user" id="chair1user"><img
-          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown1"></div>
+          class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown1">
+          <img class="none" src="../assets/picture/getdamage.png" id="less1">
+        </div>
     </div>
 
 
@@ -787,7 +803,9 @@
           *ngIf="this.hosting6"><img
           [ngClass]="{circle2: this.chair6 == this.queue, circle: this.chair6 != this.queue,circleLeave:this.quitRage.includes(this.chair6) && this.chair6 != this.queue}"
           src={{this.urluser+convert(this.chairPos[6])}} alt="Tyler" *ngIf="this.chair6user"><img class="king"
-          src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6"></div>
+          src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown6">
+          <img class="none" src="../assets/picture/getdamage.png" id="less6">
+        </div>
 
     </div>
     <div class="user2" id="chair2">
@@ -823,7 +841,9 @@
         <img
           [ngClass]="{circle2: this.chair2 == this.queue, circle: this.chair2 != this.queue,circleLeave:this.quitRage.includes(this.chair2) && this.chair2 != this.queue}"
           src={{this.urluser+convert(this.chairPos[2])}} alt="Tyler" *ngIf="this.chair2user"><img class="king"
-          src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2"></div>
+          src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown2">
+          <img class="none" src="../assets/picture/getdamage.png" id="less2">
+        </div>
 
     </div>
 
@@ -860,6 +880,7 @@
       <img
         [ngClass]="{circle2: this.chair5 == this.queue, circle: this.chair5 != this.queue,circleLeave:this.quitRage.includes(this.chair5) && this.chair5 != this.queue}"
         src={{this.urluser+convert(this.chairPos[5])}} alt="Tyler" *ngIf="this.chair5user">
+        <img class="none" src="../assets/picture/getdamage.png" id="less5">
       <img class="king" src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown5">
     </div>
     <div class="user3" id="chair3">
@@ -896,6 +917,7 @@
         [ngClass]="{circle2: this.chair3 == this.queue, circle: this.chair3 != this.queue,circleLeave:this.quitRage.includes(this.chair3) && this.chair3 != this.queue}"
         src={{this.urluser+convert(this.chairPos[3])}} alt="Tyler" *ngIf="this.chair3user"><img class="king"
         src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown3">
+        <img class="none" src="../assets/picture/getdamage.png" id="less3">
     </div>
     <div class="user4" id="chair4">
       <div class="none" id="chat4">
@@ -911,6 +933,7 @@
           src={{this.urluser+convert(this.chairPos[4])}} alt="Tyler" *ngIf="this.chair4user"> <img class="hosting"
           src="../assets/picture/hosting.png" style="width:9em" alt="Tyler" *ngIf="this.hosting4"><img class="king"
           src="../assets/picture/king.png" style="width:2em" alt="Tyler" *ngIf="this.crown4">
+          <img class="none" src="../assets/picture/getdamage.png" id="less4">
       </div>
 
     </div>

@@ -2,11 +2,115 @@
   font-family: 'Oswald', sans-serif;
 }
 
-.ambushEffect{
+.arrow {
   position: absolute;
-  filter: invert(50%);
-  bottom: 10%;
+  transform: rotateZ(180deg);
+  width: 160px;
 }
+
+@keyframes arrowshower {
+  0%{
+    bottom: 120%;
+  }
+
+  80%{
+    opacity: 1;
+  }
+  100%{
+    bottom: -10%;
+    opacity: 0;
+  }
+}
+
+.archer{
+  transform: rotateZ(-25deg);
+  width: 750px;
+  bottom: -30%;
+  left: -10%;
+  z-index: 2;
+}
+
+.archer2{
+  transform: rotateZ(-25deg);
+  width: 750px;
+  bottom: -20%;
+  left: -13%;
+  z-index: 1;
+}
+
+.arrow1{
+  left: 10%;
+  bottom: -10%;
+  animation: arrowshower 5s infinite;
+  z-index: 20;
+}
+
+.arrow2{
+  left: 25%;
+  bottom: -10%;
+  animation: arrowshower 4s infinite;
+  z-index: 20;
+}
+
+.arrow3{
+  left: 66%;
+  bottom: -10%;
+  animation: arrowshower 6.5s infinite;
+  z-index: 20;
+}
+
+.arrow4{
+  left: 88%;
+  bottom: -10%;
+  animation: arrowshower 4.5s infinite;
+  z-index: 20;
+}
+
+.arrow5{
+  left: 50%;
+  bottom: -10%;
+  animation: arrowshower 4.5s infinite;
+  z-index: 20;
+}
+
+
+.lessing {
+  position: absolute;
+  width: 75px;
+  top: 20%;
+  left: 20px;
+}
+
+.ambushEffect {
+  position: absolute;
+  bottom: -10%;
+  right: -5%;
+  animation: bright 5s infinite;
+}
+
+.ambushEffect2 {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  transform: rotateZ(180deg);
+  animation: bright 5.5s infinite;
+}
+
+@keyframes bright {
+  0% {
+    filter: invert(0%);
+  }
+
+  50% {
+    filter: invert(50%);
+  }
+
+  100% {
+    filter: invert(0%);
+  }
+}
+
+
 
 .attacking {
   position: absolute;
@@ -14,7 +118,7 @@
   left: 20px;
 }
 
-.robing{
+.robing {
   position: absolute;
   bottom: -10%;
   right: 0%;
@@ -24,22 +128,23 @@
 }
 
 @keyframes run {
-20%{
-  bottom: -5%;
-}
+  20% {
+    bottom: -5%;
+  }
 
-40%{
-  bottom: -14%;
-}
+  40% {
+    bottom: -14%;
+  }
 
-60%{
-  bottom: -5%;
-}
+  60% {
+    bottom: -5%;
+  }
 
-80%{
-  bottom: -14%;
-}
-100%{
+  80% {
+    bottom: -14%;
+  }
+
+  100% {
     right: 100%;
   }
 }
@@ -2218,6 +2323,7 @@ body {
   height: 50px;
   padding-top: 13px;
   left: 0;
+  z-index: 21;
 }
 
 .join-btn:hover {
@@ -3208,12 +3314,14 @@ input[type=checkbox]:checked+label {
   font-size: 28px;
   padding: 0;
 }
+
 .confirmdrop {
   border-radius: 100px;
   width: 200px;
   height: 200px;
 
 }
+
 .confirmdrops {
   border-radius: 100px;
   width: 200px;
@@ -3222,13 +3330,13 @@ input[type=checkbox]:checked+label {
 }
 
 @keyframes fire {
-  0%{
+  0% {
     scale: 1;
     box-shadow: 0 0 rgba(#f5630f, 1);
     filter: brightness(50%);
   }
 
-  50%{
+  50% {
     scale: 1.25;
     box-shadow: 0 0 50px 50px transparent;
     border-width: 10px;
@@ -3236,7 +3344,7 @@ input[type=checkbox]:checked+label {
     filter: brightness(100%);
   }
 
-  100%{
+  100% {
     scale: 1;
     box-shadow: 0 0 rgba(#f5630f, 1);
     filter: brightness(50%);
@@ -3682,7 +3790,7 @@ input[type=checkbox]:checked+label {
   position: absolute;
 }
 
-.selectedUser{
+.selectedUser {
   font-size: 56px;
   color: white;
   width: 900px;
@@ -3692,7 +3800,7 @@ input[type=checkbox]:checked+label {
   top: 10%;
 }
 
-.reding{
+.reding {
   color: red;
 }
 

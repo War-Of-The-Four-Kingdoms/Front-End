@@ -250,6 +250,8 @@ export class GameStartComponent implements OnInit {
   nameQueue: any;
   quickaction: any;
   robing: boolean = false;
+  damageAmbush: boolean = false;
+  damageArrowshower: boolean = false;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -263,12 +265,12 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
-    if(localStorage.getItem('repeat')){
-      this.router.navigate(['/home']);
-    }else{
-      localStorage.setItem('repeat','1');
-      this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
-    }
+    // if(localStorage.getItem('repeat')){
+    //   this.router.navigate(['/home']);
+    // }else{
+    //   localStorage.setItem('repeat','1');
+    //   this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
+    // }
     this.loopChat();
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
@@ -709,6 +711,12 @@ export class GameStartComponent implements OnInit {
 
     this.socket.listen('update remainhp aoe').subscribe((data: any) => {
       console.log(data);
+      for (let index = 1; index < 7; index++) {
+        if (this.chairPos[index] == data.position) {
+          let icon = this.elementRef.nativeElement.querySelector("#less" + String(index))
+          icon.className = "lessing"
+        }
+      }
       if (this.myPos == data.position) {
         this.updateHp(this.hp4, data.hp - this.hp4.length);
       } else if (this.chair1 == data.position) {
@@ -1271,7 +1279,13 @@ export class GameStartComponent implements OnInit {
       this.waitingArrowshower = false;
       this.waitingAmbush = false;
       this.counterAoeSelected = null;
+      this.damageArrowshower = false;
+      this.damageAmbush = false;
       this.counterAoeCards = [];
+      for (let index = 1; index < 7; index++) {
+          let icon = this.elementRef.nativeElement.querySelector("#less" + String(index))
+          icon.className = "none"
+      }
     });
 
     this.socket.listen('banquet next').subscribe((data: any) => {
@@ -2180,6 +2194,12 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
+    for (var b = 1; b < 7; b++) {
+      if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+        let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+        icon.className = 'none';
+      }
+    }
     this.cardCheck = null;
     this.canAttack = false;
     this.canTrick = false;
@@ -2741,6 +2761,7 @@ export class GameStartComponent implements OnInit {
         });
         this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'atk'});
         this.waitingAmbush = true;
+        this.damageAmbush= true;
       }
       else if(cardInfo.item_name == "arrowshower"){
         this.cardShow = false
@@ -2749,6 +2770,7 @@ export class GameStartComponent implements OnInit {
         });
         this.socket.emit("use aoe trick", { code: this.lobbyCode, position: this.myPos , type: 'def'});
         this.waitingArrowshower = true;
+        this.damageArrowshower = true;
       }
       // else if(cardInfo.item_name == "callcenter" || cardInfo.item_name == "steal"){
       //   this.canTrick = true
