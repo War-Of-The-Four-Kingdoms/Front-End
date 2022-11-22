@@ -8,6 +8,10 @@
   width: 160px;
 }
 
+.cautiontext{
+  position: absolute;
+}
+
 @keyframes arrowshower {
   0%{
     bottom: 120%;
@@ -344,7 +348,6 @@
   }
 
 }
-
 
 .cancelsi {
   position: absolute;

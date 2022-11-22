@@ -216,7 +216,7 @@
   <!--  -->
 
   <!-- ทิ้งการ์ด -->
-  <div class="droptemplate row m-0 p-0" *ngIf="this.showDropTemplate">
+  <div class="droptemplate row m-0 p-0" >
     <div class="card-canvas d-flex flex-wrap justify-content-center" *ngIf="!this.dropFire">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
@@ -322,6 +322,7 @@
 
   <!-- Give card to others -->
   <div class="giveCard row m-0 p-0" *ngIf="this.showGiveCard">
+    
     <div class="card-canvas d-flex flex-wrap justify-content-center">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
