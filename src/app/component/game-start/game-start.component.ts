@@ -267,6 +267,7 @@ export class GameStartComponent implements OnInit {
     this.roomMAX = sessionStorage.getItem('Max');
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
+
   ngOnInit(): void {
     if(localStorage.getItem('repeat')){
       this.router.navigate(['/home']);
@@ -274,7 +275,6 @@ export class GameStartComponent implements OnInit {
       localStorage.setItem('repeat','1');
       this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     }
-
     this.loopChat();
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
@@ -369,6 +369,8 @@ export class GameStartComponent implements OnInit {
     // });
 
     this.socket.listen('next turn').subscribe((pos: any) => {
+      console.log('next turn');
+
       // this.clock = true
       this.queue = pos
     });
@@ -524,6 +526,19 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('draw num adjust').subscribe((data: any) => {
       this.drawAdjust = data.num;
     });
+    this.socket.listen('clear table cards').subscribe((data: any) => {
+        if(data.position == this.chair1){
+          this.clearTableCard(this.otherEquipment.chair1,this.otherDecisionCard.chair1);
+        }else if(data.position == this.chair2){
+          this.clearTableCard(this.otherEquipment.chair2,this.otherDecisionCard.chair2);
+        }else if(data.position == this.chair3){
+          this.clearTableCard(this.otherEquipment.chair3,this.otherDecisionCard.chair3);
+        }else if(data.position == this.chair5){
+          this.clearTableCard(this.otherEquipment.chair5,this.otherDecisionCard.chair5);
+        }else if(data.position == this.chair6){
+          this.clearTableCard(this.otherEquipment.chair6,this.otherDecisionCard.chair6);
+        }
+    });
 
     this.listen_position();
     this.socket.listen('you died').subscribe((data: any) => {
@@ -538,18 +553,39 @@ export class GameStartComponent implements OnInit {
       });
       if (this.myEquipment.weapon != null) {
         handc.push(this.myEquipment.weapon['id'])
+        this.myEquipment.weapon = null
+        this.myEquipmentImage.weapon = null
       }
       if (this.myEquipment.armor != null) {
         handc.push(this.myEquipment.armor['id'])
+        this.myEquipment.armor = null
+        this.myEquipmentImage.armor = null
       }
       if (this.myEquipment.mount1 != null) {
         handc.push(this.myEquipment.mount1['id'])
+        this.myEquipment.mount1 = null
+        this.myEquipmentImage.mount1 = null
       }
       if (this.myEquipment.mount2 != null) {
         handc.push(this.myEquipment.mount2['id'])
+        this.myEquipment.mount2 = null
+        this.myEquipmentImage.mount2 = null
+      }
+      if(this.decisionCard.length > 0){
+        if(this.decisionCard.filter(dc => dc.info.item_name == 'russianroulette').length > 0){
+          let rr = this.decisionCard.filter(dc => dc.info.item_name == 'russianroulette');
+          this.socket.emit('russianroulette next', { code: this.lobbyCode, position: this.myPos, card: rr});
+        }
+        this.decisionCard.forEach(card => {
+          if(card.info.item_name != 'russianroulette'){
+            handc.push(card.id);
+          }
+        });
+        this.decisionCard = [];
       }
       this.api.dropCard(this.lobbyCode, handc).subscribe((data: any) => {
       });
+      this.socket.emit("clear table", { code: this.lobbyCode, position: this.myPos });
       this.handCard = [];
       this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       this.youDied = true;
@@ -628,6 +664,7 @@ export class GameStartComponent implements OnInit {
     })
     this.socket.listen('you win').subscribe((data: any) => {
       this.closeAll();
+      this.youDied = false;
       this.youWin = true;
       // setTimeout(() => {
       //   window.location.href = '/';
@@ -635,6 +672,7 @@ export class GameStartComponent implements OnInit {
     })
     this.socket.listen('you lose').subscribe((data: any) => {
       this.closeAll();
+      this.youDied = false;
       this.youLose = true;
       // setTimeout(() => {
       //   window.location.href = '/';
@@ -671,6 +709,8 @@ export class GameStartComponent implements OnInit {
       this.canPass = true;
     });
     this.socket.listen('damaged').subscribe((data: any) => {
+      console.log(data);
+
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
@@ -738,27 +778,39 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('update remain hp').subscribe((data: any) => {
-      for (let index = 1; index < 7; index++) {
-        if (this.chairPos[index] == this.queue) {
-          if(this.checkhp(index,data) && this.teatime == false){
-          let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
-          let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
-          let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
-          icon.className = "user" + String(index)
-          icon.classList.add("killer")
-          iconn.className = "circle2none"
-          attack.className = "attacking"
-          setTimeout(() => {
-            icon.className = "none"
-            iconn.className = ""
-            attack.className = "none"
-          }, 3000);
-        }
-      }
-      }
+      // for (let index = 1; index < 7; index++) {
+      //   if (this.chairPos[index] == this.queue) {
+      //     if(this.checkhp(index,data) && this.teatime == false){
+      //     let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
+      //     let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
+      //     let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
+      //     icon.className = "user" + String(index)
+      //     icon.classList.add("killer")
+      //     iconn.className = "circle2none"
+      //     attack.className = "attacking"
+      //     setTimeout(() => {
+      //       icon.className = "none"
+      //       iconn.className = ""
+      //       attack.className = "none"
+      //     }, 3000);
+      //   }
+      // }
+      // }
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
           if(this.checkhp(index,data) && this.teatime == false){
+          let iconsrc = this.elementRef.nativeElement.querySelector("#chair" + String(this.chairPos.indexOf(this.queue))+ String(this.chairPos.indexOf(this.queue)))
+          let iconnsrc = this.elementRef.nativeElement.querySelector("#cs" + String(this.chairPos.indexOf(this.queue)))
+          let attacksrc = this.elementRef.nativeElement.querySelector("#s" + String(this.chairPos.indexOf(this.queue)))
+          iconsrc.className = "user" + String(this.chairPos.indexOf(this.queue))
+          iconsrc.classList.add("killer")
+          iconnsrc.className = "circle2none"
+          attacksrc.className = "attacking"
+          setTimeout(() => {
+            iconsrc.className = "none"
+            iconnsrc.className = ""
+            attacksrc.className = "none"
+          }, 3000);
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
           let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
           let defend = this.elementRef.nativeElement.querySelector("#d" + String(index))
@@ -791,6 +843,7 @@ export class GameStartComponent implements OnInit {
       } else if (this.chair6 == data.position) {
         this.updateHp(this.hp6, data.hp - this.hp6.length);
       }
+      this.teatime = false;
     });
 
     this.socket.listen('need more player').subscribe(() => {
@@ -1165,6 +1218,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('teatime heal').subscribe((data: any) => {
       //data.position -> position ของคนที่ใช้การ์ดจิบชา
+      this.teatime = true;
       this.groupEffect = true;
       setTimeout(() => {
       this.groupEffect = false;
@@ -1549,7 +1603,6 @@ export class GameStartComponent implements OnInit {
 
       }
     }
-
     for (var b = 1; b < 7; b++) {
       if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
         let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
@@ -1574,7 +1627,18 @@ export class GameStartComponent implements OnInit {
     this.merguinSelection = false;
     this.stealCard = false;
   }
-
+  clearTableCard(chair:any,dcard:any){
+    chair.weapon.card = null;
+    chair.weapon.image = null;
+    chair.armor.card = null;
+    chair.armor.image = null;
+    chair.mount1.card = null;
+    chair.mount1.image = null;
+    chair.mount2.card = null;
+    chair.mount2.image = null;
+    dcard.card = [];
+    dcard.image = [];
+  }
   next_queue() {
     this.effectDsc = null;
     this.waitBetweenQueue = false;
@@ -2470,10 +2534,21 @@ export class GameStartComponent implements OnInit {
   }
 
   cfTrick(data: any){
-    let uCheck:boolean = true;
+
     if(this.cardCheck.info.item_name == 'coaching' || this.cardCheck.info.item_name == 'russianroulette'){
       this.socket.emit('set decision card',{ code: this.lobbyCode, target: data, card: this.cardCheck});
+      this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+      this.cardShow = false
+      this.canTrick = false
+      for (var b = 1; b < 7; b++) {
+        if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+          let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+          icon.className = 'none';
+        }
+      }
     }else if(this.cardCheck.info.item_name == 'callcenter' || this.cardCheck.info.item_name == 'steal'){
+      let uCheck:boolean = true;
       let haveEquipment:boolean = false;
       this.stealTrickCards = [];
       if (this.chair1 == data) {
@@ -2525,21 +2600,21 @@ export class GameStartComponent implements OnInit {
           this.stealTrickTarget = data;
           this.socket.emit('use steal trick',{ code: this.lobbyCode, position: this.myPos , target: data});
         }
+        this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
+        this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
+        });
+        this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+        this.cardShow = false
+        this.canTrick = false
+        for (var b = 1; b < 7; b++) {
+          if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
+            let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
+            icon.className = 'none';
+          }
+        }
       }else{
         alert('ผู้เล่นไม่มีการ์ดบนมือหรือในพื้นที่ติดตั้งอุปกรณ์');
         uCheck = false;
-      }
-    }
-    if(uCheck){
-      this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
-      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
-      this.cardShow = false
-      this.canTrick = false
-      for (var b = 1; b < 7; b++) {
-        if (this.testing.includes(this.chairPos[b]) && this.chairPos[b] != this.myPos) {
-          let icon = this.elementRef.nativeElement.querySelector("#chairtrick" + String(b))
-          icon.className = 'none';
-        }
       }
     }
   }
