@@ -265,12 +265,12 @@ export class GameStartComponent implements OnInit {
     this.is_private = (sessionStorage.getItem('private') === 'true');
   }
   ngOnInit(): void {
-    // if(localStorage.getItem('repeat')){
-    //   this.router.navigate(['/home']);
-    // }else{
-    //   localStorage.setItem('repeat','1');
-    //   this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
-    // }
+    if(localStorage.getItem('repeat')){
+      this.router.navigate(['/home']);
+    }else{
+      localStorage.setItem('repeat','1');
+      this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
+    }
     this.loopChat();
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
@@ -370,6 +370,7 @@ export class GameStartComponent implements OnInit {
       this.queue = pos
     });
     this.socket.listen('get card from others').subscribe((data: any) => {
+      console.log(data);
       this.test555 = true;
       this.showDraw = data.cards;
       setTimeout(() => {
@@ -802,6 +803,7 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('set steal cards').subscribe((data: any) => {
       data.cards.forEach((card: any) => {
         card.sttype = 'hand';
+        card.info.srcimg = card.info.image;
         card.info.image = 'cover.png';
         this.stealTrickCards.push(card);
       });
@@ -1884,6 +1886,9 @@ export class GameStartComponent implements OnInit {
       console.log('stealing');
 
       let stcard = this.stealTrickCards.find(st => st.id == this.stSelected);
+      if(stcard.sttype == 'hand'){
+        stcard.info.image = stcard.info.srcimg;
+      }
       this.socket.emit("steal other card", { code: this.lobbyCode, type: stcard.sttype, card: stcard , target: this.stealTrickTarget});
       this.stealTrickCards = [];
       this.stealTrickTarget = null;
