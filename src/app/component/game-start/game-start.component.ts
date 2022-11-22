@@ -292,7 +292,6 @@ export class GameStartComponent implements OnInit {
       });
     });
     this.socket.listen('assign roles').subscribe((data: any) => {
-      console.log(data);
       this.hosting1 = false
       this.hosting2 = false
       this.hosting3 = false
@@ -374,7 +373,6 @@ export class GameStartComponent implements OnInit {
       this.queue = pos
     });
     this.socket.listen('get card from others').subscribe((data: any) => {
-      console.log(data);
       this.test555 = true;
       this.showDraw = data.cards;
       setTimeout(() => {
@@ -718,7 +716,6 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('update remainhp aoe').subscribe((data: any) => {
-      console.log(data);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
           let icon = this.elementRef.nativeElement.querySelector("#less" + String(index))
@@ -741,7 +738,6 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('update remain hp').subscribe((data: any) => {
-      console.log(data);
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
           if(this.checkhp(index,data) && this.teatime == false){
@@ -813,7 +809,6 @@ export class GameStartComponent implements OnInit {
         card.info.image = 'cover.png';
         this.stealTrickCards.push(card);
       });
-      console.log(this.stealTrickCards);
       this.stealTrickTemplate = true;
       this.effectDsc = "เลือกการ์ดที่ต้องการขโมยจากบนมือหรือบนพื้นที่อุปกรณ์ของเป้าหมายจำนวน 1 ใบ";
     });
@@ -973,7 +968,6 @@ export class GameStartComponent implements OnInit {
       }, 3000);
     });
     this.socket.listen('card stolen trick').subscribe((data: any) => {
-      console.log(data);
       this.robing = true
       setTimeout(() => {
       if(!this.isDead){
@@ -1227,7 +1221,6 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('set banquet card').subscribe((data: any) => {
-      console.log(data);
       this.waitingUser.forEach((element:any) => {
         if(element.position == data.position){
           this.nameQueue = element.username
@@ -1253,8 +1246,6 @@ export class GameStartComponent implements OnInit {
     });
 
     this.socket.listen('aoe trick next').subscribe((data: any) => {
-      console.log(data);
-      console.log(this.myPos);
       this.waitingArrowshower = false;
       this.waitingAmbush = false;
       if(data.position == this.myPos){
@@ -1331,7 +1322,6 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('banquet done').subscribe((data: any) => {
       this.banquetTrick = false;
       if(!this.isDead){
-        console.log(data);
         let myCard:any = [];
         data.cards.forEach((card:any) => {
           if(card.owner == this.myPos){
@@ -1885,7 +1875,6 @@ export class GameStartComponent implements OnInit {
   }
   checkedCallcenter(event: any) {
     if (event.target.checked === true) {
-      console.log(this.ccSelected);
 
       if (this.ccSelected == null) {
         this.ccSelected = event.target.value
@@ -1913,7 +1902,6 @@ export class GameStartComponent implements OnInit {
     if (this.stSelected == null) {
       alert('กรุณาเลือกการ์ด 1 ใบ')
     } else {
-      console.log('stealing');
 
       let stcard = this.stealTrickCards.find(st => st.id == this.stSelected);
       if(stcard.sttype == 'hand'){
@@ -1933,14 +1921,11 @@ export class GameStartComponent implements OnInit {
       alert('กรุณาเลือกการ์ด 1 ใบ')
     } else {
       let dcard = this.callcenterCards.find(cc => cc.id == this.ccSelected)
-      console.log(dcard.cctype);
 
       if(dcard.cctype == 'hand'){
-        console.log('hand');
         this.handCard = this.handCard.filter(hc => hc.id != this.ccSelected)
         this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
       }else{
-        console.log('equipment');
         switch(dcard.cctype){
           case 'weapon':
             this.myEquipment.weapon = null;
@@ -2466,7 +2451,6 @@ export class GameStartComponent implements OnInit {
 
   }
   setEquipmentStealTrickCards(chair: any){
-    console.log(chair);
     if(chair.weapon.card != null){
       chair.weapon.card['sttype'] = 'weapon';
       this.stealTrickCards.push(chair.weapon.card);
@@ -2833,7 +2817,6 @@ export class GameStartComponent implements OnInit {
 
   selectCharacter(char: any) {
     if (this.role == 'king') {
-      console.log(char.id);
       if(this.inprogress.includes(char.id)){
       if(window.confirm('This character is still being developed, there may be some effects that cant be used, are you sure you can use them?')){
         this.socket.emit('king selected', { cid: char.id, code: this.lobbyCode });
@@ -2863,7 +2846,6 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('assign position').subscribe((data: any) => {
       this.specterUser = []
       this.waitingUser = data
-      console.log(this.waitingUser);
       this.waitingUser.forEach((element, i) => {
         if (element.position == 0) {
           this.specterUser.push(element)
