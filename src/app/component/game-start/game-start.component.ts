@@ -252,6 +252,7 @@ export class GameStartComponent implements OnInit {
   robing: boolean = false;
   damageAmbush: boolean = false;
   damageArrowshower: boolean = false;
+  teatime: boolean = false;
 
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -734,10 +735,9 @@ export class GameStartComponent implements OnInit {
 
     this.socket.listen('update remain hp').subscribe((data: any) => {
       console.log(data);
-
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == this.queue) {
-          if(this.checkhp(index,data)){
+          if(this.checkhp(index,data) && this.teatime == false){
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
           let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
           let attack = this.elementRef.nativeElement.querySelector("#s" + String(index))
@@ -755,7 +755,7 @@ export class GameStartComponent implements OnInit {
       }
       for (let index = 1; index < 7; index++) {
         if (this.chairPos[index] == data.position) {
-          if(this.checkhp(index,data)){
+          if(this.checkhp(index,data) && this.teatime == false){
           let icon = this.elementRef.nativeElement.querySelector("#chair" + String(index)+ String(index))
           let iconn = this.elementRef.nativeElement.querySelector("#cs" + String(index))
           let defend = this.elementRef.nativeElement.querySelector("#d" + String(index))
@@ -970,7 +970,6 @@ export class GameStartComponent implements OnInit {
       if(!this.isDead){
         if(data.type == 'hand'){
           this.handCard = this.handCard.filter(hc => hc.id != data.card.id);
-          this.robing = false;
         }else{
           switch(data.type){
             case 'weapon':
@@ -995,6 +994,7 @@ export class GameStartComponent implements OnInit {
               break;
         }
         }
+        this.robing = false;
       }
     }, 3000);
     });
@@ -2753,6 +2753,7 @@ export class GameStartComponent implements OnInit {
         });
         this.socket.emit("use banquet trick", { code: this.lobbyCode, position: this.myPos});
       }else if(cardInfo.item_name == "teatime"){
+        this.teatime = true
         this.cardShow = false
         this.handCard = this.handCard.filter(hc => hc.id != this.cardCheck.id);
         this.api.dropCard(this.lobbyCode, [this.cardCheck.id]).subscribe((data: any) => {
