@@ -1266,10 +1266,14 @@ export class GameStartComponent implements OnInit {
       }else{
         if(data.type == 'def'){
           this.waitingArrowshower = true;
+          this.damageArrowshower = true;
           this.waitingAmbush = false;
+          this.damageAmbush = false;
         }else{
           this.waitingArrowshower = false;
+          this.damageArrowshower = false;
           this.waitingAmbush = true;
+          this.damageAmbush = true;
         }
       }
     });
@@ -2170,17 +2174,17 @@ export class GameStartComponent implements OnInit {
   }
 
   checkhp(index:any,data:any){
-    if(index == 1 && data.hp >= this.hp1){
+    if(index == 1 && data.hp < this.hp1.length){
       return true;
-    }else if(index == 2 && data.hp >= this.hp2){
+    }else if(index == 2 && data.hp < this.hp2.length){
       return true;
-    }else if(index == 3 && data.hp >= this.hp3){
+    }else if(index == 3 && data.hp < this.hp3.length){
       return true;
-    }else if(index == 4 && data.hp >= this.hp4){
+    }else if(index == 4 && data.hp < this.hp4.length){
       return true;
-    }else if(index == 5 && data.hp >= this.hp5){
+    }else if(index == 5 && data.hp < this.hp5.length){
       return true;
-    }else if(index == 6 && data.hp >= this.hp6){
+    }else if(index == 6 && data.hp < this.hp6.length){
       return true;
     }else{
       return false;
@@ -2635,7 +2639,7 @@ export class GameStartComponent implements OnInit {
               let armor: any = null;
               switch (b) {
                 case 1:
-                  hp = this.hp1.length
+                  hp = this.hp1.lengthv
                   armor = this.otherEquipment.chair1.armor.card;
                   break;
                 case 2:
