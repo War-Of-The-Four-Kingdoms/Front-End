@@ -5,16 +5,6 @@
 </head>
 
 <body>
-  <h1 class="howto btn" *ngIf="this.effectDsc != null" (click)="this.showEffectDescription = true">?</h1>
-  <div class="howtouse bg-white" *ngIf="this.showEffectDescription">
-    <div class="w-100 text-end p-2">
-      <img class="hideHowto" width="45px" src="../assets/picture/cancel.png" (click)="this.showEffectDescription = false">
-    </div>
-
-    {{ this.effectDsc }}
-  </div>
-
-
   <div *ngIf="this.waitingKingSelect" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">
       รอราชาเลือกตัวละคร
@@ -37,7 +27,7 @@
             src={{this.urls+dcard.info.image}}></label>
       </div>
     </div>
-    <div class="m-0 p-0 w-100 d-flex justify-content-center">
+    <div class="m-0 p-0 w-100 d-flex justify-content-center" >
       <img class="confirmdrops" src="../assets/picture/fire.png" (click)="dropCallcenter()">
     </div>
   </div>
@@ -225,7 +215,7 @@
   <!--  -->
 
   <!-- ทิ้งการ์ด -->
-  <div class="droptemplate row m-0 p-0" >
+  <div class="droptemplate row m-0 p-0" *ngIf="this.showDropTemplate">
     <div class="card-canvas d-flex flex-wrap justify-content-center" *ngIf="!this.dropFire">
       <div class="m-0 p-0" *ngFor="let handcard of this.handCard">
         <input type="checkbox" class="dropcard-checkbox" value="{{handcard.id}}" id="c{{handcard.id}}"
@@ -513,6 +503,14 @@
   <!-- แทรกเทินชาวบ้าน -->
   <!-- *ngIf="this.damageAmbush" -->
   <div class="all">
+    <h1 class="howto btn" *ngIf="this.effectDsc != null" (click)="this.showEffectDescription = true">?</h1>
+    <div class="howtouse" *ngIf="this.showEffectDescription">
+      <div class="w-100 text-end">
+        <img class="hideHowto" width="35px" src="../assets/picture/cancel.png" (click)="this.showEffectDescription = false">
+      </div>
+  
+      {{ this.effectDsc }}
+    </div>
     <div class="ambushEffect" *ngIf="this.damageAmbush">
       <img class="hunter1" src="../assets/picture/hunter.png">
     </div>

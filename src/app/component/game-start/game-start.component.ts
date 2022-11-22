@@ -254,7 +254,7 @@ export class GameStartComponent implements OnInit {
   damageArrowshower: boolean = false;
   teatime: boolean = false;
 
-  effectDsc: any = 'sdaasfasfas';
+  effectDsc: any = 'เลือกใช้การ์ดฟื้นฟูเพื่อช่วยเหลือผู้เล่นที่อยู่ในสถานะโคม่า 1 ใบ หรือ เลือกไม่ใช้งานเพื่อปล่อยให้ผู้เล่นคนนั้นตาย';
   showEffectDescription:boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
