@@ -5,6 +5,15 @@
 </head>
 
 <body>
+  <h1 class="howto btn" *ngIf="this.effectDsc != null" (click)="this.showEffectDescription = true">?</h1>
+  <div class="howtouse bg-white" *ngIf="this.showEffectDescription">
+    <div class="w-100 text-end p-2">
+      <img class="hideHowto" width="45px" src="../assets/picture/cancel.png" (click)="this.showEffectDescription = false">
+    </div>
+
+    {{ this.effectDsc }}
+  </div>
+
 
   <div *ngIf="this.waitingKingSelect" class="waitingdef d-flex align-items-center">
     <div class="waitingtext d-flex justify-content-center align-items-center">

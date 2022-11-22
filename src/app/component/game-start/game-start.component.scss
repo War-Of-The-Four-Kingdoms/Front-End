@@ -4076,3 +4076,29 @@ input[type=checkbox]:checked+label {
   height: 200px;
   border-radius: 100px;
 }
+
+.howto{
+  position: absolute;
+  z-index: 9998;
+  font-size: 100px;
+  right: 0;
+  bottom: 0;
+  color: white;
+
+  margin: 0;
+}
+
+.howtouse{
+  position: absolute;
+  z-index: 9999;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+}
+
+.hideHowto{
+  z-index: 9999;
+  top: 0;
+  right: 0;
+}

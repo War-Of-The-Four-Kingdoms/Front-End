@@ -254,6 +254,8 @@ export class GameStartComponent implements OnInit {
   damageArrowshower: boolean = false;
   teatime: boolean = false;
 
+  effectDsc: any = 'sdaasfasfas';
+  showEffectDescription:boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -267,7 +269,7 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     if(localStorage.getItem('repeat')){
-      this.router.navigate(['/home']);
+      // this.router.navigate(['/home']);
     }else{
       localStorage.setItem('repeat','1');
       this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
@@ -2430,7 +2432,9 @@ export class GameStartComponent implements OnInit {
     }
 
   }
-
+  showEffDescription(){
+    this.showEffectDescription = true;
+  }
   setEquipmentStealTrickCards(chair: any){
     console.log(chair);
     if(chair.weapon.card != null){
