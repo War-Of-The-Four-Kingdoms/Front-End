@@ -254,7 +254,7 @@ export class GameStartComponent implements OnInit {
   damageArrowshower: boolean = false;
   teatime: boolean = false;
 
-  effectDsc: any = 'sdaasfasfas';
+  effectDsc: any = null;
   showEffectDescription:boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
@@ -269,11 +269,12 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     if(localStorage.getItem('repeat')){
-      // this.router.navigate(['/home']);
+      this.router.navigate(['/home']);
     }else{
       localStorage.setItem('repeat','1');
       this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
     }
+
     this.loopChat();
     this.socket.listen('set decision result').subscribe((data: any) => {
       this.decisionResult = data.card;
@@ -517,6 +518,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('next queue').subscribe(() => {
       this.showTrigger = false
+      this.effectDsc = null;
       this.waiting = false;
       this.next_queue();
     });
@@ -664,6 +666,7 @@ export class GameStartComponent implements OnInit {
       }
       this.incomingDamage = data.damage;
       this.showSelectDef = true;
+      this.effectDsc = "เลือกใช้การ์ดป้องกันในมือจำนวน "+this.defUse+" ใบ";
     });
     this.socket.listen('target no handcard').subscribe((data: any) => {
       this.waitingLegionDrop = false;
@@ -705,6 +708,7 @@ export class GameStartComponent implements OnInit {
           this.legionDrop = true;
           setTimeout(() => {
           this.showDropTemplate = true;
+          this.effectDsc = "เลือกทิ้งการ์ดบนมือจำนวน 1 ใบ";
         }, 3000);
         }else{
           this.socket.emit('no hand card', { code: this.lobbyCode});
@@ -811,6 +815,7 @@ export class GameStartComponent implements OnInit {
       });
       console.log(this.stealTrickCards);
       this.stealTrickTemplate = true;
+      this.effectDsc = "เลือกการ์ดที่ต้องการขโมยจากบนมือหรือบนพื้นที่อุปกรณ์ของเป้าหมายจำนวน 1 ใบ";
     });
     this.socket.listen('update inhand').subscribe((data: any) => {
       if (data.position != this.myPos) {
@@ -1015,6 +1020,7 @@ export class GameStartComponent implements OnInit {
       this.comaPlayer = this.others.find((o: any) => o.position == data.position);
 
       this.rescue = true;
+      this.effectDsc = "เลือกใช้การ์ดฟื้นฟูเพื่อช่วยเหลือผู้เล่นที่อยู่ในสถานะโคม่า 1 ใบ หรือ เลือกไม่ใช้งานเพื่อปล่อยให้ผู้เล่นคนนั้นตาย";
     });
     this.socket.listen('coma rescued').subscribe((data: any) => {
       if (data.position == this.myPos) {
@@ -1028,6 +1034,7 @@ export class GameStartComponent implements OnInit {
         this.healSelected = [];
         this.comaPlayer = null;
         this.rescue = false;
+        this.effectDsc = null;
       }
     });
     this.socket.listen('player leave').subscribe((data: any) => {
@@ -1195,6 +1202,7 @@ export class GameStartComponent implements OnInit {
         this.callcenterCards.push(this.myEquipment.mount2);
       }
       this.callcenterDrop = true;
+      this.effectDsc = "เลือกทิ้งการ์ดบนมือหรือบนพื้นที่ติดอุปกรณ์ 1 ใบ";
     });
     this.socket.listen('other drop equipment').subscribe((data: any) => {
       if(data.position != this.myPos){
@@ -1215,6 +1223,7 @@ export class GameStartComponent implements OnInit {
     });
     this.socket.listen('callcenter done').subscribe((data: any) => {
       this.waitingCallcenterDrop = false;
+      this.effectDsc = null;
     });
 
     this.socket.listen('set banquet card').subscribe((data: any) => {
@@ -1229,6 +1238,7 @@ export class GameStartComponent implements OnInit {
           cd.info.image = "../assets/picture/card/"+cd.info.image;
         }
       });
+
       if(!this.isDead){
         this.banquetCards = data.cards;
         this.banquetTrick = true;
@@ -1239,6 +1249,7 @@ export class GameStartComponent implements OnInit {
           this.canSelectBanquet = false;
         }
       }
+      this.effectDsc = "เลือกการ์ด 1 ใบเมื่อถึงลำดับของตนเอง";
     });
 
     this.socket.listen('aoe trick next').subscribe((data: any) => {
@@ -1256,6 +1267,7 @@ export class GameStartComponent implements OnInit {
             this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense');
           }
           this.aoeTrick = 'arrowshower';
+          this.effectDsc = "เลือกใช้การ์ดป้องกันจำนวน 1 ใบเพื่อป้องกันห่าฝนธนู";
         }else{
           if (this.myCharacter.char_name == 'ninjakappa') {
             this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'defense' || hc.info.item_name == 'attack');
@@ -1265,6 +1277,7 @@ export class GameStartComponent implements OnInit {
             this.counterAoeCards = this.handCard.filter(hc => hc.info.item_name == 'attack');
           }
           this.aoeTrick = 'ambush';
+          this.effectDsc = "เลือกใช้การ์ดโจมตีจำนวน 1 ใบเพื่อโจมตีกองโจร";
         }
         this.showCounterAoe = true;
       }else{
@@ -1280,9 +1293,11 @@ export class GameStartComponent implements OnInit {
           this.damageAmbush = true;
         }
       }
+
     });
     this.socket.listen('aoe trick done').subscribe((data: any) => {
       this.aoeTrick = null;
+      this.effectDsc = null;
       this.showCounterAoe = false;
       this.waitingArrowshower = false;
       this.waitingAmbush = false;
@@ -1335,6 +1350,7 @@ export class GameStartComponent implements OnInit {
         }, 2500);
       }
       this.banquetCards = [];
+      this.effectDsc = null;
     });
 
     this.socket.listen('change equipment image').subscribe((data: any) => {
@@ -1550,6 +1566,7 @@ export class GameStartComponent implements OnInit {
         icon.className = 'none';
       }
     }
+    this.effectDsc = null;
     this.callcenterDrop = false;
     this.waitingCallcenterDrop = false;
     this.waitingKingSelect = false;
@@ -1569,6 +1586,7 @@ export class GameStartComponent implements OnInit {
   }
 
   next_queue() {
+    this.effectDsc = null;
     this.waitBetweenQueue = false;
     switch (this.currentQueue) {
       case 'prepare':
@@ -1747,6 +1765,7 @@ export class GameStartComponent implements OnInit {
       this.healCard = [];
       this.healSelected = [];
       this.rescue = false;
+      this.effectDsc = null;
     } else {
       alert('กรุณาเลือกการ์ดฟื้นฟู 1 ใบ');
     }
@@ -1756,6 +1775,7 @@ export class GameStartComponent implements OnInit {
     this.healCard = [];
     this.healSelected = [];
     this.rescue = false;
+    this.effectDsc = null;
   }
   checkedGive(event: any) {
     if (event.target.checked === true) {
@@ -1809,6 +1829,7 @@ export class GameStartComponent implements OnInit {
 
       this.counterAoeSelected = null;
       this.showCounterAoe = false;
+      this.effectDsc = null;
     }else {
       if(this.aoeTrick == 'ambush'){
         alert('กรุณาเลือกการ์ดโจมตีจำนวน 1 ใบ');
@@ -1825,6 +1846,7 @@ export class GameStartComponent implements OnInit {
     }
     this.counterAoeSelected = null;
     this.showCounterAoe = false;
+    this.effectDsc = null;
   }
   checkedDef(event: any) {
     if (event.target.checked === true) {
@@ -1849,6 +1871,7 @@ export class GameStartComponent implements OnInit {
       this.defSelected = [];
       this.incomingDamage = 0;
       this.showSelectDef = false;
+      this.effectDsc = null;
     } else {
       alert('กรุณาเลือกการ์ดป้องกันจำนวน ' + this.defUse + ' ใบ');
     }
@@ -1858,6 +1881,7 @@ export class GameStartComponent implements OnInit {
     this.defSelected = [];
     this.incomingDamage = 0;
     this.showSelectDef = false;
+    this.effectDsc = null;
   }
   checkedCallcenter(event: any) {
     if (event.target.checked === true) {
@@ -1900,6 +1924,7 @@ export class GameStartComponent implements OnInit {
       this.stealTrickTarget = null;
       this.stealTrickTemplate = false;
       this.stSelected = null;
+      this.effectDsc = null;
     }
   }
 
@@ -1941,6 +1966,7 @@ export class GameStartComponent implements OnInit {
       this.callcenterDrop = false;
       this.callcenterCards = [];
       this.ccSelected = null;
+      this.effectDsc = null;
       this.socket.emit("callcenter drop done", { code: this.lobbyCode });
     }
 
@@ -1974,6 +2000,7 @@ export class GameStartComponent implements OnInit {
     }
     this.selectedItems = [];
     this.showGiveCard = false;
+    this.effectDsc = null;
     this.next_queue();
   }
   stealCardIndex(index: any) {
@@ -1992,6 +2019,7 @@ export class GameStartComponent implements OnInit {
   snaleFinish() {
     this.stealCard = false;
     this.stealablePlayers = null;
+    this.effectDsc = null;
     if (this.stealCardSelected.length > 0) {
       this.socket.emit('steal other player card', { code: this.lobbyCode, selected: this.stealCardSelected });
       this.stealCardSelected = [];
@@ -2023,6 +2051,7 @@ export class GameStartComponent implements OnInit {
     this.selectedItems = [];
     this.socket.emit('special effect end', { code: this.lobbyCode });
     this.merguinSelection = false;
+    this.effectDsc = null;
   }
 
   dropSelectedCard() {
@@ -2041,10 +2070,12 @@ export class GameStartComponent implements OnInit {
         this.api.dropCard(this.lobbyCode, this.selectedItems).subscribe((data: any) => {
         });
         this.showDropTemplate = false;
+        this.effectDsc = null;
         this.selectedItems = [];
         if (this.legionDrop) {
           this.socket.emit("legion drop done", { code: this.lobbyCode });
           this.legionDrop = false;
+          this.effectDsc = null;
 
         } else {
           this.next_queue();
@@ -2314,6 +2345,7 @@ export class GameStartComponent implements OnInit {
         break;
     }
     this.showDecisionTemplate = false;
+    this.effectDsc = null;
     this.decisionResult = null;
     if(this.hp4.length == 0){
       this.waitBetweenQueue = true;
@@ -2421,6 +2453,7 @@ export class GameStartComponent implements OnInit {
         this.playQueue.push({ waiting: false, name: 'attack' })
       } else {
         this.showDecisionTemplate = true
+        this.effectDsc = "เปิดการ์ดตัดสิน 1 ใบ ถ้าเป็น ♥/♦ จะถือว่าโจมตีสำเร็จ";
       }
     } else {
       this.waitingDef = true;
@@ -2431,9 +2464,6 @@ export class GameStartComponent implements OnInit {
       }
     }
 
-  }
-  showEffDescription(){
-    this.showEffectDescription = true;
   }
   setEquipmentStealTrickCards(chair: any){
     console.log(chair);
@@ -3210,6 +3240,7 @@ export class GameStartComponent implements OnInit {
 
   putaEffect(): void {
     this.putaGiveCount = 0;
+    this.effectDsc = "เลือกการ์ดบนมือที่ต้องการมอบให้ผู้เล่นอื่นจำนวนกี่ใบก็ได้และกดที่รูปผู้เล่นคนนั้นเพื่อมอบการ์ดที่เลือกไว้ให้ หากมอบการ์ดตั้งแต่ 2 ใบขึ้นไปในรอบนี้ฟื้นฟูพลังชีวิต 1 หน่วย เมื่อพอใจแล้วหรือไม่ต้องต้องการใช้ความสามารถให้กดปุ่ม DONE";
     this.showGiveCard = true;
     //สมบัตฺิผู้นำ : ระหว่างการจั่วการ์ด สามารถมอบการ์ดในมือให้กับผู้เล่นคนอื่นได้ หากมอบการ์ดตั้งแต่ 2 ใบขึ้นไป ในรอบนี้ฟื้นฟูพลังชีวิต 1 หน่วย
   }
@@ -3229,18 +3260,24 @@ export class GameStartComponent implements OnInit {
     this.decisionState = 'foxia';
     this.isFoxiaEffect = true;
     this.showDecisionTemplate = true;
+    this.effectDsc = "เปิดการ์ดตัดสินหากได้การ์ด ♣/♠ สามารถเก็บไว้ได้ (สามารถใช้ได้จนกว่าจะพอใจ หรือ เปิดได้การ์ด ♦/♥)";
     //this.specialDefense = ['club','spade'];
     // in prepare stage can openDecisionCard if symbol is club/spade store it - openDecisionCard({symbol: ['club','spade'],store_by_decision: true})
   }
 
 
 
-  foxiaStore() {
-    this.handCard.push(this.decisionResult);
-    this.foxiaStoredCard.push(this.decisionResult.id);
-    this.decisionResult = null;
-    this.storeConfirm = false;
-    this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+  foxiaStore(is_store:boolean) {
+    if(is_store){
+      this.handCard.push(this.decisionResult);
+      this.foxiaStoredCard.push(this.decisionResult.id);
+      this.decisionResult = null;
+      this.storeConfirm = false;
+      this.socket.emit("update inhand card", { code: this.lobbyCode, hand: this.handCard });
+    }else{
+      this.decisionResult = null;
+      this.storeConfirm = false;
+    }
   }
 
   foxiaCancel() {
@@ -3251,6 +3288,7 @@ export class GameStartComponent implements OnInit {
     this.isFoxiaEffect = false;
     this.showDecisionTemplate = false;
     this.decisionResult = null;
+    this.effectDsc = null;
     this.decisionState = '';
     this.next_queue();
   }
@@ -3285,6 +3323,7 @@ export class GameStartComponent implements OnInit {
       sp.stealed = false;
     });
     this.stealCard = true;
+    this.effectDsc = "เลือกหยิบการ์ดบนมือ 1 ใบ จากผู้เล่นอื่นไม่เกิน 2 คน";
   }
 
   porckyEffect() {
@@ -3311,6 +3350,7 @@ export class GameStartComponent implements OnInit {
     }
     else {
       this.showDecisionTemplate = true;
+      this.effectDsc = "เปิดการ์ดตัดสิน 1 ใบ ถ้าเปิดได้สัญลักษณ์ 2-9 ♠ ต้องเสียพลังชีวิต 3 หน่วย ถ้าไม่ใช่ การ์ดใบนี้จะย้ายไปอยู่หน้าผู้เล่นคนถัดไป การ์ดใบนี้จะหายไปเมื่อเกิดผลแล้วเท่านั้น (หากมีการ์ดใบนี้มากกว่า 1 ใบ ให้เปิดการ์ดตัดสินเพียงครั้งเดียว และ เสียพลังชีวิต 4 หน่วย)";
     }
   }
 
@@ -3321,6 +3361,7 @@ export class GameStartComponent implements OnInit {
     }
     else {
       this.showDecisionTemplate = true;
+      this.effectDsc = "เปิดการ์ดตัดสิน 1 ใบ ถ้าได้สัญลักษณ์ ♥ การ์ดใบนี้จะไม่เกิดผล ถ้าไม่ใช่จะถูกข้ามขั้นตอนการเล่นไป";
     }
   }
 

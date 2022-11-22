@@ -307,8 +307,10 @@
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
       <button *ngIf="!this.isFoxiaEffect && this.decisionResult == null" class="openDecisionButton open-button mx-3"
         (click)="this.openDecisionCard(true)"><span class="text">เปิดการ์ด</span></button>
+        <button class="storeConfirm" *ngIf="this.storeConfirm && this.decisionResult != null"
+        (click)="this.foxiaStore(false)">ไม่เก็บ</button>
       <button class="storeConfirm" *ngIf="this.storeConfirm && this.decisionResult != null"
-        (click)="this.foxiaStore()">เก็บ</button>
+        (click)="this.foxiaStore(true)">เก็บ</button>
     </div>
   </div>
   <!--  -->
