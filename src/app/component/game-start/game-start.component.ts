@@ -254,6 +254,8 @@ export class GameStartComponent implements OnInit {
   damageArrowshower: boolean = false;
   teatime: boolean = false;
 
+  effectDsc: any = 'sdaasfasfas';
+  showEffectDescription:boolean = false;
 
   constructor(private socket: WebSocketService, private elementRef: ElementRef, private router: Router, private _ActivatedRoute: ActivatedRoute, private api: ApiService) {
     this.arr.push({
@@ -267,7 +269,7 @@ export class GameStartComponent implements OnInit {
   }
   ngOnInit(): void {
     if(localStorage.getItem('repeat')){
-      this.router.navigate(['/home']);
+      // this.router.navigate(['/home']);
     }else{
       localStorage.setItem('repeat','1');
       this.socket.emit('get room info', { max_player: this.roomMAX, username: sessionStorage.getItem('username'), private: this.is_private });
@@ -371,6 +373,7 @@ export class GameStartComponent implements OnInit {
       this.queue = pos
     });
     this.socket.listen('get card from others').subscribe((data: any) => {
+      console.log(data);
       this.test555 = true;
       this.showDraw = data.cards;
       setTimeout(() => {
@@ -802,6 +805,7 @@ export class GameStartComponent implements OnInit {
     this.socket.listen('set steal cards').subscribe((data: any) => {
       data.cards.forEach((card: any) => {
         card.sttype = 'hand';
+        card.info.srcimg = card.info.image;
         card.info.image = 'cover.png';
         this.stealTrickCards.push(card);
       });
@@ -1888,6 +1892,9 @@ export class GameStartComponent implements OnInit {
       console.log('stealing');
 
       let stcard = this.stealTrickCards.find(st => st.id == this.stSelected);
+      if(stcard.sttype == 'hand'){
+        stcard.info.image = stcard.info.srcimg;
+      }
       this.socket.emit("steal other card", { code: this.lobbyCode, type: stcard.sttype, card: stcard , target: this.stealTrickTarget});
       this.stealTrickCards = [];
       this.stealTrickTarget = null;
@@ -2425,7 +2432,9 @@ export class GameStartComponent implements OnInit {
     }
 
   }
-
+  showEffDescription(){
+    this.showEffectDescription = true;
+  }
   setEquipmentStealTrickCards(chair: any){
     console.log(chair);
     if(chair.weapon.card != null){
